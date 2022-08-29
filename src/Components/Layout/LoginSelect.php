@@ -14,11 +14,11 @@ class LoginSelect extends BaseComponent
         $boundedContext = $currentConfiguration->getSelectedBoundedContext();
         if ($boundedContext) {
             foreach ($boundedContext->actions->filterOnApieContext($currentConfiguration->getApieContext()) as $method) {
-                if ($method->name==='verifyAuthentication') {
+                if ($method->name==='verifyAuthentication' || $method->name==='login') {
                     $loginOptions[] = [
                         'name' => $method->getDeclaringClass()->getShortName(),
                         'value' => $currentConfiguration->getContextUrl(
-                            '/action/' . $method->getDeclaringClass()->getShortName() . '/verifyAuthentication'
+                            '/action/' . $method->getDeclaringClass()->getShortName() . '/' . $method->name
                         ),
                     ];
                 }

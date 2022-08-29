@@ -29,7 +29,7 @@ abstract class AbstractRenderTest extends TestCase
      */
     protected function shouldOverwriteFixture(): bool
     {
-        return true;// false;
+        return false;
     }
 
     /**
@@ -96,6 +96,11 @@ abstract class AbstractRenderTest extends TestCase
             new LoginSelect(
                 $defaultConfiguration
             )
+        ];
+
+        yield 'Simple Menu' => [
+            'expected-menu.html',
+            new Layout\Menu($defaultConfiguration),
         ];
     }
 }

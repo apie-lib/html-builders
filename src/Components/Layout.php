@@ -2,6 +2,7 @@
 namespace Apie\HtmlBuilders\Components;
 
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
+use Apie\HtmlBuilders\Components\Layout\Menu;
 use Apie\HtmlBuilders\Components\Layout\TopBar;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
@@ -20,7 +21,7 @@ class Layout extends BaseComponent
             ],
             new ComponentHashmap([
                 'top' => new TopBar($currentConfiguration),
-                'menu' => new RawContents(''),
+                'menu' => new Menu($currentConfiguration),
                 'content' => $contents,
             ])
         );

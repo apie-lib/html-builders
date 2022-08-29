@@ -47,14 +47,14 @@ final class CurrentConfiguration
 
     public function getGlobalUrl(string $path): string
     {
-        $url = rtrim($this->config['base_url'] ?? '/');
+        $url = rtrim($this->config['base_url'] ?? '/', '/');
         return $url . '/' . ltrim($path, '/');
     }
 
     public function getContextUrl(string $path): string
     {
         $id = $this->getSelectedBoundedContextId();
-        return $this->getGlobalUrl('/' . $id . '/' . ltrim($path, '/'));
+        return $this->getGlobalUrl($id . '/' . ltrim($path, '/'));
     }
 
     public function getBrowserTitle(string $pageTitle): string
