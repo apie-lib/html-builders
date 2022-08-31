@@ -1,14 +1,17 @@
 <?php
 namespace Apie\HtmlBuilders\TestHelpers;
 
+use Apie\Core\Actions\ActionResponse;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Fixtures\BoundedContextFactory;
+use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
 use Apie\HtmlBuilders\Components\Layout\Logo;
+use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\ComponentRendererInterface;
@@ -19,7 +22,7 @@ use PHPUnit\Framework\TestCase;
  * @codeCoverageIgnore
  */
 abstract class AbstractRenderTest extends TestCase
-{
+{   
     abstract public function getRenderer(): ComponentRendererInterface;
 
     abstract public function getFixturesPath(): string;
@@ -29,7 +32,7 @@ abstract class AbstractRenderTest extends TestCase
      */
     protected function shouldOverwriteFixture(): bool
     {
-        return false;
+        return true;//false;
     }
 
     /**
@@ -101,6 +104,16 @@ abstract class AbstractRenderTest extends TestCase
         yield 'Simple Menu' => [
             'expected-menu.html',
             new Layout\Menu($defaultConfiguration),
+        ];
+
+        yield 'Resource overview' => [
+            'expected-resource-overview.html',
+            new Overview([['id' => 12, 'name' => 'Pizza']], ['id', 'name'])
+        ];
+
+        yield 'Resource overview large list' => [
+            'expected-resource-overview-large-list.html',
+            new Overview(array_fill(0, 100, ['id' => 12, 'name' => 'Pizza']), ['id', 'name'])
         ];
     }
 }
