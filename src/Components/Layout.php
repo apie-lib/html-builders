@@ -1,7 +1,6 @@
 <?php
 namespace Apie\HtmlBuilders\Components;
 
-use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Layout\Menu;
 use Apie\HtmlBuilders\Components\Layout\TopBar;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;

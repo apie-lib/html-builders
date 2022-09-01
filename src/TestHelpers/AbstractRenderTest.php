@@ -1,11 +1,9 @@
 <?php
 namespace Apie\HtmlBuilders\TestHelpers;
 
-use Apie\Core\Actions\ActionResponse;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Fixtures\BoundedContextFactory;
-use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
@@ -22,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  * @codeCoverageIgnore
  */
 abstract class AbstractRenderTest extends TestCase
-{   
+{
     abstract public function getRenderer(): ComponentRendererInterface;
 
     abstract public function getFixturesPath(): string;

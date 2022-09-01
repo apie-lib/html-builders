@@ -1,10 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\Components\Resource;
 
-use Apie\Core\Actions\ActionResponse;
-use Apie\Core\Datalayers\Lists\PaginatedResult;
 use Apie\HtmlBuilders\Components\BaseComponent;
-use ReflectionClass;
 
 class Overview extends BaseComponent
 {
