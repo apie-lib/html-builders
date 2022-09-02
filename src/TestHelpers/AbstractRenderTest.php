@@ -3,8 +3,11 @@ namespace Apie\HtmlBuilders\TestHelpers;
 
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Enums\RequestMethod;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
+use Apie\HtmlBuilders\Components\Forms\Form;
+use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
@@ -112,6 +115,21 @@ abstract class AbstractRenderTest extends TestCase
         yield 'Resource overview large list' => [
             'expected-resource-overview-large-list.html',
             new Overview(array_fill(0, 100, ['id' => 12, 'name' => 'Pizza']), ['id', 'name'])
+        ];
+
+        yield 'Form' => [
+            'expected-form.html',
+            new Form(RequestMethod::POST, new RawContents('test'), new RawContents('test2')),
+        ];
+
+        yield 'Simple input field' => [
+            'expected-input.html',
+            new Input('name', 'value')
+        ];
+
+        yield 'Simple password field' => [
+            'expected-input-password.html',
+            new Input('name', 'value', 'password')
         ];
     }
 }
