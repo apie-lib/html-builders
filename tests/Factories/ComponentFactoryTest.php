@@ -7,6 +7,7 @@ use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\Factories\ComponentFactory;
+use Apie\HtmlBuilders\Factories\FormComponentFactory;
 use PHPUnit\Framework\TestCase;
 
 class ComponentFactoryTest extends TestCase
@@ -18,7 +19,8 @@ class ComponentFactoryTest extends TestCase
     {
         $testItem = new ComponentFactory(
             new ApplicationConfiguration([]),
-            new BoundedContextHashmap([])
+            new BoundedContextHashmap([]),
+            FormComponentFactory::create()
         );
         $this->assertInstanceOf(
             Layout::class,
