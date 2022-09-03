@@ -1,6 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\Factories;
 
+use Apie\Common\ContextConstants;
 use Apie\Core\Actions\ActionResponse;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\BoundedContext\BoundedContextId;
@@ -23,7 +24,8 @@ class ComponentFactory
 {
     public function __construct(
         private readonly ApplicationConfiguration $applicationConfiguration,
-        private readonly BoundedContextHashmap $boundedContextHashmap
+        private readonly BoundedContextHashmap $boundedContextHashmap,
+        private readonly FormComponentFactory $formComponentFactory
     ) {
     }
 
@@ -69,6 +71,12 @@ class ComponentFactory
         ApieContext $context
     ): ComponentInterface {
         $formFields = [];
+        $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
+            ? $context->getContext(ContextConstants::RAW_CONTENTS)
+            : [];
+        foreach ($method->getParameters() as $parameter) {
+            $formFields[] = $this->formComponentFactory->createFromParameter($context, $parameter, ['form'], $filledIn);
+        }
         return $this->createWrapLayout(
             $pageTitle,
             $boundedContextId,
