@@ -23,7 +23,7 @@ final class Utils
 
     public static function internalName(string $name): string
     {
-        if (!preg_match('/^(?<first>[^\[]+)<?<second>\[.*)$/', $name, $matches)) {
+        if (!preg_match('/^(?<first>[^\[]+)(?<second>.*)$/', $name, $matches)) {
             throw new UnexpectedValueException('Can not parse ' . $name);
         }
         return '_apie[' . $matches['first'] . ']' . $matches['second'];
