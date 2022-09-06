@@ -42,11 +42,15 @@ class ComponentFactory
         assert($actionResponse->result instanceof PaginatedResult);
         $listData = Utils::toArray($actionResponse->getResultAsNativeData()['list']);
         $columns = array_keys($actionResponse->apieContext->getApplicableGetters($className)->toArray());
+        $pagination = $this->createRawContents('');
+        if ($actionResponse->result->totalCount > $actionResponse->result->pageSize) {
+            $pagination = new Pagination($actionResponse->result);
+        }
         return $this->createWrapLayout(
             $className->getShortName() . ' overview',
             $boundedContextId,
             $actionResponse->apieContext,
-            new Overview($listData, $columns, new Pagination($actionResponse->result))
+            new Overview($listData, $columns, $pagination)
         );
     }
 
@@ -82,6 +86,24 @@ class ComponentFactory
             $boundedContextId,
             $context,
             new Form($method->getNumberOfParameters() > 0 ? RequestMethod::POST : RequestMethod::GET, ...$formFields)
+        );
+    }
+
+    public function createFormForResourceCreation(
+        string $pageTitle,
+        ReflectionClass $class,
+        ?BoundedContextId $boundedContextId,
+        ApieContext $context
+    ): ComponentInterface {
+        $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
+            ? $context->getContext(ContextConstants::RAW_CONTENTS)
+            : [];
+        $form = $this->formComponentFactory->createFromClass($context, $class, ['form'], $filledIn);
+        return $this->createWrapLayout(
+            $pageTitle,
+            $boundedContextId,
+            $context,
+            new Form(RequestMethod::POST, $form)
         );
     }
 }

@@ -18,6 +18,7 @@ use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use Apie\HtmlBuilders\Utils;
 use ReflectionClass;
+use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionType;
 
@@ -77,6 +78,16 @@ final class FormComponentFactory
             if ($constructor) {
                 foreach ($constructor->getParameters() as $parameter) {
                     $components[] = $this->createFromParameter($context, $parameter, $prefix, $filledIn);
+                }
+            }
+            foreach ($context->getApplicableSetters($class) as $key => $setter) {
+                $componentPrefix =  [...$prefix, $key];
+                if ($setter instanceof ReflectionMethod) {
+                    $parameter = end($setter->getParameters());
+                    $typehint = $parameter->getType();
+                    $components[] = $this->createFromType($context, $typehint, $componentPrefix, $filledIn[$key] ?? []);
+                } else {
+                    $components[] = $this->createFromType($context, $setter->getType(), $componentPrefix, $filledIn[$key] ?? []);
                 }
             }
 
