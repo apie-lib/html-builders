@@ -83,7 +83,8 @@ final class FormComponentFactory
             foreach ($context->getApplicableSetters($class) as $key => $setter) {
                 $componentPrefix =  [...$prefix, $key];
                 if ($setter instanceof ReflectionMethod) {
-                    $parameter = end($setter->getParameters());
+                    $parameters = $setter->getParameters();
+                    $parameter = end($parameters);
                     $typehint = $parameter->getType();
                     $components[] = $this->createFromType($context, $typehint, $componentPrefix, $filledIn[$key] ?? []);
                 } else {
