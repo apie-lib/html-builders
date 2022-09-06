@@ -25,6 +25,7 @@
     "symfony/mime":  "6.*"
   },
   "require-dev": {
+    "apie/fixtures": "self.version",
     "phpunit/phpunit": "^9.5",
     "phpspec/prophecy-phpunit": "^2.0"
   },
