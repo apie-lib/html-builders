@@ -5,7 +5,7 @@ use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\Utils;
 
-class TabSplit extends BaseComponent
+class FormSplit extends BaseComponent
 {
     public function __construct(string $name, string $value, ComponentHashmap $tabComponents)
     {

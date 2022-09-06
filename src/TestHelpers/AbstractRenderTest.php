@@ -7,6 +7,8 @@ use Apie\Core\Enums\RequestMethod;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Form;
+use Apie\HtmlBuilders\Components\Forms\FormSplit;
+use Apie\HtmlBuilders\Components\Forms\HiddenField;
 use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
@@ -16,6 +18,7 @@ use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\ComponentRendererInterface;
+use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Generator;
 use PHPUnit\Framework\TestCase;
 
@@ -130,6 +133,22 @@ abstract class AbstractRenderTest extends TestCase
         yield 'Simple password field' => [
             'expected-input-password.html',
             new Input('name', 'value', 'password')
+        ];
+        yield 'Hidden field' => [
+            'expected-hidden-field.html',
+            new HiddenField('name', 'value')
+        ];
+
+        yield 'Union type' => [
+            'expected-type-split.html',
+            new FormSplit(
+                'form[name]',
+                '42',
+                new ComponentHashmap([
+                    'input' => new Input('name', 'value'),
+                    'password' => new Input('name', 'value', 'password')
+                ])
+            )
         ];
     }
 }

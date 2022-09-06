@@ -2,7 +2,7 @@
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
 use Apie\Core\Context\ApieContext;
-use Apie\HtmlBuilders\Components\Forms\TabSplit;
+use Apie\HtmlBuilders\Components\Forms\FormSplit;
 use Apie\HtmlBuilders\Factories\FormComponentFactory;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -30,7 +30,7 @@ class UnionTypehintComponentProvider implements FormComponentProviderInterface
             $key = $this->getSafePanelName($subType);
             $components[$key] = $formComponentFactory->createFromType($context, $subType, $prefix, $filledIn);
         }
-        return new TabSplit(Utils::toFormName($prefix), $filledIn[end($prefix)] ?? '', new ComponentHashmap($components));
+        return new FormSplit(Utils::toFormName($prefix), $filledIn[end($prefix)] ?? '', new ComponentHashmap($components));
     }
 
     public function getSafePanelName(ReflectionType $type): string

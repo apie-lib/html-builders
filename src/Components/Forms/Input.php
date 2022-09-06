@@ -2,6 +2,7 @@
 namespace Apie\HtmlBuilders\Components\Forms;
 
 use Apie\HtmlBuilders\Components\BaseComponent;
+use LogicException;
 
 class Input extends BaseComponent
 {
@@ -10,6 +11,11 @@ class Input extends BaseComponent
      */
     public function __construct(string $name, string $value, string $type = 'text', array $additionalAttributes = [])
     {
+        if ($type === 'hidden') {
+            throw new LogicException(
+                'Do not use class ' . __CLASS__ . ' for hidden input fields, use ' . HiddenField::class . ' instead.'
+            );
+        }
         parent::__construct(
             [
                 'name' => $name,

@@ -2,18 +2,22 @@
 namespace Apie\HtmlBuilders\Factories;
 
 use Apie\Core\Context\ApieContext;
+use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Factories\Concrete\BooleanComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\DateTimeComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\DtoComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\EntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\EnumComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\FloatComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\IntComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\UnionTypehintComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ValueObjectComponentProvider;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use Apie\HtmlBuilders\Utils;
+use ReflectionClass;
 use ReflectionParameter;
 use ReflectionType;
 
@@ -31,6 +35,8 @@ final class FormComponentFactory
         {
             return new self(
                 new UnionTypehintComponentProvider(),
+                new PolymorphicEntityComponentProvider(),
+                new EntityComponentProvider(),
                 new BooleanComponentProvider(),
                 new EnumComponentProvider(),
                 new FloatComponentProvider(),
@@ -62,5 +68,21 @@ final class FormComponentFactory
             $prefix =  [...$prefix, $parameter->name];
             $typehint = $parameter->getType();
             return $this->createFromType($context, $typehint, $prefix, $filledIn);
+        }
+
+        public function createFromClass(ApieContext $context, ReflectionClass $class, array $prefix, array $filledIn): ComponentInterface
+        {
+            $components = [];
+            $constructor = $class->getConstructor();
+            if ($constructor) {
+                foreach ($constructor->getParameters() as $parameter) {
+                    $components[] = $this->createFromParameter($context, $parameter, $prefix, $filledIn);
+                }
+            }
+
+            return new FormGroup(
+                Utils::toFormName($prefix),
+                ...$components
+            );
         }
 }
