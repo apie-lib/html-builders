@@ -38,9 +38,10 @@ class PolymorphicEntityComponentProvider implements FormComponentProviderInterfa
         /** @var DiscriminatorMapping $mapping */
         $mapping = $method->invoke(null);
         $propertyName = $mapping->getPropertyName();
-        $value = $filledIn[$propertyName] ?? reset($mapping->getConfigs());
+        $configs = $mapping->getConfigs();
+        $value = $filledIn[$propertyName] ?? reset($configs);
         $components = [];
-        foreach ($mapping->getConfigs() as $config) {
+        foreach ($configs as $config) {
             $components[$config->getDiscriminator()] = $formComponentFactory->createFromClass(
                 $context,
                 new ReflectionClass($config->getClassName()),
