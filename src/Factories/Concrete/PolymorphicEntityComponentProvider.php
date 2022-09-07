@@ -20,7 +20,8 @@ class PolymorphicEntityComponentProvider implements FormComponentProviderInterfa
     {
         if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName()) && $context->hasContext(FormComponentFactory::class)) {
             $refl = new ReflectionClass($type->getName());
-            return $refl->implementsInterface(PolymorphicEntityInterface::class);
+            return $refl->implementsInterface(PolymorphicEntityInterface::class)
+                && $refl->getMethod('getDiscriminatorMapping')->getDeclaringClass()->name === $refl->name;
         }
         return false;
     }
@@ -34,20 +35,18 @@ class PolymorphicEntityComponentProvider implements FormComponentProviderInterfa
         $formComponentFactory = $context->getContext(FormComponentFactory::class);
         $refl = new ReflectionClass($type->getName());
         $method = $refl->getMethod('getDiscriminatorMapping');
-        if ($method->getDeclaringClass()->name === $refl->name) {
-            /** @var DiscriminatorMapping $mapping */
-            $mapping = $method->invoke(null);
-            $propertyName = $mapping->getPropertyName();
-            $value = $filledIn[$propertyName] ?? reset($mapping->getConfigs());
-            $components = [];
-            foreach ($mapping->getConfigs() as $config) {
-                $components[$config->getDiscriminator()] = $formComponentFactory->createFromClass(
-                    $context,
-                    new ReflectionClass($config->getClassName()),
-                    $prefix,
-                    $filledIn
-                );
-            }
+        /** @var DiscriminatorMapping $mapping */
+        $mapping = $method->invoke(null);
+        $propertyName = $mapping->getPropertyName();
+        $value = $filledIn[$propertyName] ?? reset($mapping->getConfigs());
+        $components = [];
+        foreach ($mapping->getConfigs() as $config) {
+            $components[$config->getDiscriminator()] = $formComponentFactory->createFromClass(
+                $context,
+                new ReflectionClass($config->getClassName()),
+                $prefix,
+                $filledIn
+            );
         }
 
         return new FormSplit(Utils::toFormName([...$prefix, $propertyName]), $value, new ComponentHashmap($components));

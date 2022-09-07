@@ -17,7 +17,7 @@ class EntityComponentProvider implements FormComponentProviderInterface
     {
         if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName()) && $context->hasContext(FormComponentFactory::class)) {
             $refl = new ReflectionClass($type->getName());
-            return $refl->implementsInterface(EntityInterface::class) && !$refl->implementsInterface(PolymorphicEntityInterface::class);
+            return $refl->isInstantiable() && $refl->implementsInterface(EntityInterface::class) && !$refl->implementsInterface(PolymorphicEntityInterface::class);
         }
         return false;
     }
@@ -33,7 +33,8 @@ class EntityComponentProvider implements FormComponentProviderInterface
             $context,
             new ReflectionClass($type->getName()),
             $prefix,
-            $filledIn
+            $filledIn,
+            false
         );
     }
 }

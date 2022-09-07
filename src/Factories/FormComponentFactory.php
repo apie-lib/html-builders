@@ -14,6 +14,7 @@ use Apie\HtmlBuilders\Factories\Concrete\IntComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\UnionTypehintComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ValueObjectComponentProvider;
+use Apie\HtmlBuilders\Factories\ReflectionTypeFactory;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use Apie\HtmlBuilders\Utils;
@@ -71,9 +72,19 @@ final class FormComponentFactory
             return $this->createFromType($context, $typehint, $prefix, $filledIn);
         }
 
-        public function createFromClass(ApieContext $context, ReflectionClass $class, array $prefix, array $filledIn): ComponentInterface
+        public function createFromClass(ApieContext $context, ReflectionClass $class, array $prefix, array $filledIn, bool $providerCheck = true): ComponentInterface
         {
             $components = [];
+            if ($providerCheck) {
+                $typehint = ReflectionTypeFactory::createReflectionType($class->name);
+                $context = $context->withContext(FormComponentFactory::class, $this);
+                foreach ($this->formComponentProviders as $formComponentProvider) {
+                    if ($formComponentProvider->supports($typehint, $context)) {
+                        return $formComponentProvider->createComponentFor($typehint, $context, $prefix, $filledIn);
+                    }
+                }
+            }
+
             $constructor = $class->getConstructor();
             if ($constructor) {
                 foreach ($constructor->getParameters() as $parameter) {
@@ -91,7 +102,6 @@ final class FormComponentFactory
                     $components[] = $this->createFromType($context, $setter->getType(), $componentPrefix, $filledIn[$key] ?? []);
                 }
             }
-
             return new FormGroup(
                 Utils::toFormName($prefix),
                 ...$components
