@@ -7,10 +7,11 @@ use RuntimeException;
 
 /**
  * This code is evil, do not reuse!
- * 
+ *
  * @internal
  */
-final class ReflectionTypeFactory {
+final class ReflectionTypeFactory
+{
     private static array $alreadyCreated = [];
 
     public static function createReflectionType(string $typehint): ReflectionType

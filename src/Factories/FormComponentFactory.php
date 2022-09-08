@@ -14,7 +14,6 @@ use Apie\HtmlBuilders\Factories\Concrete\IntComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\UnionTypehintComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ValueObjectComponentProvider;
-use Apie\HtmlBuilders\Factories\ReflectionTypeFactory;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use Apie\HtmlBuilders\Utils;
