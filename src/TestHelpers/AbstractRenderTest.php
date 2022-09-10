@@ -7,6 +7,7 @@ use Apie\Core\Enums\RequestMethod;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Form;
+use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
 use Apie\HtmlBuilders\Components\Forms\HiddenField;
 use Apie\HtmlBuilders\Components\Forms\Input;
@@ -19,6 +20,7 @@ use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\ComponentRendererInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
+use Apie\HtmlBuilders\ValueObjects\FormName;
 use Generator;
 use PHPUnit\Framework\TestCase;
 
@@ -142,12 +144,21 @@ abstract class AbstractRenderTest extends TestCase
         yield 'Union type' => [
             'expected-type-split.html',
             new FormSplit(
-                'form[name]',
+                new FormName('name'),
                 '42',
                 new ComponentHashmap([
                     'input' => new Input('name', 'value'),
                     'password' => new Input('name', 'value', 'password')
                 ])
+            )
+        ];
+
+        yield 'Form list' => [
+            'expected-form-list.html',
+            new FormPrototypeList(
+                new FormName('name'),
+                [],
+                new Input('name', 'value', 'tel')
             )
         ];
     }

@@ -83,8 +83,9 @@ class ComponentFactory
         $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
             ? $context->getContext(ContextConstants::RAW_CONTENTS)
             : [];
+        $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
         foreach ($method->getParameters() as $parameter) {
-            $formFields[] = $this->formComponentFactory->createFromParameter($context, $parameter, ['form'], $filledIn);
+            $formFields[] = $this->formComponentFactory->createFromParameter($parameter, $formBuildContext);
         }
         return $this->createWrapLayout(
             $pageTitle,
@@ -103,7 +104,8 @@ class ComponentFactory
         $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
             ? $context->getContext(ContextConstants::RAW_CONTENTS)
             : [];
-        $form = $this->formComponentFactory->createFromClass($context, $class, ['form'], $filledIn);
+        $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
+        $form = $this->formComponentFactory->createFromClass($class, $formBuildContext);
         return $this->createWrapLayout(
             $pageTitle,
             $boundedContextId,

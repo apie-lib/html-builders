@@ -9,7 +9,7 @@ class Input extends BaseComponent
     /**
      * @param array<string, string|int> $additionalAttributes
      */
-    public function __construct(string $name, string $value, string $type = 'text', array $additionalAttributes = [])
+    public function __construct(string $name, ?string $value, string $type = 'text', array $additionalAttributes = [], bool $nullable = false)
     {
         if ($type === 'hidden') {
             throw new LogicException(
@@ -21,6 +21,7 @@ class Input extends BaseComponent
                 'name' => $name,
                 'value' => $value,
                 'type' => $type,
+                'nullable' => $nullable,
                 'additionalAttributes' => $additionalAttributes,
             ]
         );

@@ -1,22 +1,22 @@
 <?php
 namespace Apie\HtmlBuilders\Components\Forms;
 
-use Apie\Core\Enums\RequestMethod;
 use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 
-class Form extends BaseComponent
+class FormPrototypeList extends BaseComponent
 {
-    public function __construct(RequestMethod $method, ComponentInterface... $formElements)
+    public function __construct(FormName $name, ?array $value, ComponentInterface $prototype)
     {
         parent::__construct(
             [
-                'method' => $method->value,
+                'name' => $name,
+                'value' => $value,
             ],
             new ComponentHashmap([
-                'formElements' => new FormGroup(new FormName(), ...$formElements),
+                '__proto__' => $prototype->withName($name->getPrototypeName()),
             ])
         );
     }

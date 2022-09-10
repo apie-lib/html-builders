@@ -2,17 +2,17 @@
 namespace Apie\HtmlBuilders\Components\Forms;
 
 use Apie\HtmlBuilders\Components\BaseComponent;
-use Apie\HtmlBuilders\Utils;
+use Apie\HtmlBuilders\ValueObjects\FormName;
 
 class Checkbox extends BaseComponent
 {
-    public function __construct(string $name, string $value)
+    public function __construct(FormName $name, ?bool $value, bool $nullable = false)
     {
         parent::__construct(
             [
                 'name' => $name,
-                'internalTypeName' => Utils::internalName($name),
                 'value' => $value,
+                'nullable' => $nullable,
             ]
         );
     }

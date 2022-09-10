@@ -1,9 +1,8 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Context\ApieContext;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
-use Apie\HtmlBuilders\Factories\FormComponentFactory;
+use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use ReflectionClass;
@@ -12,9 +11,9 @@ use ReflectionType;
 
 class ValueObjectComponentProvider implements FormComponentProviderInterface
 {
-    public function supports(ReflectionType $type, ApieContext $context): bool
+    public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
-        if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName()) && $context->hasContext(FormComponentFactory::class)) {
+        if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName())) {
             $refl = new ReflectionClass($type->getName());
             return $refl->implementsInterface(ValueObjectInterface::class);
         }
@@ -24,12 +23,11 @@ class ValueObjectComponentProvider implements FormComponentProviderInterface
     /**
      * @param ReflectionNamedType $type
      */
-    public function createComponentFor(ReflectionType $type, ApieContext $context, array $prefix, array $filledIn): ComponentInterface
+    public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        /** @var FormComponentFactory $formComponentFactory */
-        $formComponentFactory = $context->getContext(FormComponentFactory::class);
+        $formComponentFactory = $context->getComponentFactory();
         $refl = new ReflectionClass($type->getName());
         $method = $refl->getMethod('toNative');
-        return $formComponentFactory->createFromType($context, $method->getReturnType(), $prefix, $filledIn);
+        return $formComponentFactory->createFromType($method->getReturnType(), $context);
     }
 }

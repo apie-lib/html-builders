@@ -1,36 +1,33 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Context\ApieContext;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
-use Apie\HtmlBuilders\Factories\FormComponentFactory;
+use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
-use Apie\HtmlBuilders\Utils;
 use ReflectionType;
 use ReflectionUnionType;
 
 class UnionTypehintComponentProvider implements FormComponentProviderInterface
 {
-    public function supports(ReflectionType $type, ApieContext $context): bool
+    public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
-        return $type instanceof ReflectionUnionType && $context->hasContext(FormComponentFactory::class);
+        return $type instanceof ReflectionUnionType;
     }
 
     /**
      * @param ReflectionUnionType $type
      */
-    public function createComponentFor(ReflectionType $type, ApieContext $context, array $prefix, array $filledIn): ComponentInterface
+    public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        /** @var FormComponentFactory $formComponentFactory */
-        $formComponentFactory = $context->getContext(FormComponentFactory::class);
+        $formComponentFactory = $context->getComponentFactory();
         $components = [];
         foreach ($type->getTypes() as $subType) {
             $key = $this->getSafePanelName($subType);
-            $components[$key] = $formComponentFactory->createFromType($context, $subType, $prefix, $filledIn);
+            $components[$key] = $formComponentFactory->createFromType($subType, $context);
         }
-        return new FormSplit(Utils::toFormName($prefix), $filledIn[end($prefix)] ?? '', new ComponentHashmap($components));
+        return new FormSplit($context->getFormName(), $context->getFilledInValue($type->allowsNull() ? null : ''), new ComponentHashmap($components));
     }
 
     public function getSafePanelName(ReflectionType $type): string

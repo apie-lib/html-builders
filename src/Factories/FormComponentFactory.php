@@ -11,12 +11,13 @@ use Apie\HtmlBuilders\Factories\Concrete\EntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\EnumComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\FloatComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\IntComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\ItemListComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\UnionTypehintComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ValueObjectComponentProvider;
+use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
-use Apie\HtmlBuilders\Utils;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
@@ -24,7 +25,7 @@ use ReflectionType;
 
 final class FormComponentFactory
 {
-    /** @var FormComponentProviderInterface */
+    /** @var FormComponentProviderInterface[] */
     private $formComponentProviders;
 
     public function __construct(FormComponentProviderInterface... $formComponentProviders)
@@ -37,6 +38,7 @@ final class FormComponentFactory
             return new self(
                 new UnionTypehintComponentProvider(),
                 new PolymorphicEntityComponentProvider(),
+                new ItemListComponentProvider(),
                 new EntityComponentProvider(),
                 new BooleanComponentProvider(),
                 new EnumComponentProvider(),
@@ -49,60 +51,71 @@ final class FormComponentFactory
             );
         }
 
-        public function createFromType(ApieContext $context, ?ReflectionType $typehint, array $prefix, array $filledIn): ComponentInterface
+        public function createFormBuildContext(ApieContext $context, array $filledIn = []): FormBuildContext
         {
-            $context = $context->withContext(FormComponentFactory::class, $this);
-            foreach ($this->formComponentProviders as $formComponentProvider) {
-                if ($formComponentProvider->supports($typehint, $context)) {
-                    return $formComponentProvider->createComponentFor($typehint, $context, $prefix, $filledIn);
-                }
-            }
-
-            return new Input(
-                Utils::toFormName($prefix),
-                $filledIn[end($prefix)] ?? ''
+            return new FormBuildContext(
+                $this,
+                $context->withContext(FormComponentFactory::class, $this),
+                $filledIn
             );
         }
 
-        public function createFromParameter(ApieContext $context, ReflectionParameter $parameter, array $prefix, array $filledIn): ComponentInterface
+        public function createFromType(?ReflectionType $typehint, FormBuildContext $context): ComponentInterface
         {
-            $prefix =  [...$prefix, $parameter->name];
-            $typehint = $parameter->getType();
-            return $this->createFromType($context, $typehint, $prefix, $filledIn);
+            foreach ($this->formComponentProviders as $formComponentProvider) {
+                if ($formComponentProvider->supports($typehint, $context)) {
+                    return $formComponentProvider->createComponentFor($typehint, $context);
+                }
+            }
+            $allowsNull = $typehint === null || $typehint->allowsNull();
+
+            return new Input(
+                $context->getFormName(),
+                $context->getFilledInValue($allowsNull ? null : ''),
+                'text',
+                [],
+                $allowsNull
+            );
         }
 
-        public function createFromClass(ApieContext $context, ReflectionClass $class, array $prefix, array $filledIn, bool $providerCheck = true): ComponentInterface
+        public function createFromParameter(ReflectionParameter $parameter, FormBuildContext $context): ComponentInterface
         {
-            $components = [];
+            $childContext = $context->createChildContext($parameter->name);
+            $typehint = $parameter->getType();
+            return $this->createFromType($typehint, $childContext);
+        }
+
+        public function createFromClass(ReflectionClass $class, FormBuildContext $context, bool $providerCheck = true): ComponentInterface
+        {
             if ($providerCheck) {
                 $typehint = ReflectionTypeFactory::createReflectionType($class->name);
-                $context = $context->withContext(FormComponentFactory::class, $this);
                 foreach ($this->formComponentProviders as $formComponentProvider) {
                     if ($formComponentProvider->supports($typehint, $context)) {
-                        return $formComponentProvider->createComponentFor($typehint, $context, $prefix, $filledIn);
+                        return $formComponentProvider->createComponentFor($typehint, $context);
                     }
                 }
             }
 
+            $components = [];
             $constructor = $class->getConstructor();
             if ($constructor) {
                 foreach ($constructor->getParameters() as $parameter) {
-                    $components[] = $this->createFromParameter($context, $parameter, $prefix, $filledIn);
+                    $components[] = $this->createFromParameter($parameter, $context);
                 }
             }
             foreach ($context->getApplicableSetters($class) as $key => $setter) {
-                $componentPrefix =  [...$prefix, $key];
+                $childContext = $context->createChildContext($key);
                 if ($setter instanceof ReflectionMethod) {
                     $parameters = $setter->getParameters();
                     $parameter = end($parameters);
                     $typehint = $parameter->getType();
-                    $components[] = $this->createFromType($context, $typehint, $componentPrefix, $filledIn[$key] ?? []);
+                    $components[] = $this->createFromType($typehint, $childContext);
                 } else {
-                    $components[] = $this->createFromType($context, $setter->getType(), $componentPrefix, $filledIn[$key] ?? []);
+                    $components[] = $this->createFromType($setter->getType(), $childContext);
                 }
             }
             return new FormGroup(
-                Utils::toFormName($prefix),
+                $context->getFormName(),
                 ...$components
             );
         }

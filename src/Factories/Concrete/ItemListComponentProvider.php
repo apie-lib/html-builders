@@ -1,8 +1,8 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Entities\EntityInterface;
-use Apie\Core\Entities\PolymorphicEntityInterface;
+use Apie\Core\Lists\ItemList;
+use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -10,13 +10,13 @@ use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionType;
 
-class EntityComponentProvider implements FormComponentProviderInterface
+class ItemListComponentProvider implements FormComponentProviderInterface
 {
-    public function supports(ReflectionType $type, FormBuildContext $context): bool
+    public function supports(ReflectionType $type, FormBuildContext $formBuildContext): bool
     {
         if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName())) {
             $refl = new ReflectionClass($type->getName());
-            return $refl->isInstantiable() && $refl->implementsInterface(EntityInterface::class) && !$refl->implementsInterface(PolymorphicEntityInterface::class);
+            return $refl->isInstantiable() && $refl->isSubclassOf(ItemList::class);
         }
         return false;
     }
@@ -27,10 +27,14 @@ class EntityComponentProvider implements FormComponentProviderInterface
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
         $formComponentFactory = $context->getComponentFactory();
-        return $formComponentFactory->createFromClass(
-            new ReflectionClass($type->getName()),
-            $context,
-            false
+        $refl = new ReflectionClass($type->getName());
+        return new FormPrototypeList(
+            $context->getFormName(),
+            $context->getFilledInValue($type->allowsNull() ? null : []),
+            $formComponentFactory->createFromType(
+                $refl->getMethod('offsetGet')->getReturnType(),
+                $context->createChildContext('__PROTO__')
+            )
         );
     }
 }
