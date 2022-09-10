@@ -61,7 +61,7 @@ final class FormName implements ValueObjectInterface, Stringable
             ['[', ']'],
             '__',
             '__' . $this . '__'
-        ));
+        )) . md5((string) $this);
     }
 
     public function getTypehintName(): string

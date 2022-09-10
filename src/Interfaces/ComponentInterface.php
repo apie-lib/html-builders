@@ -9,5 +9,5 @@ interface ComponentInterface
 
     public function getAttribute(string $key): mixed;
 
-    public function withName(FormName|string $name): ComponentInterface;
+    public function withName(FormName $name): ComponentInterface;
 }

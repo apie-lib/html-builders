@@ -11,6 +11,7 @@ use Apie\HtmlBuilders\Factories\Concrete\EntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\EnumComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\FloatComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\IntComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\ItemHashmapComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ItemListComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\UnionTypehintComponentProvider;
@@ -39,6 +40,7 @@ final class FormComponentFactory
                 new UnionTypehintComponentProvider(),
                 new PolymorphicEntityComponentProvider(),
                 new ItemListComponentProvider(),
+                new ItemHashmapComponentProvider(),
                 new EntityComponentProvider(),
                 new BooleanComponentProvider(),
                 new EnumComponentProvider(),

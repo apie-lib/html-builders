@@ -2,6 +2,7 @@
 namespace Apie\HtmlBuilders\Components\Forms;
 
 use Apie\HtmlBuilders\Components\BaseComponent;
+use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 
@@ -17,5 +18,15 @@ class FormSplit extends BaseComponent
             ],
             $tabComponents
         );
+    }
+
+    public function withName(FormName $name): ComponentInterface
+    {
+        $item = clone $this;
+        $item->attributes['name'] = $name;
+        foreach ($item->childComponents as $key => $component) {
+            $item->childComponents[$key] = $component->withName($name);
+        }
+        return $item;
     }
 }

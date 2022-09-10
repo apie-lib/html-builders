@@ -7,9 +7,9 @@ use Apie\HtmlBuilders\ValueObjects\FormName;
 
 abstract class BaseComponent implements ComponentInterface
 {
-    private ComponentHashmap $childComponents;
+    protected ComponentHashmap $childComponents;
 
-    public function __construct(private array $attributes, ?ComponentHashmap $childComponents = null)
+    public function __construct(protected array $attributes, ?ComponentHashmap $childComponents = null)
     {
         $this->childComponents = $childComponents ?? new ComponentHashmap();
     }
@@ -24,7 +24,7 @@ abstract class BaseComponent implements ComponentInterface
         return $this->attributes[$key] ?? null;
     }
 
-    public function withName(FormName|string $name): ComponentInterface
+    public function withName(FormName $name): ComponentInterface
     {
         $item = clone $this;
         $item->attributes['name'] = $name;

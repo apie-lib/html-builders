@@ -6,7 +6,7 @@ use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 
-class FormPrototypeList extends BaseComponent
+class FormPrototypeHashmap extends BaseComponent
 {
     public function __construct(FormName $name, ?array $value, ComponentInterface $prototype)
     {
