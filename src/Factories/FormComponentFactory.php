@@ -3,6 +3,7 @@ namespace Apie\HtmlBuilders\Factories;
 
 use Apie\Core\Context\ApieContext;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
+use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Factories\Concrete\BooleanComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\DateTimeComponentProvider;
@@ -84,7 +85,15 @@ final class FormComponentFactory
         {
             $childContext = $context->createChildContext($parameter->name);
             $typehint = $parameter->getType();
-            return $this->createFromType($typehint, $childContext);
+            $component = $this->createFromType($typehint, $childContext);
+            if ($parameter->isVariadic()) {
+                return new FormPrototypeList(
+                    $context->getFormName(),
+                    $context->getFilledInValue([]),
+                    $component
+                );
+            }
+            return $component;
         }
 
         public function createFromClass(ReflectionClass $class, FormBuildContext $context, bool $providerCheck = true): ComponentInterface
