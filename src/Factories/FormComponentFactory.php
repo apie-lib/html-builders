@@ -88,8 +88,8 @@ final class FormComponentFactory
             $component = $this->createFromType($typehint, $childContext);
             if ($parameter->isVariadic()) {
                 return new FormPrototypeList(
-                    $context->createChildContext('__PROTO__')->getFormName(),
-                    $context->getFilledInValue([]),
+                    $childContext->getFormName(),
+                    $childContext->getFilledInValue([]),
                     $component
                 );
             }
