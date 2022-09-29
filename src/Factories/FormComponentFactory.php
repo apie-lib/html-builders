@@ -6,6 +6,7 @@ use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Factories\Concrete\BooleanComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\CompositeValueObjectComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\DateTimeComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\DtoComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\EntityComponentProvider;
@@ -40,6 +41,7 @@ final class FormComponentFactory
             return new self(
                 new UnionTypehintComponentProvider(),
                 new PolymorphicEntityComponentProvider(),
+                new CompositeValueObjectComponentProvider(),
                 new ItemListComponentProvider(),
                 new ItemHashmapComponentProvider(),
                 new EntityComponentProvider(),
