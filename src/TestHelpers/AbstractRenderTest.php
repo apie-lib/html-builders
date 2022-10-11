@@ -98,7 +98,7 @@ abstract class AbstractRenderTest extends TestCase
         ];
         yield 'Logo' => [
             'expected-logo.html',
-            new Logo(),
+            new Logo($defaultConfiguration),
         ];
         yield 'Login select' => [
             'expected-login-select.html',
