@@ -23,7 +23,7 @@ final class AssetManager
     public function withAddedPath(string... $paths): self
     {
         $returnValue = new self();
-        $returnValue->paths = [...$paths, ...$this->paths];
+        $returnValue->paths = [...$this->paths, ...$paths];
 
         return $returnValue;
     }
