@@ -1,6 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\Factories;
 
+use LogicException;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionType;
@@ -32,6 +33,18 @@ final class ReflectionTypeFactory
         return $refl->getReturnType()->getTypes()[1];
     }
 
+    private static function createTrueType(): ReflectionType
+    {
+        if (PHP_VERSION_ID < 80200) {
+            throw new LogicException('true typehint not supported in PHP < 8.2');
+        }
+        $fakeClass = eval(
+            'return new class { public function method(): string|true {} };'
+        );
+        $refl = new ReflectionClass($fakeClass);
+        return $refl->getMethod('method')->getReturnType()->getTypes()[1];
+    }
+
     public static function createReflectionType(string $typehint): ReflectionType
     {
         if (strpos($typehint, ';') !== false || strpos($typehint, '/') !== false) {
@@ -42,6 +55,8 @@ final class ReflectionTypeFactory
                 self::$alreadyCreated[$typehint] = self::createNullType();
             } elseif ($typehint === 'false') {
                 self::$alreadyCreated[$typehint] = self::createFalseType();
+            } elseif ($typehint === 'true') {
+                self::$alreadyCreated[$typehint] = self::createTrueType();
             } else {
                 $fakeClass = eval(
                     'return new class { public function method(): ' . $typehint . '{} };'
