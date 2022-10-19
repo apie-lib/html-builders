@@ -8,7 +8,7 @@ use Apie\HtmlBuilders\ValueObjects\FormName;
 
 class FormSplit extends BaseComponent
 {
-    public function __construct(FormName $name, string $value, ComponentHashmap $tabComponents)
+    public function __construct(FormName $name, ?string $value, ComponentHashmap $tabComponents)
     {
         parent::__construct(
             [

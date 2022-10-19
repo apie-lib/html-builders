@@ -2,8 +2,8 @@
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
 use Apie\CompositeValueObjects\CompositeValueObject;
+use Apie\Core\ReflectionTypeFactory;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
-use Apie\HtmlBuilders\Factories\ReflectionTypeFactory;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;

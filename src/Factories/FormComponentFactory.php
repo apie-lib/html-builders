@@ -2,6 +2,11 @@
 namespace Apie\HtmlBuilders\Factories;
 
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Metadata\CompositeMetadata;
+use Apie\Core\Metadata\MetadataFactory;
+use Apie\Core\Other\DiscriminatorMapping;
+use Apie\Core\ReflectionTypeFactory;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\Input;
@@ -23,8 +28,11 @@ use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionParameter;
+use ReflectionProperty;
 use ReflectionType;
+use RuntimeException;
 
 final class FormComponentFactory
 {
@@ -109,22 +117,36 @@ final class FormComponentFactory
                 }
             }
 
-            $components = [];
-            $constructor = $class->getConstructor();
-            if ($constructor) {
-                foreach ($constructor->getParameters() as $parameter) {
-                    $components[] = $this->createFromParameter($parameter, $context);
-                }
+            $metadata = MetadataFactory::getCreationMetadata($class, $context->getApieContext());
+            if (!$metadata instanceof CompositeMetadata) {
+                throw new InvalidTypeException($metadata, CompositeMetadata::class);
             }
-            foreach ($context->getApplicableSetters($class) as $key => $setter) {
-                $childContext = $context->createChildContext($key);
-                if ($setter instanceof ReflectionMethod) {
-                    $parameters = $setter->getParameters();
-                    $parameter = end($parameters);
-                    $typehint = $parameter->getType();
-                    $components[] = $this->createFromType($typehint, $childContext);
-                } else {
-                    $components[] = $this->createFromType($setter->getType(), $childContext);
+
+            $components = [];
+            foreach ($metadata->getHashmap() as $fieldName => $reflectionData) {
+                $childContext = $context->createChildContext($fieldName);
+                switch (get_class($reflectionData)) {
+                    case ReflectionNamedType::class:
+                    case ReflectionUnionType::class:
+                    case ReflectionIntersectionType::class:
+                        $components[] = $this->createFromType($typehint, $childContext);
+                        // no break
+                    case ReflectionMethod::class:
+                        $parameters = $reflectionData->getParameters();
+                        $parameter = end($parameters);
+                        $typehint = $parameter->getType();
+                        $components[] = $this->createFromType($typehint, $childContext);
+                        // no break
+                    case ReflectionProperty::class:
+                        $components[] = $this->createFromType($reflectionData->getType(), $childContext);
+                        break;
+                    case ReflectionParameter::class:
+                        $components[] = $this->createFromParameter($reflectionData, $context);
+                        // no break
+                    case DiscriminatorMapping::class:
+                        break;
+                    default:
+                        throw new RuntimeException('Unknown class ' . get_class($reflectionData));
                 }
             }
             return new FormGroup(

@@ -19,6 +19,11 @@ final class FormBuildContext
         $this->formName = new FormName();
     }
 
+    public function getApieContext(): ApieContext
+    {
+        return $this->context;
+    }
+
     public function getComponentFactory(): FormComponentFactory
     {
         return $this->formComponentFactory;
