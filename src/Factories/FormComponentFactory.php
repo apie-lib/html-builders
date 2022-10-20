@@ -18,6 +18,7 @@ use Apie\HtmlBuilders\Factories\Concrete\DtoComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\EntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\EnumComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\FloatComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\HiddenIdComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\IntComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ItemHashmapComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ItemListComponentProvider;
@@ -48,6 +49,7 @@ final class FormComponentFactory
         public static function create(FormComponentProviderInterface... $formComponentProviders): FormComponentFactory
         {
             return new self(
+                new HiddenIdComponentProvider(),
                 new UnionTypehintComponentProvider(),
                 new PolymorphicEntityComponentProvider(),
                 //new CompositeValueObjectComponentProvider(),
