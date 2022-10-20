@@ -27,6 +27,7 @@ class CompositeValueObjectComponentProvider implements FormComponentProviderInte
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
+        @trigger_error(__CLASS__ .  ' is deprecated, use EntityComponentProvider instead', E_USER_DEPRECATED);
         assert($type instanceof ReflectionNamedType);
         $refl = new ReflectionClass($type->getName());
         /** @var array<string, FieldInterface> $fields */

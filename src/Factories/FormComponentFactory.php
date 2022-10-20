@@ -5,6 +5,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\MetadataFactory;
+use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Other\DiscriminatorMapping;
 use Apie\Core\ReflectionTypeFactory;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
@@ -49,17 +50,17 @@ final class FormComponentFactory
             return new self(
                 new UnionTypehintComponentProvider(),
                 new PolymorphicEntityComponentProvider(),
-                new CompositeValueObjectComponentProvider(),
+                //new CompositeValueObjectComponentProvider(),
                 new ItemListComponentProvider(),
                 new ItemHashmapComponentProvider(),
-                new EntityComponentProvider(),
                 new BooleanComponentProvider(),
                 new EnumComponentProvider(),
                 new FloatComponentProvider(),
                 new IntComponentProvider(),
                 new DateTimeComponentProvider(),
-                new ValueObjectComponentProvider(),
-                new DtoComponentProvider(),
+                new EntityComponentProvider(),
+                //new ValueObjectComponentProvider(),
+                //new DtoComponentProvider(),
                 ...$formComponentProviders,
             );
         }
@@ -79,6 +80,13 @@ final class FormComponentFactory
                 if ($formComponentProvider->supports($typehint, $context)) {
                     return $formComponentProvider->createComponentFor($typehint, $context);
                 }
+            }
+            $metadata = MetadataFactory::getCreationMetadata(
+                $typehint ?? ReflectionTypeFactory::createReflectionType('mixed'),
+                $context->getApieContext()
+            );
+            if ($metadata instanceof CompositeMetadata) {
+                return $this->createFromMetadata($metadata, $context);
             }
             $allowsNull = $typehint === null || $typehint->allowsNull();
 
@@ -118,6 +126,11 @@ final class FormComponentFactory
             }
 
             $metadata = MetadataFactory::getCreationMetadata($class, $context->getApieContext());
+            return $this->createFromMetadata($metadata, $context);
+        }
+
+        public function createFromMetadata(MetadataInterface $metadata, FormBuildContext $context)
+        {
             if (!$metadata instanceof CompositeMetadata) {
                 throw new InvalidTypeException($metadata, CompositeMetadata::class);
             }
@@ -129,14 +142,14 @@ final class FormComponentFactory
                     case ReflectionNamedType::class:
                     case ReflectionUnionType::class:
                     case ReflectionIntersectionType::class:
-                        $components[] = $this->createFromType($typehint, $childContext);
-                        // no break
+                        $components[] = $this->createFromType($reflectionData, $childContext);
+                        break;
                     case ReflectionMethod::class:
                         $parameters = $reflectionData->getParameters();
                         $parameter = end($parameters);
                         $typehint = $parameter->getType();
                         $components[] = $this->createFromType($typehint, $childContext);
-                        // no break
+                        break;
                     case ReflectionProperty::class:
                         $components[] = $this->createFromType($reflectionData->getType(), $childContext);
                         break;

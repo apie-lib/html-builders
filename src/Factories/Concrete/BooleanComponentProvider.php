@@ -1,6 +1,9 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Enums\ScalarType;
+use Apie\Core\Metadata\MetadataFactory;
+use Apie\Core\Metadata\ScalarMetadata;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\FormBuildContext;
@@ -16,7 +19,8 @@ class BooleanComponentProvider implements FormComponentProviderInterface
 {
     public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
-        return $type instanceof ReflectionNamedType && $type->isBuiltin() && $type->getName() === 'bool';
+        $metadata = MetadataFactory::getCreationMetadata($type, $context->getApieContext());
+        return $metadata instanceof ScalarMetadata && $metadata->toScalarType() === ScalarType::BOOLEAN;
     }
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface

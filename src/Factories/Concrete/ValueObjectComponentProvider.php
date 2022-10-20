@@ -25,6 +25,7 @@ class ValueObjectComponentProvider implements FormComponentProviderInterface
      */
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
+        @trigger_error(__CLASS__ .  ' is deprecated, use default behaviour instead', E_USER_DEPRECATED);
         $formComponentFactory = $context->getComponentFactory();
         $refl = new ReflectionClass($type->getName());
         $method = $refl->getMethod('toNative');
