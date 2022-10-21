@@ -22,6 +22,7 @@ use Apie\HtmlBuilders\Factories\Concrete\HiddenIdComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\IntComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ItemHashmapComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ItemListComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\PasswordComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\UnionTypehintComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ValueObjectComponentProvider;
@@ -49,10 +50,10 @@ final class FormComponentFactory
         public static function create(FormComponentProviderInterface... $formComponentProviders): FormComponentFactory
         {
             return new self(
+                new PasswordComponentProvider(),
                 new HiddenIdComponentProvider(),
                 new UnionTypehintComponentProvider(),
                 new PolymorphicEntityComponentProvider(),
-                //new CompositeValueObjectComponentProvider(),
                 new ItemListComponentProvider(),
                 new ItemHashmapComponentProvider(),
                 new BooleanComponentProvider(),
@@ -61,8 +62,6 @@ final class FormComponentFactory
                 new IntComponentProvider(),
                 new DateTimeComponentProvider(),
                 new EntityComponentProvider(),
-                //new ValueObjectComponentProvider(),
-                //new DtoComponentProvider(),
                 ...$formComponentProviders,
             );
         }

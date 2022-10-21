@@ -11,6 +11,7 @@ use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
 use Apie\HtmlBuilders\Components\Forms\HiddenField;
 use Apie\HtmlBuilders\Components\Forms\Input;
+use Apie\HtmlBuilders\Components\Forms\Password;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
@@ -21,6 +22,7 @@ use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\ComponentRendererInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ValueObjects\FormName;
+use Apie\TextValueObjects\StrongPassword;
 use Generator;
 use PHPUnit\Framework\TestCase;
 
@@ -139,6 +141,10 @@ abstract class AbstractRenderTest extends TestCase
         yield 'Hidden field' => [
             'expected-hidden-field.html',
             new HiddenField('name', 'value')
+        ];
+        yield 'Password field' => [
+            'expected-password-field.html',
+            new Password(StrongPassword::class, new FormName('name'), 'value')
         ];
 
         yield 'Union type' => [
