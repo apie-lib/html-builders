@@ -16,7 +16,7 @@ class FloatComponentProvider implements FormComponentProviderInterface
     public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
         $metadata = MetadataFactory::getCreationMetadata($type, $context->getApieContext());
-        return $metadata instanceof ScalarMetadata && $metadata->toScalarType() === ScalarType::FLOAT;
+        return $metadata->toScalarType() === ScalarType::FLOAT;
     }
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface

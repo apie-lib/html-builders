@@ -16,7 +16,7 @@ class IntComponentProvider implements FormComponentProviderInterface
     public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
         $metadata = MetadataFactory::getCreationMetadata($type, $context->getApieContext());
-        return $metadata instanceof ScalarMetadata && $metadata->toScalarType() === ScalarType::INTEGER;
+        return $metadata->toScalarType() === ScalarType::INTEGER;
     }
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {

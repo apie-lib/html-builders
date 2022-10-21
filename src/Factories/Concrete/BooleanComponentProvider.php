@@ -20,7 +20,7 @@ class BooleanComponentProvider implements FormComponentProviderInterface
     public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
         $metadata = MetadataFactory::getCreationMetadata($type, $context->getApieContext());
-        return $metadata instanceof ScalarMetadata && $metadata->toScalarType() === ScalarType::BOOLEAN;
+        return $metadata->toScalarType() === ScalarType::BOOLEAN;
     }
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface

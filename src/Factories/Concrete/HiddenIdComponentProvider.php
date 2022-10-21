@@ -20,11 +20,11 @@ class HiddenIdComponentProvider implements FormComponentProviderInterface
             return false;
         }
         $metadata = MetadataFactory::getCreationMetadata($type, $context->getApieContext());
-        return $metadata instanceof ScalarMetadata && $metadata->toScalarType() === ScalarType::STRING;
+        return $metadata->toScalarType() === ScalarType::STRING;
     }
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        return new RawContents('<!-- id is filled in automatically !>');
+        return new RawContents('<!-- id is filled in automatically -->');
     }
 }
