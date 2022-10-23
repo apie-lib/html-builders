@@ -8,6 +8,10 @@ use Apie\HtmlBuilders\Lists\ComponentHashmap;
 
 class Overview extends BaseComponent
 {
+    /**
+     * @param array<string|int, mixed> $listData
+     * @param array<int, string> $columns
+     */
     public function __construct(array $listData, array $columns, ?ComponentInterface $pagination = null)
     {
         parent::__construct(

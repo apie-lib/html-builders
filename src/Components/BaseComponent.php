@@ -9,6 +9,7 @@ abstract class BaseComponent implements ComponentInterface
 {
     protected ComponentHashmap $childComponents;
 
+    /** @param array<string|int, mixed> $attributes */
     public function __construct(protected array $attributes, ?ComponentHashmap $childComponents = null)
     {
         $this->childComponents = $childComponents ?? new ComponentHashmap();

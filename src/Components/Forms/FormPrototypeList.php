@@ -8,6 +8,7 @@ use Apie\HtmlBuilders\ValueObjects\FormName;
 
 class FormPrototypeList extends BaseComponent
 {
+    /** @param array<string|int, mixed>|null $value */
     public function __construct(FormName $name, ?array $value, ComponentInterface $prototype)
     {
         parent::__construct(

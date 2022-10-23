@@ -8,6 +8,7 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Datalayers\Lists\PaginatedResult;
 use Apie\Core\Enums\RequestMethod;
+use Apie\Core\Entities\EntityInterface;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Columns\ColumnSelector;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
@@ -39,6 +40,9 @@ class ComponentFactory
         return new RawContents($dashboardContents);
     }
 
+    /**
+     * @param ReflectionClass<EntityInterface> $className
+     */
     public function createResourceOverview(
         ActionResponse $actionResponse,
         ReflectionClass $className,
@@ -95,6 +99,9 @@ class ComponentFactory
         );
     }
 
+    /**
+     * @param ReflectionClass<EntityInterface> $class
+     */
     public function createFormForResourceCreation(
         string $pageTitle,
         ReflectionClass $class,

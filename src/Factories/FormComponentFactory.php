@@ -30,11 +30,13 @@ use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use ReflectionClass;
+use ReflectionIntersectionType;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionType;
+use ReflectionUnionType;
 use RuntimeException;
 
 final class FormComponentFactory
@@ -66,6 +68,9 @@ final class FormComponentFactory
             );
         }
 
+        /**
+         * @param array<string|int, mixed> $filledIn
+         */
         public function createFormBuildContext(ApieContext $context, array $filledIn = []): FormBuildContext
         {
             return new FormBuildContext(
@@ -115,6 +120,9 @@ final class FormComponentFactory
             return $component;
         }
 
+        /**
+         * @param ReflectionClass<object> $class
+         */
         public function createFromClass(ReflectionClass $class, FormBuildContext $context, bool $providerCheck = true): ComponentInterface
         {
             if ($providerCheck) {
@@ -130,7 +138,7 @@ final class FormComponentFactory
             return $this->createFromMetadata($metadata, $context);
         }
 
-        public function createFromMetadata(MetadataInterface $metadata, FormBuildContext $context)
+        public function createFromMetadata(MetadataInterface $metadata, FormBuildContext $context): ComponentInterface
         {
             if (!$metadata instanceof CompositeMetadata) {
                 throw new InvalidTypeException($metadata, CompositeMetadata::class);

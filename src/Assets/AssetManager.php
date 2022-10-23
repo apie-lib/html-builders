@@ -15,7 +15,7 @@ final class AssetManager
     }
 
     /** @param array<int, string> $paths */
-    public static function create(array $paths)
+    public static function create(array $paths): self
     {
         return new self(...$paths);
     }

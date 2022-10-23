@@ -3,14 +3,12 @@ namespace Apie\HtmlBuilders\Components\Forms;
 
 use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
-use Apie\Core\ValueObjects\IsPasswordValueObject;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 
 class Password extends BaseComponent
 {
     /**
-     * @param class-string<ValueObjectInterface&IsPasswordValueObject> $passwordClassname
-     * @param array<string, string|int> $additionalAttributes
+     * @param class-string<ValueObjectInterface> $passwordClassname
      */
     public function __construct(string $passwordClassname, FormName $name, ?string $value, bool $nullable = false)
     {

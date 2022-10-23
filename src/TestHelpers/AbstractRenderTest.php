@@ -46,7 +46,7 @@ abstract class AbstractRenderTest extends TestCase
     /**
      * @dataProvider provideComponents
      */
-    public function testRender(string $expectedFixtureFile, ComponentInterface $component)
+    public function testRender(string $expectedFixtureFile, ComponentInterface $component): void
     {
         $renderer = $this->getRenderer();
         $actual = $renderer->render($component);

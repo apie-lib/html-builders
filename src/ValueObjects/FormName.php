@@ -8,6 +8,7 @@ use Stringable;
 
 final class FormName implements ValueObjectInterface, Stringable
 {
+    /** @var array<int, string> */
     private array $internal = [];
 
     public function __construct(string... $parts)

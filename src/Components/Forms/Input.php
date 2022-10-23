@@ -20,7 +20,7 @@ class Input extends BaseComponent
             [
                 'name' => $name,
                 'value' => $value,
-                'type' => $type,
+                'type' => ($type !== 'text' || $name !== 'password') ? $type : 'password',
                 'nullable' => $nullable,
                 'additionalAttributes' => $additionalAttributes,
             ]

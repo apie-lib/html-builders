@@ -11,6 +11,9 @@ final class FormBuildContext
 {
     private FormName $formName;
 
+    /**
+     * @param array<string|int, mixed> $filledIn
+     */
     public function __construct(
         private FormComponentFactory $formComponentFactory,
         private ApieContext $context,
@@ -27,11 +30,6 @@ final class FormBuildContext
     public function getComponentFactory(): FormComponentFactory
     {
         return $this->formComponentFactory;
-    }
-
-    public function getApplicableSetters(ReflectionClass $class): ReflectionHashmap
-    {
-        return $this->context->getApplicableSetters($class);
     }
 
     public function getFilledInValue(mixed $defaultValue = null): mixed
