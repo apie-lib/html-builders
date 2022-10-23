@@ -3,12 +3,10 @@ namespace Apie\HtmlBuilders\Factories\Concrete;
 
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\MetadataFactory;
-use Apie\Core\Metadata\ScalarMetadata;
 use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
-use ReflectionNamedType;
 use ReflectionType;
 
 class FloatComponentProvider implements FormComponentProviderInterface

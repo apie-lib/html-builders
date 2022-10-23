@@ -1,7 +1,6 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Entities\PolymorphicEntityInterface;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\MetadataFactory;
@@ -17,7 +16,6 @@ class EntityComponentProvider implements FormComponentProviderInterface
     public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
         if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName())) {
-
             $refl = new ReflectionClass($type->getName());
             return $refl->isInstantiable()
                 && !$refl->implementsInterface(PolymorphicEntityInterface::class)

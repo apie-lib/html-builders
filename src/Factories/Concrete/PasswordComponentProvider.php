@@ -2,7 +2,6 @@
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
 use Apie\Core\ValueObjects\IsPasswordValueObject;
-use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Components\Forms\Password;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;

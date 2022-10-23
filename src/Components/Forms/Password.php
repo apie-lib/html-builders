@@ -1,8 +1,8 @@
 <?php
 namespace Apie\HtmlBuilders\Components\Forms;
 
-use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
+use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 
 class Password extends BaseComponent

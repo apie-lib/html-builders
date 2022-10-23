@@ -1,6 +1,9 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Enums\ScalarType;
+use Apie\Core\Metadata\MetadataFactory;
+use Apie\Core\Metadata\UnionTypeMetadata;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
@@ -13,7 +16,9 @@ class UnionTypehintComponentProvider implements FormComponentProviderInterface
 {
     public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
-        return $type instanceof ReflectionUnionType;
+        $metadata = MetadataFactory::getMetadataStrategyForType($type);
+
+        return $metadata instanceof UnionTypeMetadata;
     }
 
     /**
@@ -22,6 +27,13 @@ class UnionTypehintComponentProvider implements FormComponentProviderInterface
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
         $formComponentFactory = $context->getComponentFactory();
+        $metadata = MetadataFactory::getMetadataStrategyForType($type);
+        if ($metadata instanceof UnionTypeMetadata) {
+            $scalar = $metadata->toScalarType();
+            if (!in_array($scalar, [ScalarType::ARRAY, ScalarType::STDCLASS, ScalarType::MIXED])) {
+                return $formComponentFactory->createFromType($scalar->toReflectionType(), $context);
+            }
+        }
         $components = [];
         foreach ($type->getTypes() as $subType) {
             $key = $this->getSafePanelName($subType);
