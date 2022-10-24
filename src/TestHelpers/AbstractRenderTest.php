@@ -6,6 +6,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
+use Apie\HtmlBuilders\Components\Forms\Csrf;
 use Apie\HtmlBuilders\Components\Forms\Form;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
@@ -166,6 +167,10 @@ abstract class AbstractRenderTest extends TestCase
                 [],
                 new Input('name', 'value', 'tel')
             )
+        ];
+        yield 'CSRF token' => [
+            'expected-csrf-token.html',
+            new Csrf('token-123')
         ];
     }
 }

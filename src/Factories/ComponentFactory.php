@@ -12,15 +12,19 @@ use Apie\Core\Enums\RequestMethod;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Columns\ColumnSelector;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
+use Apie\HtmlBuilders\Components\Forms\Csrf;
 use Apie\HtmlBuilders\Components\Forms\Form;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Components\Resource\Pagination;
 use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
+use Ramsey\Uuid\Uuid;
 use ReflectionClass;
 use ReflectionMethod;
 use Stringable;
+use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ComponentFactory
 {
@@ -111,13 +115,22 @@ class ComponentFactory
         $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
             ? $context->getContext(ContextConstants::RAW_CONTENTS)
             : [];
+        /** @var SessionInterface $session */
+        $session = $context->getContext(SessionInterface::class);
+        $tokens = $session->get('_csrf_tokens');
+        $csrfToken = Uuid::uuid4()->toString();
+        $tokens[$csrfToken] = true;
+        if (count($tokens) > 64) {
+            array_shift($tokens);
+        }
+        
         $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
         $form = $this->formComponentFactory->createFromClass($class, $formBuildContext);
         return $this->createWrapLayout(
             $pageTitle,
             $boundedContextId,
             $context,
-            new Form(RequestMethod::POST, $form)
+            new Form(RequestMethod::POST, new Csrf($csrfToken), $form)
         );
     }
 }
