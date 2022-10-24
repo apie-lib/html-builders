@@ -9,6 +9,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Datalayers\Lists\PaginatedResult;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Enums\RequestMethod;
+use Apie\Core\Session\CsrfTokenProvider;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Columns\ColumnSelector;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
@@ -87,7 +88,10 @@ class ComponentFactory
         ?BoundedContextId $boundedContextId,
         ApieContext $context
     ): ComponentInterface {
-        $formFields = [];
+        /** @var CsrfTokenProvider $csrfTokenProvider */
+        $csrfTokenProvider = $context->getContext(CsrfTokenProvider::class);
+        $csrfToken = $csrfTokenProvider->createToken();
+        $formFields = [new Csrf($csrfToken)];
         $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
             ? $context->getContext(ContextConstants::RAW_CONTENTS)
             : [];
@@ -115,14 +119,9 @@ class ComponentFactory
         $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
             ? $context->getContext(ContextConstants::RAW_CONTENTS)
             : [];
-        /** @var SessionInterface $session */
-        $session = $context->getContext(SessionInterface::class);
-        $tokens = $session->get('_csrf_tokens');
-        $csrfToken = Uuid::uuid4()->toString();
-        $tokens[$csrfToken] = true;
-        if (count($tokens) > 64) {
-            array_shift($tokens);
-        }
+        /** @var CsrfTokenProvider $csrfTokenProvider */
+        $csrfTokenProvider = $context->getContext(CsrfTokenProvider::class);
+        $csrfToken = $csrfTokenProvider->createToken();
         
         $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
         $form = $this->formComponentFactory->createFromClass($class, $formBuildContext);
