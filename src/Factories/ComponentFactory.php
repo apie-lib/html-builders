@@ -20,12 +20,9 @@ use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Components\Resource\Pagination;
 use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
-use Ramsey\Uuid\Uuid;
 use ReflectionClass;
 use ReflectionMethod;
 use Stringable;
-use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ComponentFactory
 {
