@@ -138,6 +138,9 @@ final class FormComponentFactory
 
             $components = [];
             foreach ($metadata->getHashmap() as $fieldName => $reflectionData) {
+                if (!$reflectionData->isField()) {
+                    continue;
+                }
                 $childContext = $context->createChildContext($fieldName);
                 switch (get_class($reflectionData)) {
                     case SetterMethod::class:
