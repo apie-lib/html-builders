@@ -3,6 +3,7 @@ namespace Apie\HtmlBuilders\Factories\Concrete;
 
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\MetadataFactory;
+use Apie\Core\Metadata\NullableMetadataInterface;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
@@ -17,7 +18,8 @@ class HiddenIdComponentProvider implements FormComponentProviderInterface
             return false;
         }
         $metadata = MetadataFactory::getCreationMetadata($type, $context->getApieContext());
-        return $metadata->toScalarType() === ScalarType::STRING;
+        $scalar = $metadata instanceof NullableMetadataInterface ? $metadata->toScalarType(true) : $metadata->toScalarType();
+        return $scalar === ScalarType::STRING || $scalar === ScalarType::INTEGER;
     }
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface

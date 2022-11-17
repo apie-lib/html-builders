@@ -129,4 +129,30 @@ class ComponentFactory
             new Form(RequestMethod::POST, new Csrf($csrfToken), $form)
         );
     }
+
+    /**
+     * @param ReflectionClass<EntityInterface> $class
+     */
+    public function createFormForResourceModification(
+        string $pageTitle,
+        ReflectionClass $class,
+        ?BoundedContextId $boundedContextId,
+        ApieContext $context
+    ): ComponentInterface {
+        $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
+            ? $context->getContext(ContextConstants::RAW_CONTENTS)
+            : [];
+        /** @var CsrfTokenProvider $csrfTokenProvider */
+        $csrfTokenProvider = $context->getContext(CsrfTokenProvider::class);
+        $csrfToken = $csrfTokenProvider->createToken();
+        
+        $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
+        $form = $this->formComponentFactory->createFromClass($class, $formBuildContext);
+        return $this->createWrapLayout(
+            $pageTitle,
+            $boundedContextId,
+            $context,
+            new Form(RequestMethod::POST, new Csrf($csrfToken), $form)
+        );
+    }
 }
