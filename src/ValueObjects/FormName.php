@@ -1,11 +1,13 @@
 <?php
 namespace Apie\HtmlBuilders\ValueObjects;
 
+use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\HtmlBuilders\Exceptions\EmptyFormNameException;
 use Stringable;
 
+#[SchemaMethod('createSchema')]
 final class FormName implements ValueObjectInterface, Stringable
 {
     /** @var array<int, string> */
@@ -73,5 +75,18 @@ final class FormName implements ValueObjectInterface, Stringable
     public function __toString(): string
     {
         return 'form[' . implode('][', $this->internal) . ']';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public static function createSchema(): array
+    {
+        return [
+            'type' => 'array',
+            'items' => [
+                'type' => 'string',
+            ]
+        ];
     }
 }
