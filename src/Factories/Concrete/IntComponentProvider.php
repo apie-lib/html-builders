@@ -26,7 +26,8 @@ class IntComponentProvider implements FormComponentProviderInterface
                 'inputmode' => 'numeric',
                 'pattern' => '[1-9]\d*'
             ],
-            $type->allowsNull()
+            $type->allowsNull(),
+            $context->getValidationError()
         );
     }
 }

@@ -34,7 +34,8 @@ class DateTimeComponentProvider implements FormComponentProviderInterface
             $value,
             'datetime-local',
             [],
-            $type->allowsNull()
+            $type->allowsNull(),
+            $context->getValidationError()
         );
     }
 }
