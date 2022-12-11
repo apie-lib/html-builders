@@ -31,6 +31,7 @@ class BooleanComponentProvider implements FormComponentProviderInterface
             $context->getFormName(),
             $value,
             $type->allowsNull(),
+            $context->getValidationError()
         );
     }
 }

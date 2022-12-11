@@ -6,6 +6,7 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
+use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
 use Apie\HtmlBuilders\Components\Forms\Form;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
@@ -135,8 +136,13 @@ abstract class AbstractRenderTest extends TestCase
             new Input('name', 'value')
         ];
 
+        yield 'Simple checkbox with validation error' => [
+            'expected-checkbox-with-validation-error.html',
+            new Checkbox(new FormName('name'), 'value', validationError: 'validation error')
+        ];
+
         yield 'Simple input field with validation error' => [
-            'expected-input_with-validation-error.html',
+            'expected-input-with-validation-error.html',
             new Input('name', 'value', validationError: 'validation error')
         ];
 
