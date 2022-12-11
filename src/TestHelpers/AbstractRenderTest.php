@@ -161,7 +161,11 @@ abstract class AbstractRenderTest extends TestCase
         ];
         yield 'Password field' => [
             'expected-password-field.html',
-            new Password(StrongPassword::class, new FormName('name'), 'value')
+            new Password(StrongPassword::class, new FormName('name'), null, 'value')
+        ];
+        yield 'Password field with validation error' => [
+            'expected-password-field-with-validation-error.html',
+            new Password(StrongPassword::class, new FormName('name'), 'Validation Error', 'value')
         ];
 
         yield 'Union type' => [

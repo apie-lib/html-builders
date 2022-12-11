@@ -10,7 +10,7 @@ class Password extends BaseComponent
     /**
      * @param class-string<ValueObjectInterface> $passwordClassname
      */
-    public function __construct(string $passwordClassname, FormName $name, ?string $value, bool $nullable = false)
+    public function __construct(string $passwordClassname, FormName $name, ?string $value, ?string $validationError, bool $nullable = false)
     {
         parent::__construct(
             [
@@ -18,6 +18,7 @@ class Password extends BaseComponent
                 'value' => $value,
                 'type' => 'password',
                 'nullable' => $nullable,
+                'validationError' => $validationError,
                 'additionalAttributes' => [
                     'class' => 'unbound-password',
                     'spellcheck' => 'off',
