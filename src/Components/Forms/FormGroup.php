@@ -8,7 +8,7 @@ use Apie\HtmlBuilders\ValueObjects\FormName;
 
 class FormGroup extends BaseComponent
 {
-    public function __construct(FormName $name, ComponentInterface... $formElements)
+    public function __construct(FormName $name, ?string $validationError, ComponentInterface... $formElements)
     {
         // empty form: we need to send something so we can serialize {} in the form submit
         if (empty($formElements)) {
@@ -21,6 +21,7 @@ class FormGroup extends BaseComponent
             [
                 'groupName' => $name,
                 'keys' => array_keys($formElements),
+                'validationError' => $validationError,
             ],
             new ComponentHashmap($formElements)
         );

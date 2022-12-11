@@ -128,7 +128,12 @@ abstract class AbstractRenderTest extends TestCase
 
         yield 'Form' => [
             'expected-form.html',
-            new Form(RequestMethod::POST, new RawContents('test'), new RawContents('test2')),
+            new Form(RequestMethod::POST, null, new RawContents('test'), new RawContents('test2')),
+        ];
+
+        yield 'Form with validation error' => [
+            'expected-form-with-validation-error.html',
+            new Form(RequestMethod::POST, 'validation error', new RawContents('test'), new RawContents('test2')),
         ];
 
         yield 'Simple input field' => [

@@ -160,6 +160,7 @@ final class FormComponentFactory
             }
             return new FormGroup(
                 $context->getFormName(),
+                $context->getValidationError(),
                 ...$components
             );
         }

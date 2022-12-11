@@ -100,7 +100,7 @@ class ComponentFactory
             $pageTitle,
             $boundedContextId,
             $context,
-            new Form($method->getNumberOfParameters() > 0 ? RequestMethod::POST : RequestMethod::GET, ...$formFields)
+            new Form($method->getNumberOfParameters() > 0 ? RequestMethod::POST : RequestMethod::GET, $formBuildContext->getValidationError(), ...$formFields)
         );
     }
 
@@ -126,7 +126,7 @@ class ComponentFactory
             $pageTitle,
             $boundedContextId,
             $context,
-            new Form(RequestMethod::POST, new Csrf($csrfToken), $form)
+            new Form(RequestMethod::POST, $formBuildContext->getValidationError(), new Csrf($csrfToken), $form)
         );
     }
 
@@ -152,7 +152,7 @@ class ComponentFactory
             $pageTitle,
             $boundedContextId,
             $context,
-            new Form(RequestMethod::POST, new Csrf($csrfToken), $form)
+            new Form(RequestMethod::POST, $formBuildContext->getValidationError(), new Csrf($csrfToken), $form)
         );
     }
 }
