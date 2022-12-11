@@ -16,13 +16,19 @@ final class FormBuildContext
     private array $validationErrors;
 
     /**
+     * @var array<string|int, mixed>|string|null $filledIn
+     */
+    private array|string|null $filledIn;
+
+    /**
      * @param array<string|int, mixed> $filledIn
      */
     public function __construct(
         private FormComponentFactory $formComponentFactory,
         private ApieContext $context,
-        private array $filledIn
+        array $filledIn
     ) {
+        $this->filledIn = $filledIn;
         $this->formName = new FormName();
         $this->validationErrors = $context->hasContext(ContextConstants::VALIDATION_ERRORS)
             ? $context->getContext(ContextConstants::VALIDATION_ERRORS)
@@ -41,7 +47,7 @@ final class FormBuildContext
 
     public function getFilledInValue(mixed $defaultValue = null): mixed
     {
-        return $this->filledIn[$this->formName->getChildFormFieldName()] ?? $defaultValue;
+        return $this->filledIn ?? $defaultValue;
     }
 
     public function getValidationError(): string|null
@@ -74,8 +80,8 @@ final class FormBuildContext
     {
         $result = clone $this;
         $result->formName = $this->formName->createChildForm($propertyName);
-        $filledIn = $this->filledIn[$propertyName] ?? [];
-        $result->filledIn = is_array($filledIn) ? $filledIn : [];
+        $filledIn = $this->filledIn[$propertyName] ?? null;
+        $result->filledIn = $filledIn;
 
         return $result;
     }
