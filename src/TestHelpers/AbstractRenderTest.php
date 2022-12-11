@@ -135,6 +135,11 @@ abstract class AbstractRenderTest extends TestCase
             new Input('name', 'value')
         ];
 
+        yield 'Simple input field with validation error' => [
+            'expected-input_with-validation-error.html',
+            new Input('name', 'value', validationError: 'validation error')
+        ];
+
         yield 'Simple password field' => [
             'expected-input-password.html',
             new Input('name', 'value', 'password')
