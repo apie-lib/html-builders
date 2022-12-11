@@ -64,7 +64,7 @@ final class FormBuildContext
         $result = [];
         foreach ($this->validationErrors as $key => $message) {
             if (str_starts_with($key, $prefix)) {
-                $result[substr($key, strlen($prefix))] = $message;
+                $result[substr($key, strlen($prefix) + 1)] = $message;
             }
         }
 
@@ -82,6 +82,7 @@ final class FormBuildContext
         $result->formName = $this->formName->createChildForm($propertyName);
         $filledIn = $this->filledIn[$propertyName] ?? null;
         $result->filledIn = $filledIn;
+        $result->validationErrors = $this->validationErrors;
 
         return $result;
     }
