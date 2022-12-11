@@ -52,7 +52,7 @@ final class FormBuildContext
 
     public function getValidationError(): string|null
     {
-        return $this->validationErrors[$this->formName->__toString()] ?? null;
+        return $this->validationErrors[$this->formName->toValidationErrorKey()] ?? null;
     }
 
     /**
@@ -60,7 +60,7 @@ final class FormBuildContext
      */
     public function getValidationErrorsInContext(): array
     {
-        $prefix = $this->formName->__toString();
+        $prefix = $this->formName->toValidationErrorKey();
         $result = [];
         foreach ($this->validationErrors as $key => $message) {
             if (str_starts_with($key, $prefix)) {

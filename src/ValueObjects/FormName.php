@@ -58,6 +58,11 @@ final class FormName implements ValueObjectInterface, Stringable
         return $this->internal;
     }
 
+    public function toValidationErrorKey(): string
+    {
+        return implode('.', $this->internal);
+    }
+
     public function getPrototypeName(): string
     {
         return strtoupper(str_replace(

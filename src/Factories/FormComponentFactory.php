@@ -93,7 +93,8 @@ final class FormComponentFactory
                 $context->getFilledInValue($allowsNull ? null : ''),
                 'text',
                 [],
-                $allowsNull
+                $allowsNull,
+                $context->getValidationError()
             );
         }
 
