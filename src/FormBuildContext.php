@@ -1,6 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders;
 
+use Apie\Common\ContextConstants;
 use Apie\Core\Context\ApieContext;
 use Apie\HtmlBuilders\Factories\FormComponentFactory;
 use Apie\HtmlBuilders\ValueObjects\FormName;
@@ -8,6 +9,11 @@ use Apie\HtmlBuilders\ValueObjects\FormName;
 final class FormBuildContext
 {
     private FormName $formName;
+
+    /**
+     * @var array<string|int, string> $validationErrors
+     */
+    private array $validationErrors;
 
     /**
      * @param array<string|int, mixed> $filledIn
@@ -18,6 +24,9 @@ final class FormBuildContext
         private array $filledIn
     ) {
         $this->formName = new FormName();
+        $this->validationErrors = $context->hasContext(ContextConstants::VALIDATION_ERRORS)
+            ? $context->getContext(ContextConstants::VALIDATION_ERRORS)
+            : [];
     }
 
     public function getApieContext(): ApieContext
@@ -32,7 +41,28 @@ final class FormBuildContext
 
     public function getFilledInValue(mixed $defaultValue = null): mixed
     {
-        return $this->filled[$this->formName->getChildFormFieldName()] ?? $defaultValue;
+        return $this->filledIn[$this->formName->getChildFormFieldName()] ?? $defaultValue;
+    }
+
+    public function getValidationError(): string|null
+    {
+        return $this->validationErrors[$this->formName->__toString()] ?? null;
+    }
+
+    /**
+     * @return array<int|string, string>
+     */
+    public function getValidationErrorsInContext(): array
+    {
+        $prefix = $this->formName->__toString();
+        $result = [];
+        foreach ($this->validationErrors as $key => $message) {
+            if (str_starts_with($key, $prefix)) {
+                $result[substr($key, strlen($prefix))] = $message;
+            }
+        }
+
+        return $result;
     }
 
     public function getFormName(): FormName
