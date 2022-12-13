@@ -37,7 +37,8 @@ class PasswordComponentProvider implements FormComponentProviderInterface
             $type->getName(),
             $context->getFormName(),
             $value,
-            $type->allowsNull()
+            $type->allowsNull(),
+            $context->getValidationError()
         );
     }
 }
