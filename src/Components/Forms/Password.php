@@ -10,12 +10,12 @@ class Password extends BaseComponent
     /**
      * @param class-string<ValueObjectInterface> $passwordClassname
      */
-    public function __construct(string $passwordClassname, FormName $name, ?string $value, ?string $validationError, bool $nullable = false)
+    public function __construct(string $passwordClassname, FormName $name, ?string $value, bool $nullable = false, ?string $validationError = null)
     {
         parent::__construct(
             [
                 'name' => $name,
-                'value' => $value,
+                'intendedValue' => $value,
                 'type' => 'password',
                 'nullable' => $nullable,
                 'validationError' => $validationError,
@@ -24,6 +24,7 @@ class Password extends BaseComponent
                     'spellcheck' => 'off',
                     'autocomplete' => 'off',
                     'maxlength' => $passwordClassname::getMaxLength(),
+                    'toggle-password' => 'toggle-password',
                 ],
                 'minLength' => $passwordClassname::getMinLength(),
                 'maxLength' => $passwordClassname::getMaxLength(),

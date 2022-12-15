@@ -37,6 +37,11 @@ final class FormName implements ValueObjectInterface, Stringable
         throw new InvalidTypeException($input, 'string|array');
     }
 
+    public function hasChildFormFieldName(): bool
+    {
+        return !empty($this->internal);
+    }
+
     public function getChildFormFieldName(): string
     {
         if (empty($this->internal)) {

@@ -143,7 +143,7 @@ abstract class AbstractRenderTest extends TestCase
 
         yield 'Simple checkbox with validation error' => [
             'expected-checkbox-with-validation-error.html',
-            new Checkbox(new FormName('name'), 'value', validationError: 'validation error')
+            new Checkbox(new FormName('name'), true, validationError: 'validation error')
         ];
 
         yield 'Simple input field with validation error' => [
@@ -161,11 +161,11 @@ abstract class AbstractRenderTest extends TestCase
         ];
         yield 'Password field' => [
             'expected-password-field.html',
-            new Password(StrongPassword::class, new FormName('name'), null, 'value')
+            new Password(StrongPassword::class, new FormName('name'), null, false)
         ];
         yield 'Password field with validation error' => [
             'expected-password-field-with-validation-error.html',
-            new Password(StrongPassword::class, new FormName('name'), 'Validation Error', 'value')
+            new Password(StrongPassword::class, new FormName('name'), 'value', false, 'Validation Error')
         ];
 
         yield 'Union type' => [
