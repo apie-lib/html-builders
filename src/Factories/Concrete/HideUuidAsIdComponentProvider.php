@@ -3,6 +3,7 @@ namespace Apie\HtmlBuilders\Factories\Concrete;
 
 use Apie\Core\Identifiers\Uuid;
 use Apie\Core\Identifiers\UuidV4;
+use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Components\Forms\HiddenField;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
@@ -28,9 +29,13 @@ class HideUuidAsIdComponentProvider implements FormComponentProviderInterface
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
+        $id = Utils::toString($context->getFilledInValue(''));
+        if (!preg_match(Uuid::getRegularExpression(), $id)) {
+            $id = UuidV4::createRandom()->toNative();
+        };
         return new HiddenField(
             $context->getFormName(),
-            $context->getFilledInValue(UuidV4::createRandom()->toNative())
+            $id
         );
     }
 }
