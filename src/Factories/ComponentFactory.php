@@ -88,19 +88,24 @@ class ComponentFactory
         /** @var CsrfTokenProvider $csrfTokenProvider */
         $csrfTokenProvider = $context->getContext(CsrfTokenProvider::class);
         $csrfToken = $csrfTokenProvider->createToken();
-        $formFields = [new Csrf($csrfToken)];
+        $formFields = ['_csrf' => new Csrf($csrfToken)];
         $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
             ? $context->getContext(ContextConstants::RAW_CONTENTS)
             : [];
         $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
         foreach ($method->getParameters() as $parameter) {
-            $formFields[] = $this->formComponentFactory->createFromParameter($parameter, $formBuildContext);
+            $formFields[$parameter->name] = $this->formComponentFactory->createFromParameter($parameter, $formBuildContext);
         }
         return $this->createWrapLayout(
             $pageTitle,
             $boundedContextId,
             $context,
-            new Form($method->getNumberOfParameters() > 0 ? RequestMethod::POST : RequestMethod::GET, $formBuildContext->getValidationError(), ...$formFields)
+            new Form(
+                $method->getNumberOfParameters() > 0 ? RequestMethod::POST : RequestMethod::GET,
+                $formBuildContext->getValidationError(),
+                $formBuildContext->getMissingValidationErrors($formFields),
+                ...$formFields
+            )
         );
     }
 
@@ -126,7 +131,13 @@ class ComponentFactory
             $pageTitle,
             $boundedContextId,
             $context,
-            new Form(RequestMethod::POST, $formBuildContext->getValidationError(), new Csrf($csrfToken), $form)
+            new Form(
+                RequestMethod::POST,
+                $formBuildContext->getValidationError(),
+                $form->getMissingValidationErrors($formBuildContext),
+                new Csrf($csrfToken),
+                $form
+            )
         );
     }
 
@@ -152,7 +163,13 @@ class ComponentFactory
             $pageTitle,
             $boundedContextId,
             $context,
-            new Form(RequestMethod::POST, $formBuildContext->getValidationError(), new Csrf($csrfToken), $form)
+            new Form(
+                RequestMethod::POST,
+                $formBuildContext->getValidationError(),
+                $form->getMissingValidationErrors($formBuildContext),
+                new Csrf($csrfToken),
+                $form
+            )
         );
     }
 }

@@ -9,6 +9,7 @@ use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
 use Apie\HtmlBuilders\Components\Forms\Form;
+use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
 use Apie\HtmlBuilders\Components\Forms\HiddenField;
@@ -128,12 +129,21 @@ abstract class AbstractRenderTest extends TestCase
 
         yield 'Form' => [
             'expected-form.html',
-            new Form(RequestMethod::POST, null, new RawContents('test'), new RawContents('test2')),
+            new Form(RequestMethod::POST, null, [], new RawContents('test'), new RawContents('test2')),
+        ];
+        yield 'Form with unknown validation errors' => [
+            'expected-form-with-unknown-validation-error.html',
+            new Form(RequestMethod::POST, null, ['id' => 'unknown field'], new RawContents('test')),
+        ];
+
+        yield 'Form group with unknown validation errors' => [
+            'expected-form-group-with-unknown-validation-error.html',
+            new FormGroup(new FormName('test'), null, ['id' => 'unknown field'], new RawContents('test')),
         ];
 
         yield 'Form with validation error' => [
             'expected-form-with-validation-error.html',
-            new Form(RequestMethod::POST, 'validation error', new RawContents('test'), new RawContents('test2')),
+            new Form(RequestMethod::POST, 'validation error', [], new RawContents('test'), new RawContents('test2')),
         ];
 
         yield 'Simple input field' => [

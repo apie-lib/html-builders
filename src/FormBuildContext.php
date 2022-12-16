@@ -4,6 +4,7 @@ namespace Apie\HtmlBuilders;
 use Apie\Common\ContextConstants;
 use Apie\Core\Context\ApieContext;
 use Apie\HtmlBuilders\Factories\FormComponentFactory;
+use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 
 final class FormBuildContext
@@ -56,15 +57,41 @@ final class FormBuildContext
     }
 
     /**
+     * @param array<string, ComponentInterface> $childComponents
+     *
+     * @return array<int|string, string>
+     */
+    public function getMissingValidationErrors(array $childComponents): array
+    {
+        $result = $this->getValidationErrorsInContext();
+        $missingValidationErrors = [];
+        foreach (array_keys($childComponents) as $propertyName) {
+            $prefix = $propertyName . '.';
+            $found = false;
+            foreach (array_keys($result) as $key) {
+                if ($key !== $propertyName || !str_starts_with($key, $prefix)) {
+                    $found = true;
+                }
+            }
+            if (!$found && isset($result[$propertyName])) {
+                $missingValidationErrors[$propertyName] = $result[$propertyName];
+            }
+        }
+
+        return $missingValidationErrors;
+    }
+
+    /**
      * @return array<int|string, string>
      */
     public function getValidationErrorsInContext(): array
     {
         $prefix = $this->formName->toValidationErrorKey();
         $result = [];
+        $prefixLength = strlen($prefix) + 1;
         foreach ($this->validationErrors as $key => $message) {
             if (str_starts_with($key, $prefix)) {
-                $result[substr($key, strlen($prefix) + 1)] = $message;
+                $result[substr($key, $prefixLength)] = $message;
             }
         }
 

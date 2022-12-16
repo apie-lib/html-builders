@@ -149,7 +149,7 @@ final class FormComponentFactory
                     case SetterMethod::class:
                         foreach ($reflectionData->getMethod()->getParameters() as $parameter) {
                             if ($parameter->name === $fieldName) {
-                                $components[] = $this->createFromParameter($parameter, $context);
+                                $components[$fieldName] = $this->createFromParameter($parameter, $context);
                                 break;
                             }
                         }
@@ -157,12 +157,13 @@ final class FormComponentFactory
                     case DiscriminatorColumn::class:
                         break;
                     default:
-                        $components[] = $this->createFromType($reflectionData->getTypehint(), $childContext);
+                        $components[$fieldName] = $this->createFromType($reflectionData->getTypehint(), $childContext);
                 }
             }
             return new FormGroup(
                 $context->getFormName(),
                 $context->getValidationError(),
+                $context->getMissingValidationErrors($components),
                 ...$components
             );
         }

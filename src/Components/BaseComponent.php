@@ -1,6 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\Components;
 
+use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ValueObjects\FormName;
@@ -18,6 +19,11 @@ abstract class BaseComponent implements ComponentInterface
     public function getComponent(string $key): ComponentInterface
     {
         return $this->childComponents[$key];
+    }
+
+    public function getMissingValidationErrors(FormBuildContext $formBuildContext): array
+    {
+        return $formBuildContext->getMissingValidationErrors($this->childComponents->toArray());
     }
 
     public function getAttribute(string $key): mixed
