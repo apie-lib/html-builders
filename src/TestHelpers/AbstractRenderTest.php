@@ -14,6 +14,7 @@ use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
 use Apie\HtmlBuilders\Components\Forms\HiddenField;
 use Apie\HtmlBuilders\Components\Forms\Input;
+use Apie\HtmlBuilders\Components\Forms\InputWithAutocomplete;
 use Apie\HtmlBuilders\Components\Forms\Password;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
@@ -158,6 +159,16 @@ abstract class AbstractRenderTest extends TestCase
 
         yield 'Simple input field with validation error' => [
             'expected-input-with-validation-error.html',
+            new InputWithAutocomplete('name', 'value', 'https://www.example.com/ajaxCall', validationError: 'validation error')
+        ];
+
+        yield 'Simple input field with autocomplete' => [
+            'expected-input-with-autocomplete.html',
+            new InputWithAutocomplete('name', 'value', 'https://www.example.com/ajaxCall')
+        ];
+
+        yield 'Simple input field with autocomplete and validation error' => [
+            'expected-input-with-autocomplete-and-validation-error.html',
             new Input('name', 'value', validationError: 'validation error')
         ];
 

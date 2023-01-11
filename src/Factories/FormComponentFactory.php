@@ -42,129 +42,132 @@ final class FormComponentFactory
         $this->formComponentProviders = $formComponentProviders;
     }
 
-        public static function create(FormComponentProviderInterface... $formComponentProviders): FormComponentFactory
-        {
-            return new self(
-                new PasswordComponentProvider(),
-                new HideUuidAsIdComponentProvider(),
-                new HiddenIdComponentProvider(),
-                new UnionTypehintComponentProvider(),
-                new PolymorphicEntityComponentProvider(),
-                new ItemListComponentProvider(),
-                new ItemHashmapComponentProvider(),
-                new BooleanComponentProvider(),
-                new EnumComponentProvider(),
-                new FloatComponentProvider(),
-                new IntComponentProvider(),
-                new DateTimeComponentProvider(),
-                new EntityComponentProvider(),
-                ...$formComponentProviders,
+    /**
+     * @param FormComponentProviderInterface[] $formComponentProviders
+     */
+    public static function create(iterable $formComponentProviders = []): FormComponentFactory
+    {
+        return new self(
+            new PasswordComponentProvider(),
+            new HideUuidAsIdComponentProvider(),
+            new HiddenIdComponentProvider(),
+            new UnionTypehintComponentProvider(),
+            new PolymorphicEntityComponentProvider(),
+            new ItemListComponentProvider(),
+            new ItemHashmapComponentProvider(),
+            new BooleanComponentProvider(),
+            new EnumComponentProvider(),
+            new FloatComponentProvider(),
+            new IntComponentProvider(),
+            new DateTimeComponentProvider(),
+            new EntityComponentProvider(),
+            ...$formComponentProviders,
+        );
+    }
+
+    /**
+     * @param array<string|int, mixed> $filledIn
+     */
+    public function createFormBuildContext(ApieContext $context, array $filledIn = []): FormBuildContext
+    {
+        return new FormBuildContext(
+            $this,
+            $context->withContext(FormComponentFactory::class, $this),
+            $filledIn
+        );
+    }
+
+    public function createFromType(?ReflectionType $typehint, FormBuildContext $context): ComponentInterface
+    {
+        foreach ($this->formComponentProviders as $formComponentProvider) {
+            if ($formComponentProvider->supports($typehint, $context)) {
+                return $formComponentProvider->createComponentFor($typehint, $context);
+            }
+        }
+        $metadata = MetadataFactory::getCreationMetadata(
+            $typehint ?? ReflectionTypeFactory::createReflectionType('mixed'),
+            $context->getApieContext()
+        );
+        if ($metadata instanceof CompositeMetadata) {
+            return $this->createFromMetadata($metadata, $context);
+        }
+        $allowsNull = $typehint === null || $typehint->allowsNull();
+
+        return new Input(
+            $context->getFormName(),
+            $context->getFilledInValue($allowsNull ? null : ''),
+            'text',
+            [],
+            $allowsNull,
+            $context->getValidationError()
+        );
+    }
+
+    public function createFromParameter(ReflectionParameter $parameter, FormBuildContext $context): ComponentInterface
+    {
+        $childContext = $context->createChildContext($parameter->name);
+        $typehint = $parameter->getType();
+        $component = $this->createFromType($typehint, $childContext);
+        if ($parameter->isVariadic()) {
+            return new FormPrototypeList(
+                $childContext->getFormName(),
+                $childContext->getFilledInValue([]),
+                $component
             );
         }
+        return $component;
+    }
 
-        /**
-         * @param array<string|int, mixed> $filledIn
-         */
-        public function createFormBuildContext(ApieContext $context, array $filledIn = []): FormBuildContext
-        {
-            return new FormBuildContext(
-                $this,
-                $context->withContext(FormComponentFactory::class, $this),
-                $filledIn
-            );
-        }
-
-        public function createFromType(?ReflectionType $typehint, FormBuildContext $context): ComponentInterface
-        {
+    /**
+     * @param ReflectionClass<object> $class
+     */
+    public function createFromClass(ReflectionClass $class, FormBuildContext $context, bool $providerCheck = true): ComponentInterface
+    {
+        if ($providerCheck) {
+            $typehint = ReflectionTypeFactory::createReflectionType($class->name);
             foreach ($this->formComponentProviders as $formComponentProvider) {
                 if ($formComponentProvider->supports($typehint, $context)) {
                     return $formComponentProvider->createComponentFor($typehint, $context);
                 }
             }
-            $metadata = MetadataFactory::getCreationMetadata(
-                $typehint ?? ReflectionTypeFactory::createReflectionType('mixed'),
-                $context->getApieContext()
-            );
-            if ($metadata instanceof CompositeMetadata) {
-                return $this->createFromMetadata($metadata, $context);
-            }
-            $allowsNull = $typehint === null || $typehint->allowsNull();
-
-            return new Input(
-                $context->getFormName(),
-                $context->getFilledInValue($allowsNull ? null : ''),
-                'text',
-                [],
-                $allowsNull,
-                $context->getValidationError()
-            );
         }
 
-        public function createFromParameter(ReflectionParameter $parameter, FormBuildContext $context): ComponentInterface
-        {
-            $childContext = $context->createChildContext($parameter->name);
-            $typehint = $parameter->getType();
-            $component = $this->createFromType($typehint, $childContext);
-            if ($parameter->isVariadic()) {
-                return new FormPrototypeList(
-                    $childContext->getFormName(),
-                    $childContext->getFilledInValue([]),
-                    $component
-                );
-            }
-            return $component;
+        $metadata = MetadataFactory::getCreationMetadata($class, $context->getApieContext());
+        return $this->createFromMetadata($metadata, $context);
+    }
+
+    public function createFromMetadata(MetadataInterface $metadata, FormBuildContext $context): ComponentInterface
+    {
+        if (!$metadata instanceof CompositeMetadata) {
+            throw new InvalidTypeException($metadata, CompositeMetadata::class);
         }
 
-        /**
-         * @param ReflectionClass<object> $class
-         */
-        public function createFromClass(ReflectionClass $class, FormBuildContext $context, bool $providerCheck = true): ComponentInterface
-        {
-            if ($providerCheck) {
-                $typehint = ReflectionTypeFactory::createReflectionType($class->name);
-                foreach ($this->formComponentProviders as $formComponentProvider) {
-                    if ($formComponentProvider->supports($typehint, $context)) {
-                        return $formComponentProvider->createComponentFor($typehint, $context);
-                    }
-                }
+        $components = [];
+        foreach ($metadata->getHashmap() as $fieldName => $reflectionData) {
+            if (!$reflectionData->isField()) {
+                continue;
             }
-
-            $metadata = MetadataFactory::getCreationMetadata($class, $context->getApieContext());
-            return $this->createFromMetadata($metadata, $context);
-        }
-
-        public function createFromMetadata(MetadataInterface $metadata, FormBuildContext $context): ComponentInterface
-        {
-            if (!$metadata instanceof CompositeMetadata) {
-                throw new InvalidTypeException($metadata, CompositeMetadata::class);
-            }
-
-            $components = [];
-            foreach ($metadata->getHashmap() as $fieldName => $reflectionData) {
-                if (!$reflectionData->isField()) {
-                    continue;
-                }
-                $childContext = $context->createChildContext($fieldName);
-                switch (get_class($reflectionData)) {
-                    case SetterMethod::class:
-                        foreach ($reflectionData->getMethod()->getParameters() as $parameter) {
-                            if ($parameter->name === $fieldName) {
-                                $components[$fieldName] = $this->createFromParameter($parameter, $context);
-                                break;
-                            }
+            $childContext = $context->createChildContext($fieldName);
+            switch (get_class($reflectionData)) {
+                case SetterMethod::class:
+                    foreach ($reflectionData->getMethod()->getParameters() as $parameter) {
+                        if ($parameter->name === $fieldName) {
+                            $components[$fieldName] = $this->createFromParameter($parameter, $context);
+                            break;
                         }
-                        break;
-                    case DiscriminatorColumn::class:
-                        break;
-                    default:
-                        $components[$fieldName] = $this->createFromType($reflectionData->getTypehint(), $childContext);
-                }
+                    }
+                    break;
+                case DiscriminatorColumn::class:
+                    break;
+                default:
+                    $components[$fieldName] = $this->createFromType($reflectionData->getTypehint(), $childContext);
             }
-            return new FormGroup(
-                $context->getFormName(),
-                $context->getValidationError(),
-                $context->getMissingValidationErrors($components),
-                ...$components
-            );
         }
+        return new FormGroup(
+            $context->getFormName(),
+            $context->getValidationError(),
+            $context->getMissingValidationErrors($components),
+            ...$components
+        );
+    }
 }
