@@ -31,7 +31,7 @@ class DropdownOptionsComponentProvider implements FormComponentProviderInterface
         assert($dropdownOptionProvider instanceof DropdownOptionProviderInterface);
         
         return $dropdownOptionProvider->supports(
-            $apieContext->withContext('property', $context->getFormName()->getChildFormFieldName())
+            $apieContext->withContext('property', $context->getFormName()->toValidationErrorKey())
         );
     }
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
