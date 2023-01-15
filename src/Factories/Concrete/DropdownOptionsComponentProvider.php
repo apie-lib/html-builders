@@ -47,7 +47,7 @@ class DropdownOptionsComponentProvider implements FormComponentProviderInterface
         return new InputWithAutocomplete(
             $context->getFormName(),
             $context->getFilledInValue(),
-            $configuration->getContextUrl('/' . $resource->getShortName() . '/dropdown-options/id'),
+            $configuration->getContextUrl('/' . $resource->getShortName() . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey()),
             [],
             $type->allowsNull(),
             $context->getValidationError()
