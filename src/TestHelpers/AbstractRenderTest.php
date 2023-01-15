@@ -159,12 +159,12 @@ abstract class AbstractRenderTest extends TestCase
 
         yield 'Simple input field with validation error' => [
             'expected-input-with-validation-error.html',
-            new InputWithAutocomplete('name', 'value', 'https://www.example.com/ajaxCall', validationError: 'validation error')
+            new InputWithAutocomplete(new FormName('name'), 'value', 'https://www.example.com/ajaxCall', validationError: 'validation error')
         ];
 
         yield 'Simple input field with autocomplete' => [
             'expected-input-with-autocomplete.html',
-            new InputWithAutocomplete('name', 'value', 'https://www.example.com/ajaxCall')
+            new InputWithAutocomplete(new FormName('name'), 'value', 'https://www.example.com/ajaxCall')
         ];
 
         yield 'Simple input field with autocomplete and validation error' => [
