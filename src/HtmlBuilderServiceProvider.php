@@ -44,7 +44,7 @@ class HtmlBuilderServiceProvider extends ServiceProvider
         \Apie\ServiceProviderGenerator\TagMap::register(
             $this->app,
             \Apie\HtmlBuilders\Factories\Concrete\DropdownOptionsComponentProvider::class,
-            array (
+            array(
               0 => 'Apie\\HtmlBuilders\\Interfaces\\FormComponentProviderInterface',
             )
         );
@@ -53,7 +53,7 @@ class HtmlBuilderServiceProvider extends ServiceProvider
             \Apie\HtmlBuilders\Configuration\ApplicationConfiguration::class,
             function ($app) {
                 return new \Apie\HtmlBuilders\Configuration\ApplicationConfiguration(
-                    array (
+                    array(
                   'base_url' => '%apie.cms.base_url%',
                 )
                 );
