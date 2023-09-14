@@ -20,6 +20,13 @@ services:
       -
         base_url: '%apie.cms.base_url%'
 
+  Apie\HtmlBuilders\ErrorHandler\CmsErrorRenderer:
+    arguments:
+      - '@Apie\HtmlBuilders\Factories\ComponentFactory'
+      - '@Apie\HtmlBuilders\Interfaces\ComponentRendererInterface'
+      - '@?Twig\Environment'
+      - '%apie.cms.error_template%'
+
   Apie\HtmlBuilders\Assets\AssetManager:
     factory: ['Apie\HtmlBuilders\Assets\AssetManager', 'create']
     arguments:

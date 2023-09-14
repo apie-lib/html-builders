@@ -60,6 +60,17 @@ class HtmlBuilderServiceProvider extends ServiceProvider
             }
         );
         $this->app->singleton(
+            \Apie\HtmlBuilders\ErrorHandler\CmsErrorRenderer::class,
+            function ($app) {
+                return new \Apie\HtmlBuilders\ErrorHandler\CmsErrorRenderer(
+                    $app->make(\Apie\HtmlBuilders\Factories\ComponentFactory::class),
+                    $app->make(\Apie\HtmlBuilders\Interfaces\ComponentRendererInterface::class),
+                    $app->bound(\Twig\Environment::class) ? $app->make(\Twig\Environment::class) : null,
+                    $this->parseArgument('%apie.cms.error_template%')
+                );
+            }
+        );
+        $this->app->singleton(
             \Apie\HtmlBuilders\Assets\AssetManager::class,
             function ($app) {
                 return \Apie\HtmlBuilders\Assets\AssetManager::create(
