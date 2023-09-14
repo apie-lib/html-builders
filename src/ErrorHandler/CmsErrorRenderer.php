@@ -2,23 +2,24 @@
 
 namespace Apie\HtmlBuilders\ErrorHandler;
 
-use Apie\ApieBundle\Wrappers\DashboardContents;
 use Apie\Common\ContextConstants;
+use Apie\Common\Interfaces\DashboardContentFactoryInterface;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Exceptions\HttpStatusCodeException;
 use Apie\HtmlBuilders\Factories\ComponentFactory;
 use Apie\HtmlBuilders\Interfaces\ComponentRendererInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
-use Twig\Environment;
 
 class CmsErrorRenderer
 {
     public function __construct(
         private readonly ComponentFactory $componentFactory,
         private readonly ComponentRendererInterface $componentRenderer,
-        private readonly ?Environment $environment,
+        private readonly DashboardContentFactoryInterface $dashboardContentFactory,
         private readonly string $errorTemplate
     ) {
     }
@@ -32,10 +33,14 @@ class CmsErrorRenderer
      */
     public function createCmsResponse(Request $request, Throwable $error): Response
     {
-        $contents = new DashboardContents($this->environment, $this->errorTemplate, ['error' => $error]);
+        $contents = $this->dashboardContentFactory->create($this->errorTemplate, ['error' => $error]);
         $boundedContextId = null;
         if ($request->attributes->has(ContextConstants::BOUNDED_CONTEXT_ID)) {
             $boundedContextId = new BoundedContextId($request->attributes->get(ContextConstants::BOUNDED_CONTEXT_ID));
+        }
+        $statusCode = 500;
+        if ($error instanceof HttpStatusCodeException || $error instanceof HttpException) {
+            $statusCode = $error->getStatusCode();
         }
         return new Response(
             $this->componentRenderer->render(
@@ -45,7 +50,8 @@ class CmsErrorRenderer
                     new ApieContext(),
                     $this->componentFactory->createRawContents($contents)
                 )
-            )
+            ),
+            $statusCode
         );
     }
 }

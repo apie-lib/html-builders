@@ -24,7 +24,7 @@ services:
     arguments:
       - '@Apie\HtmlBuilders\Factories\ComponentFactory'
       - '@Apie\HtmlBuilders\Interfaces\ComponentRendererInterface'
-      - '@?Twig\Environment'
+      - '@Apie\Common\Interfaces\DashboardContentFactoryInterface'
       - '%apie.cms.error_template%'
 
   Apie\HtmlBuilders\Assets\AssetManager:

@@ -65,7 +65,7 @@ class HtmlBuilderServiceProvider extends ServiceProvider
                 return new \Apie\HtmlBuilders\ErrorHandler\CmsErrorRenderer(
                     $app->make(\Apie\HtmlBuilders\Factories\ComponentFactory::class),
                     $app->make(\Apie\HtmlBuilders\Interfaces\ComponentRendererInterface::class),
-                    $app->bound(\Twig\Environment::class) ? $app->make(\Twig\Environment::class) : null,
+                    $app->make(\Apie\Common\Interfaces\DashboardContentFactoryInterface::class),
                     $this->parseArgument('%apie.cms.error_template%')
                 );
             }
