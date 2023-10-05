@@ -7,7 +7,7 @@ use Apie\HtmlBuilders\Components\Forms\VerifyOtpInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
-use Apie\OtpValueObjects\VerifyOtp;
+use Apie\OtpValueObjects\VerifyOTP;
 use ReflectionProperty;
 use ReflectionType;
 
@@ -20,7 +20,7 @@ class VerifyOtpInputComponentProvider implements FormComponentProviderInterface
         }
         $class = ConverterUtils::toReflectionClass($type);
         do {
-            if ($class->name === VerifyOtp::class) {
+            if ($class->name === VerifyOTP::class) {
                 return true;
             }
             $class = $class->getParentClass();
