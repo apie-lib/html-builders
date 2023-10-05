@@ -16,6 +16,7 @@ use Apie\HtmlBuilders\Components\Forms\HiddenField;
 use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Components\Forms\InputWithAutocomplete;
 use Apie\HtmlBuilders\Components\Forms\Password;
+use Apie\HtmlBuilders\Components\Forms\VerifyOtpInput;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
@@ -26,8 +27,10 @@ use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\ComponentRendererInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ValueObjects\FormName;
+use Apie\OtpValueObjects\HOTPSecret;
 use Apie\TextValueObjects\StrongPassword;
 use Generator;
+use OTPHP\HOTP;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -212,6 +215,15 @@ abstract class AbstractRenderTest extends TestCase
         yield 'CSRF token' => [
             'expected-csrf-token.html',
             new Csrf('token-123')
+        ];
+        yield 'OTP secret' => [
+            'expected-otp-secret.html',
+            new VerifyOtpInput(
+                'name',
+                null,
+                'label',
+                new HOTPSecret(HOTP::create(str_repeat('A', 103)))
+            )
         ];
     }
 }

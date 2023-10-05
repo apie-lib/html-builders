@@ -24,6 +24,7 @@ use Apie\HtmlBuilders\Factories\Concrete\ItemListComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PasswordComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\UnionTypehintComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\VerifyOtpInputComponentProvider;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -48,6 +49,7 @@ final class FormComponentFactory
     public static function create(iterable $formComponentProviders = []): FormComponentFactory
     {
         return new self(
+            new VerifyOtpInputComponentProvider(),
             new PasswordComponentProvider(),
             new HideUuidAsIdComponentProvider(),
             new HiddenIdComponentProvider(),
