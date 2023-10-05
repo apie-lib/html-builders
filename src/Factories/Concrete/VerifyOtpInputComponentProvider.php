@@ -34,9 +34,9 @@ class VerifyOtpInputComponentProvider implements FormComponentProviderInterface
         $class = ConverterUtils::toReflectionClass($type);
         /** @var ReflectionProperty $property */
         $property = $class->getMethod('getOtpReference')->invoke(null);
-        /** @var string $label */
-        $label = $class->getMethod('getOtpLabel')->invoke(null);
         $resource = $context->getApieContext()->getContext(ContextConstants::RESOURCE);
+        /** @var string $label */
+        $label = $class->getMethod('getOtpLabel')->invoke(null, $resource);
         $otpSecret = $property->getValue($resource);
 
         return new VerifyOtpInput(
