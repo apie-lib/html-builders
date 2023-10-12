@@ -169,7 +169,7 @@ final class FormComponentFactory
             $context->getFormName(),
             $context->getValidationError(),
             $context->getMissingValidationErrors($components),
-            ...$components
+            ...array_values($components)
         );
     }
 }
