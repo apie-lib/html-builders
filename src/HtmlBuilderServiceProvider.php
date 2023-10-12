@@ -20,7 +20,16 @@ class HtmlBuilderServiceProvider extends ServiceProvider
                 return new \Apie\HtmlBuilders\Factories\ComponentFactory(
                     $app->make(\Apie\HtmlBuilders\Configuration\ApplicationConfiguration::class),
                     $app->make(\Apie\Core\BoundedContext\BoundedContextHashmap::class),
-                    $app->make(\Apie\HtmlBuilders\Factories\FormComponentFactory::class)
+                    $app->make(\Apie\HtmlBuilders\Factories\FormComponentFactory::class),
+                    $app->make(\Apie\HtmlBuilders\Factories\ResourceActionFactory::class)
+                );
+            }
+        );
+        $this->app->singleton(
+            \Apie\HtmlBuilders\Factories\ResourceActionFactory::class,
+            function ($app) {
+                return new \Apie\HtmlBuilders\Factories\ResourceActionFactory(
+                    $app->make(\Apie\Common\ActionDefinitionProvider::class)
                 );
             }
         );

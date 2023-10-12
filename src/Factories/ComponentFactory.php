@@ -18,6 +18,7 @@ use Apie\HtmlBuilders\Components\Forms\Form;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Components\Resource\Pagination;
+use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
 use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use ReflectionClass;
@@ -32,6 +33,7 @@ class ComponentFactory
         private readonly ApplicationConfiguration $applicationConfiguration,
         private readonly BoundedContextHashmap $boundedContextHashmap,
         private readonly FormComponentFactory $formComponentFactory,
+        private readonly ResourceActionFactory $resourceActionFactory,
         ?ColumnSelector $columnSelector = null
     ) {
         $this->columnSelector = $columnSelector ?? new ColumnSelector();
@@ -57,11 +59,14 @@ class ComponentFactory
         if ($actionResponse->result->totalCount > $actionResponse->result->pageSize) {
             $pagination = new Pagination($actionResponse->result);
         }
+        $actionList = new ResourceActionList(
+            $this->resourceActionFactory->createResourceActionForOverview($className, $actionResponse->apieContext)
+        );
         return $this->createWrapLayout(
             $className->getShortName() . ' overview',
             $boundedContextId,
             $actionResponse->apieContext,
-            new Overview($listData, $columns, $pagination)
+            new Overview($listData, $columns, $actionList, $pagination)
         );
     }
 

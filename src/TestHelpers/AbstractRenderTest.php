@@ -1,10 +1,12 @@
 <?php
 namespace Apie\HtmlBuilders\TestHelpers;
 
+use Apie\Common\ActionDefinitions\CreateResourceActionDefinition;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Fixtures\BoundedContextFactory;
+use Apie\Fixtures\Entities\UserWithAutoincrementKey;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
@@ -22,16 +24,20 @@ use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
 use Apie\HtmlBuilders\Components\Layout\Logo;
 use Apie\HtmlBuilders\Components\Resource\Overview;
+use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\ComponentRendererInterface;
+use Apie\HtmlBuilders\Lists\ActionList;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
+use Apie\HtmlBuilders\ResourceActions\CreateResourceAction;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 use Apie\OtpValueObjects\HOTPSecret;
 use Apie\TextValueObjects\StrongPassword;
 use Generator;
 use OTPHP\HOTP;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 /**
  * @codeCoverageIgnore
@@ -120,15 +126,35 @@ abstract class AbstractRenderTest extends TestCase
             'expected-menu.html',
             new Layout\Menu($defaultConfiguration),
         ];
-
+        
         yield 'Resource overview' => [
             'expected-resource-overview.html',
-            new Overview([['id' => 12, 'name' => 'Pizza']], ['id', 'name'])
+            new Overview(
+                [['id' => 12, 'name' => 'Pizza']],
+                ['id', 'name'],
+                new ResourceActionList(new ActionList([]))
+            )
+        ];
+
+        $createResourceAction = new CreateResourceAction(
+            new CreateResourceActionDefinition(
+                new ReflectionClass(UserWithAutoincrementKey::class),
+                new BoundedContextId('default')
+            )
+        );
+        $resourceActionList = new ResourceActionList(new ActionList([$createResourceAction]));
+        yield 'Resource action list' => [
+            'expected-resource-action-list.html',
+            $resourceActionList
         ];
 
         yield 'Resource overview large list' => [
             'expected-resource-overview-large-list.html',
-            new Overview(array_fill(0, 100, ['id' => 12, 'name' => 'Pizza']), ['id', 'name'])
+            new Overview(
+                array_fill(0, 100, ['id' => 12, 'name' => 'Pizza']),
+                ['id', 'name'],
+                $resourceActionList
+            )
         ];
 
         yield 'Form' => [
