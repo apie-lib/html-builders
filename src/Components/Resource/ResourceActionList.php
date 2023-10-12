@@ -9,12 +9,14 @@ class ResourceActionList extends BaseComponent
 {
     public function __construct(
         CurrentConfiguration $currentConfiguration,
-        ActionList $resourceActionList
+        ActionList $resourceActionList,
+        string $textSearch = '',
     ) {
         parent::__construct(
             [
                 'actions' => $resourceActionList,
                 'config' => $currentConfiguration,
+                'textSearch' => $textSearch,
             ]
         );
     }
