@@ -132,7 +132,7 @@ abstract class AbstractRenderTest extends TestCase
             new Overview(
                 [['id' => 12, 'name' => 'Pizza']],
                 ['id', 'name'],
-                new ResourceActionList(new ActionList([]))
+                new ResourceActionList($defaultConfiguration, new ActionList([]))
             )
         ];
 
@@ -142,7 +142,7 @@ abstract class AbstractRenderTest extends TestCase
                 new BoundedContextId('default')
             )
         );
-        $resourceActionList = new ResourceActionList(new ActionList([$createResourceAction]));
+        $resourceActionList = new ResourceActionList($defaultConfiguration, new ActionList([$createResourceAction]));
         yield 'Resource action list' => [
             'expected-resource-action-list.html',
             $resourceActionList

@@ -4,6 +4,7 @@ namespace Apie\HtmlBuilders\ResourceActions;
 use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
 use Apie\Common\ActionDefinitions\RunGlobalMethodDefinition;
 use Apie\Core\Utils\ConverterUtils;
+use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\TypeConverter\Exceptions\CanNotConvertObjectException;
 use ReflectionClass;
 
@@ -30,5 +31,13 @@ class GlobalMethodResourceAction implements ResourceActionInterface
         }
 
         return null;
+    }
+
+    public function getUrl(CurrentConfiguration $currentConfiguration): string
+    {
+        $method = $this->actionDefinition->getMethod();
+        return $currentConfiguration->getContextUrl(
+            'resource/action/' . $method->getDeclaringClass()->name . '/' . $method->getName()
+        );
     }
 }

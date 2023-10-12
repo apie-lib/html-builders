@@ -3,6 +3,7 @@ namespace Apie\HtmlBuilders\ResourceActions;
 
 use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
 use Apie\Common\ActionDefinitions\RunResourceMethodDefinition;
+use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use ReflectionClass;
 
 class RunResourceMethodResourceAction implements ResourceActionInterface
@@ -26,5 +27,14 @@ class RunResourceMethodResourceAction implements ResourceActionInterface
         }
 
         return null;
+    }
+
+    public function getUrl(CurrentConfiguration $currentConfiguration): string
+    {
+        // TODO
+        $method = $this->actionDefinition->getMethod();
+        return $currentConfiguration->getContextUrl(
+            'resource/action/' . $method->getDeclaringClass()->name . '/' . $method->getName()
+        );
     }
 }

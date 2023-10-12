@@ -59,7 +59,14 @@ class ComponentFactory
         if ($actionResponse->result->totalCount > $actionResponse->result->pageSize) {
             $pagination = new Pagination($actionResponse->result);
         }
+        $configuration = $this->applicationConfiguration->createConfiguration(
+            new ApieContext(),
+            $this->boundedContextHashmap,
+            $boundedContextId
+        );
+        
         $actionList = new ResourceActionList(
+            $configuration,
             $this->resourceActionFactory->createResourceActionForOverview($className, $actionResponse->apieContext)
         );
         return $this->createWrapLayout(
