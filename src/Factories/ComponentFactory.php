@@ -71,7 +71,7 @@ class ComponentFactory
             assert($request instanceof RequestInterface);
             $query = $request->getUri()->getQuery();
             parse_str($query, $result);
-            $textSearch = $result['text'] ?? '';
+            $textSearch = $result['search'] ?? '';
         }
         
         $actionList = new ResourceActionList(
