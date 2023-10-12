@@ -21,6 +21,7 @@ use Apie\HtmlBuilders\Components\Resource\Pagination;
 use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
 use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
+use Psr\Http\Message\RequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use Stringable;
@@ -64,10 +65,19 @@ class ComponentFactory
             $this->boundedContextHashmap,
             $boundedContextId
         );
+        $textSearch = '';
+        if ($actionResponse->apieContext->hasContext(RequestInterface::class)) {
+            $request = $actionResponse->apieContext->getContext(RequestInterface::class);
+            assert($request instanceof RequestInterface);
+            $query = $request->getUri()->getQuery();
+            parse_str($query, $result);
+            $textSearch = $result['text'] ?? '';
+        }
         
         $actionList = new ResourceActionList(
             $configuration,
-            $this->resourceActionFactory->createResourceActionForOverview($className, $actionResponse->apieContext)
+            $this->resourceActionFactory->createResourceActionForOverview($className, $actionResponse->apieContext),
+            $textSearch
         );
         return $this->createWrapLayout(
             $className->getShortName() . ' overview',
