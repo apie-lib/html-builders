@@ -23,6 +23,7 @@ use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
 use Apie\HtmlBuilders\Components\Layout\Logo;
+use Apie\HtmlBuilders\Components\Resource\FieldDisplay\SegmentDisplay;
 use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
@@ -250,6 +251,18 @@ abstract class AbstractRenderTest extends TestCase
                 'label',
                 new HOTPSecret(HOTP::create(str_repeat('A', 103)))
             )
+        ];
+        yield 'Segment display' => [
+            'expected-segment-display.html',
+            new SegmentDisplay([
+                'test' => new RawContents('value1'),
+                'test2' => new RawContents('value2'),
+            ]),
+        ];
+        yield 'EmptySegment display' => [
+            'expected-empty-segment-display.html',
+            new SegmentDisplay([
+            ]),
         ];
     }
 }

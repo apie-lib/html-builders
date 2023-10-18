@@ -34,6 +34,7 @@ class ComponentFactory
         private readonly ApplicationConfiguration $applicationConfiguration,
         private readonly BoundedContextHashmap $boundedContextHashmap,
         private readonly FormComponentFactory $formComponentFactory,
+        private readonly FieldDisplayComponentFactory $fieldDisplayComponentFactory,
         private readonly ResourceActionFactory $resourceActionFactory,
         ?ColumnSelector $columnSelector = null
     ) {
@@ -43,6 +44,23 @@ class ComponentFactory
     public function createRawContents(Stringable|string $dashboardContents): ComponentInterface
     {
         return new RawContents($dashboardContents);
+    }
+
+    /**
+     * @param ReflectionClass<EntityInterface> $className
+     */
+    public function createResource(
+        ActionResponse $actionResponse,
+        ReflectionClass $className,
+        ?BoundedContextId $boundedContextId
+    ): ComponentInterface {
+        assert($actionResponse->result instanceof EntityInterface);
+        return $this->createWrapLayout(
+            $className->getShortName() . ' details',
+            $boundedContextId,
+            $actionResponse->apieContext,
+            $this->fieldDisplayComponentFactory->createDisplayFor($actionResponse->result, $actionResponse->apieContext)
+        );
     }
 
     /**

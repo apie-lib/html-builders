@@ -4,7 +4,11 @@ services:
       - '@Apie\HtmlBuilders\Configuration\ApplicationConfiguration'
       - '@Apie\Core\BoundedContext\BoundedContextHashmap'
       - '@Apie\HtmlBuilders\Factories\FormComponentFactory'
+      - '@Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory'
       - '@Apie\HtmlBuilders\Factories\ResourceActionFactory'
+
+  Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory:
+    factory: ['Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory', 'create']
 
   Apie\HtmlBuilders\Factories\ResourceActionFactory:
     arguments:
