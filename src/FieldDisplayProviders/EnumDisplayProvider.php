@@ -15,6 +15,6 @@ final class EnumDisplayProvider extends FallbackDisplayProvider
     public function createComponentFor(mixed $object, FieldDisplayBuildContext $context): ComponentInterface
     {
         assert($object instanceof UnitEnum);
-        return parent::createComponentFor($object instanceof BackedEnum ? $object->value : $object->key, $context);
+        return parent::createComponentFor($object instanceof BackedEnum ? $object->value : $object->name, $context);
     }
 }

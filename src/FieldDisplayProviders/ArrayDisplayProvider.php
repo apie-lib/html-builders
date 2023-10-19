@@ -11,11 +11,12 @@ final class ArrayDisplayProvider implements FieldDisplayComponentProviderInterfa
 {
     public function supports(mixed $object, FieldDisplayBuildContext $context): bool
     {
-        return is_array($object) && $object instanceof ItemHashmap;
+        return is_array($object) || $object instanceof ItemHashmap;
     }
     public function createComponentFor(mixed $object, FieldDisplayBuildContext $context): ComponentInterface
     {
-        assert(is_array($object) && $object instanceof ItemHashmap);
+        assert(is_array($object) || $object instanceof ItemHashmap);
+        /** @var array<string, mixed> $detailComponents */
         $detailComponents = [];
         $childContext = $context->createChildContext('_');
         foreach ($object as $key => $value) {
