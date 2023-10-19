@@ -1,21 +1,20 @@
 <?php
 namespace Apie\HtmlBuilders\FieldDisplayProviders;
 
-use Apie\Core\ValueObjects\Utils;
-use Apie\HtmlBuilders\Components\Dashboard\RawContents;
+use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\HtmlBuilders\FieldDisplayBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FieldDisplayComponentProviderInterface;
 
-class FallbackDisplayProvider implements FieldDisplayComponentProviderInterface
+final class ValueObjectDisplayProvider implements FieldDisplayComponentProviderInterface
 {
     public function supports(mixed $object, FieldDisplayBuildContext $context): bool
     {
-        return true;
+        return $object instanceof ValueObjectInterface;
     }
-
     public function createComponentFor(mixed $object, FieldDisplayBuildContext $context): ComponentInterface
     {
-        return new RawContents('<div style="white-space: pre-wrap">' . htmlspecialchars(Utils::toString($object)) . '</div>');
+        assert($object instanceof ValueObjectInterface);
+        return $context->createComponentFor($object->toNative());
     }
 }
