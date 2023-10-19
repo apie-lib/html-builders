@@ -3,6 +3,7 @@ namespace Apie\HtmlBuilders\Factories;
 
 use Apie\Core\Context\ApieContext;
 use Apie\HtmlBuilders\FieldDisplayBuildContext;
+use Apie\HtmlBuilders\FieldDisplayProviders\ArrayDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\BooleanDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\EnumDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\FallbackDisplayProvider;
@@ -27,6 +28,7 @@ final class FieldDisplayComponentFactory
     public static function create(): self
     {
         return new self(
+            new ArrayDisplayProvider(),
             new ValueObjectDisplayProvider(),
             new EnumDisplayProvider(),
             new BooleanDisplayProvider(),
