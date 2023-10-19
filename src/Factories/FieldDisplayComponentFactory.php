@@ -3,7 +3,9 @@ namespace Apie\HtmlBuilders\Factories;
 
 use Apie\Core\Context\ApieContext;
 use Apie\HtmlBuilders\FieldDisplayBuildContext;
+use Apie\HtmlBuilders\FieldDisplayProviders\BooleanDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\FallbackDisplayProvider;
+use Apie\HtmlBuilders\FieldDisplayProviders\NullDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\SegmentDisplayProvider;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FieldDisplayComponentProviderInterface;
@@ -23,6 +25,8 @@ final class FieldDisplayComponentFactory
     public static function create(): self
     {
         return new self(
+            new BooleanDisplayProvider(),
+            new NullDisplayProvider(),
             new SegmentDisplayProvider(),
             new FallbackDisplayProvider(),
         );

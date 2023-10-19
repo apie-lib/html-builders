@@ -23,6 +23,8 @@ use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
 use Apie\HtmlBuilders\Components\Layout\Logo;
+use Apie\HtmlBuilders\Components\Resource\FieldDisplay\BooleanDisplay;
+use Apie\HtmlBuilders\Components\Resource\FieldDisplay\NullDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\SegmentDisplay;
 use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
@@ -263,6 +265,18 @@ abstract class AbstractRenderTest extends TestCase
             'expected-empty-segment-display.html',
             new SegmentDisplay([
             ]),
+        ];
+        yield 'Display true' => [
+            'expected-true-display.html',
+            new BooleanDisplay(true)
+        ];
+        yield 'Display false' => [
+            'expected-false-display.html',
+            new BooleanDisplay(false)
+        ];
+        yield 'Display null' => [
+             'expected-null-display.html',
+             new NullDisplay()
         ];
     }
 }
