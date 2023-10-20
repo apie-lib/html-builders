@@ -19,6 +19,9 @@ class VerifyOtpInputComponentProvider implements FormComponentProviderInterface
             return false;
         }
         $class = ConverterUtils::toReflectionClass($type);
+        if (!$class) {
+            return false;
+        }
         do {
             if ($class->name === VerifyOTP::class) {
                 return true;
