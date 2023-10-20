@@ -163,7 +163,7 @@ class ComponentFactory
             $boundedContextId,
             $context,
             new Form(
-                $method->getNumberOfParameters() > 0 ? RequestMethod::POST : RequestMethod::GET,
+                RequestMethod::POST,
                 $formBuildContext->getValidationError(),
                 $formBuildContext->getMissingValidationErrors($formFields),
                 ...$formFields
