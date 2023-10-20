@@ -50,11 +50,11 @@ class RunResourceMethodResourceAction implements ResourceActionInterface, Single
         if ($this->entity) {
             $id = $this->entity->getId()->toNative();
             return $currentConfiguration->getContextUrl(
-                'resource/action/' . $method->getDeclaringClass()->name . '/' . $id . '/' . $method->getName()
+                'resource/action/' . $method->getDeclaringClass()->getShortName() . '/' . $id . '/' . $method->getName()
             );
         }
         return $currentConfiguration->getContextUrl(
-            'resource/action/' . $method->getDeclaringClass()->name . '/' . $method->getName()
+            'resource/action/' . $method->getDeclaringClass()->getShortName() . '/' . $method->getName()
         );
     }
 }
