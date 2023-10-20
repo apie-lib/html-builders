@@ -6,7 +6,10 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Fixtures\BoundedContextFactory;
+use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
+use Apie\Fixtures\Identifiers\OrderIdentifier;
+use Apie\Fixtures\Lists\OrderLineList;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
@@ -23,11 +26,13 @@ use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
 use Apie\HtmlBuilders\Components\Layout\Logo;
+use Apie\HtmlBuilders\Components\Resource\Detail;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\BooleanDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\NullDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\SegmentDisplay;
 use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
+use Apie\HtmlBuilders\Components\Resource\SingleResourceActionList;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\ComponentRendererInterface;
@@ -277,6 +282,24 @@ abstract class AbstractRenderTest extends TestCase
         yield 'Display null' => [
              'expected-null-display.html',
              new NullDisplay()
+        ];
+        $entity = new Order(OrderIdentifier::createRandom(), new OrderLineList());
+        $singleResourceActionList = new SingleResourceActionList($defaultConfiguration, new ActionList([]), $entity->getId());
+        yield 'Single resource action list' => [
+            'expected-single-resource-action-list.html',
+            $singleResourceActionList,
+        ];
+        
+        yield 'Resource details' => [
+            'expected-resource-details.html',
+            new Detail(
+                $entity,
+                $singleResourceActionList,
+                new SegmentDisplay([
+                    'test' => new RawContents('value1'),
+                    'test2' => new RawContents('value2'),
+                ]),
+            )
         ];
     }
 }

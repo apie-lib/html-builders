@@ -16,9 +16,11 @@ use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
 use Apie\HtmlBuilders\Components\Forms\Form;
 use Apie\HtmlBuilders\Components\Layout;
+use Apie\HtmlBuilders\Components\Resource\Detail;
 use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Components\Resource\Pagination;
 use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
+use Apie\HtmlBuilders\Components\Resource\SingleResourceActionList;
 use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Psr\Http\Message\RequestInterface;
@@ -55,11 +57,31 @@ class ComponentFactory
         ?BoundedContextId $boundedContextId
     ): ComponentInterface {
         assert($actionResponse->result instanceof EntityInterface);
+        $id = $actionResponse->apieContext->getContext(ContextConstants::RESOURCE_ID);
+        $configuration = $this->applicationConfiguration->createConfiguration(
+            $actionResponse->apieContext,
+            $this->boundedContextHashmap,
+            $boundedContextId
+        );
+        $actionList = $this->resourceActionFactory->createResourceActionForDetail(
+            $actionResponse->result,
+            $className,
+            $actionResponse->apieContext
+        );
+        $resourceActionList = new SingleResourceActionList(
+            $configuration,
+            $actionList,
+            $id
+        );
         return $this->createWrapLayout(
-            $className->getShortName() . ' details',
+            $className->getShortName() . ' details of ' . $id,
             $boundedContextId,
             $actionResponse->apieContext,
-            $this->fieldDisplayComponentFactory->createDisplayFor($actionResponse->result, $actionResponse->apieContext)
+            new Detail(
+                $actionResponse->result,
+                $resourceActionList,
+                $this->fieldDisplayComponentFactory->createDisplayFor($actionResponse->result, $actionResponse->apieContext)
+            )
         );
     }
 
@@ -79,7 +101,7 @@ class ComponentFactory
             $pagination = new Pagination($actionResponse->result);
         }
         $configuration = $this->applicationConfiguration->createConfiguration(
-            new ApieContext(),
+            $actionResponse->apieContext,
             $this->boundedContextHashmap,
             $boundedContextId
         );
