@@ -283,7 +283,7 @@ abstract class AbstractRenderTest extends TestCase
              'expected-null-display.html',
              new NullDisplay()
         ];
-        $entity = new Order(OrderIdentifier::createRandom(), new OrderLineList());
+        $entity = new Order(OrderIdentifier::fromNative('35eadea7-b93b-4031-acaf-c9759886627d'), new OrderLineList());
         $singleResourceActionList = new SingleResourceActionList($defaultConfiguration, new ActionList([]), $entity->getId());
         yield 'Single resource action list' => [
             'expected-single-resource-action-list.html',
