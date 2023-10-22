@@ -1,8 +1,6 @@
 <?php
 namespace Apie\HtmlBuilders\Enums;
 
-use Stringable;
-
 enum ActionDefinitionVariant: string
 {
     case DEFAULT = 'default';
