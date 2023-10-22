@@ -145,6 +145,7 @@ abstract class AbstractRenderTest extends TestCase
         ];
 
         $createResourceAction = new CreateResourceAction(
+            new ReflectionClass(UserWithAutoincrementKey::class),
             new CreateResourceActionDefinition(
                 new ReflectionClass(UserWithAutoincrementKey::class),
                 new BoundedContextId('default')

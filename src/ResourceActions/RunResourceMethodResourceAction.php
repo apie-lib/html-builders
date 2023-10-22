@@ -3,8 +3,10 @@ namespace Apie\HtmlBuilders\ResourceActions;
 
 use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
 use Apie\Common\ActionDefinitions\RunResourceMethodDefinition;
+use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
+use Apie\HtmlBuilders\Enums\ActionDefinitionVariant;
 use ReflectionClass;
 
 class RunResourceMethodResourceAction implements ResourceActionInterface, SingleResourceActionInterface
@@ -56,5 +58,27 @@ class RunResourceMethodResourceAction implements ResourceActionInterface, Single
         return $currentConfiguration->getContextUrl(
             'resource/action/' . $method->getDeclaringClass()->getShortName() . '/' . $method->getName()
         );
+    }
+
+    public function getVariant(): ActionDefinitionVariant
+    {
+        if (str_starts_with($this->actionDefinition->getMethod()->name, 'create')) {
+            return ActionDefinitionVariant::PRIMARY;
+        }
+        if (str_starts_with($this->actionDefinition->getMethod()->name, 'remove')) {
+            return ActionDefinitionVariant::DANGER;
+        }
+        if ($this->actionDefinition->getMethod()->isStatic()) {
+            return ActionDefinitionVariant::PLAIN;
+        }
+        return ActionDefinitionVariant::SECONDARY;
+    }
+
+    /**
+     * Can be used by the layout to render small pages/form in a sidebar instead.
+     */
+    public function isSmallPage(?ApieContext $apieContext = null): bool
+    {
+        return false;
     }
 }

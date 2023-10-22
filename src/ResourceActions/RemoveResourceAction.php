@@ -3,8 +3,10 @@ namespace Apie\HtmlBuilders\ResourceActions;
 
 use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
 use Apie\Common\ActionDefinitions\RemoveResourceActionDefinition;
+use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
+use Apie\HtmlBuilders\Enums\ActionDefinitionVariant;
 use ReflectionClass;
 
 class RemoveResourceAction implements SingleResourceActionInterface
@@ -35,5 +37,15 @@ class RemoveResourceAction implements SingleResourceActionInterface
         return $currentConfiguration->getContextUrl(
             'resource/delete/' . $this->actionDefinition->getResourceName()->getShortName() . '/' . $id
         );
+    }
+
+    public function getVariant(): ActionDefinitionVariant
+    {
+        return ActionDefinitionVariant::DANGER;
+    }
+
+    public function isSmallPage(?ApieContext $apieContext = null): bool
+    {
+        return true;
     }
 }
