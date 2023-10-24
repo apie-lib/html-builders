@@ -22,6 +22,7 @@ use Apie\HtmlBuilders\Components\Resource\Pagination;
 use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
 use Apie\HtmlBuilders\Components\Resource\SingleResourceActionList;
 use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
+use Apie\HtmlBuilders\Enums\LayoutEnum;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Psr\Http\Message\RequestInterface;
 use ReflectionClass;
@@ -131,8 +132,12 @@ class ComponentFactory
         string $pageTitle,
         ?BoundedContextId $boundedContextId,
         ApieContext $context,
-        ComponentInterface $contents
+        ComponentInterface $contents,
+        LayoutEnum $layoutEnum = LayoutEnum::LAYOUT
     ): ComponentInterface {
+        if ($layoutEnum === LayoutEnum::SIDEBAR) {
+            return $contents;
+        }
         $configuration = $this->applicationConfiguration->createConfiguration($context, $this->boundedContextHashmap, $boundedContextId);
         return new Layout(
             $pageTitle,
@@ -145,7 +150,8 @@ class ComponentFactory
         string $pageTitle,
         ReflectionMethod $method,
         ?BoundedContextId $boundedContextId,
-        ApieContext $context
+        ApieContext $context,
+        LayoutEnum $layoutEnum = LayoutEnum::LAYOUT
     ): ComponentInterface {
         /** @var CsrfTokenProvider $csrfTokenProvider */
         $csrfTokenProvider = $context->getContext(CsrfTokenProvider::class);
@@ -167,7 +173,8 @@ class ComponentFactory
                 $formBuildContext->getValidationError(),
                 $formBuildContext->getMissingValidationErrors($formFields),
                 ...$formFields
-            )
+            ),
+            $layoutEnum
         );
     }
 
@@ -178,7 +185,8 @@ class ComponentFactory
         string $pageTitle,
         ReflectionClass $class,
         ?BoundedContextId $boundedContextId,
-        ApieContext $context
+        ApieContext $context,
+        LayoutEnum $layoutEnum = LayoutEnum::LAYOUT
     ): ComponentInterface {
         $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
             ? $context->getContext(ContextConstants::RAW_CONTENTS)
@@ -199,7 +207,8 @@ class ComponentFactory
                 $form->getMissingValidationErrors($formBuildContext),
                 new Csrf($csrfToken),
                 $form
-            )
+            ),
+            $layoutEnum
         );
     }
 
@@ -210,7 +219,8 @@ class ComponentFactory
         string $pageTitle,
         ReflectionClass $class,
         ?BoundedContextId $boundedContextId,
-        ApieContext $context
+        ApieContext $context,
+        LayoutEnum $layoutEnum = LayoutEnum::LAYOUT
     ): ComponentInterface {
         $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
             ? $context->getContext(ContextConstants::RAW_CONTENTS)
@@ -231,7 +241,8 @@ class ComponentFactory
                 $form->getMissingValidationErrors($formBuildContext),
                 new Csrf($csrfToken),
                 $form
-            )
+            ),
+            $layoutEnum
         );
     }
 }
