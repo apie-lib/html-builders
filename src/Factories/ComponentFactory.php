@@ -15,6 +15,8 @@ use Apie\HtmlBuilders\Columns\ColumnSelector;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
 use Apie\HtmlBuilders\Components\Forms\Form;
+use Apie\HtmlBuilders\Components\Forms\FormGroup;
+use Apie\HtmlBuilders\Components\Forms\RemoveConfirm;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Resource\Detail;
 use Apie\HtmlBuilders\Components\Resource\Overview;
@@ -24,6 +26,7 @@ use Apie\HtmlBuilders\Components\Resource\SingleResourceActionList;
 use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\Enums\LayoutEnum;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
+use Apie\HtmlBuilders\ValueObjects\FormName;
 use Psr\Http\Message\RequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -173,6 +176,44 @@ class ComponentFactory
                 $formBuildContext->getValidationError(),
                 $formBuildContext->getMissingValidationErrors($formFields),
                 ...$formFields
+            ),
+            $layoutEnum
+        );
+    }
+
+    /**
+     * @param ReflectionClass<EntityInterface> $class
+     */
+    public function createFormForResourceRemoval(
+        string $pageTitle,
+        ReflectionClass $class,
+        ?BoundedContextId $boundedContextId,
+        ApieContext $context,
+        LayoutEnum $layoutEnum = LayoutEnum::LAYOUT
+    ): ComponentInterface {
+        $filledIn = $context->hasContext(ContextConstants::RAW_CONTENTS)
+            ? $context->getContext(ContextConstants::RAW_CONTENTS)
+            : [];
+        /** @var CsrfTokenProvider $csrfTokenProvider */
+        $csrfTokenProvider = $context->getContext(CsrfTokenProvider::class);
+        $csrfToken = $csrfTokenProvider->createToken();
+        
+        $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
+        $form = new FormGroup(
+            new FormName(''),
+            $formBuildContext->getValidationError(),
+            $formBuildContext->getMissingValidationErrors([])
+        );
+        return $this->createWrapLayout(
+            $pageTitle,
+            $boundedContextId,
+            $context,
+            new Form(
+                RequestMethod::POST,
+                $formBuildContext->getValidationError(),
+                $formBuildContext->getMissingValidationErrors([]),
+                new RemoveConfirm($class),
+                new Csrf($csrfToken)
             ),
             $layoutEnum
         );

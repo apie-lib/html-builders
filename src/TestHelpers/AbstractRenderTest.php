@@ -21,6 +21,7 @@ use Apie\HtmlBuilders\Components\Forms\HiddenField;
 use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Components\Forms\InputWithAutocomplete;
 use Apie\HtmlBuilders\Components\Forms\Password;
+use Apie\HtmlBuilders\Components\Forms\RemoveConfirm;
 use Apie\HtmlBuilders\Components\Forms\VerifyOtpInput;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
@@ -301,6 +302,11 @@ abstract class AbstractRenderTest extends TestCase
                     'test2' => new RawContents('value2'),
                 ]),
             )
+        ];
+
+        yield 'Remove confirmation text' => [
+            'expected-remove-confirm.html',
+            new RemoveConfirm(new ReflectionClass(Order::class))
         ];
     }
 }
