@@ -8,6 +8,7 @@ use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Enums\ActionDefinitionVariant;
+use Apie\HtmlBuilders\Utils\FieldUtils;
 use ReflectionClass;
 
 class CreateResourceAction implements ResourceActionInterface
@@ -49,8 +50,8 @@ class CreateResourceAction implements ResourceActionInterface
 
     public function isSmallPage(?ApieContext $apieContext = null): bool
     {
-        $metadata = MetadataFactory::getCreationMetadata($this->entityClass, $apieContext ?? new ApieContext());
-        $hashmap = $metadata->getHashmap();
-        return $hashmap->count() < 4;
+        $apieContext ??= new ApieContext();
+        $metadata = MetadataFactory::getCreationMetadata($this->entityClass, $apieContext);
+        return FieldUtils::countAmountOfFields($metadata, $apieContext) < 4;
     }
 }
