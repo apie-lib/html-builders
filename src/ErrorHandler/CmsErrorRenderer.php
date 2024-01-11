@@ -6,12 +6,10 @@ use Apie\Common\ContextConstants;
 use Apie\Common\Interfaces\DashboardContentFactoryInterface;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Exceptions\HttpStatusCodeException;
 use Apie\HtmlBuilders\Factories\ComponentFactory;
 use Apie\HtmlBuilders\Interfaces\ComponentRendererInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class CmsErrorRenderer
@@ -33,14 +31,11 @@ class CmsErrorRenderer
      */
     public function createCmsResponse(Request $request, Throwable $error): Response
     {
+        $error = new WrappedError($error);
         $contents = $this->dashboardContentFactory->create($this->errorTemplate, ['error' => $error]);
         $boundedContextId = null;
         if ($request->attributes->has(ContextConstants::BOUNDED_CONTEXT_ID)) {
             $boundedContextId = new BoundedContextId($request->attributes->get(ContextConstants::BOUNDED_CONTEXT_ID));
-        }
-        $statusCode = 500;
-        if ($error instanceof HttpStatusCodeException || $error instanceof HttpException) {
-            $statusCode = $error->getStatusCode();
         }
         return new Response(
             $this->componentRenderer->render(
@@ -51,7 +46,7 @@ class CmsErrorRenderer
                     $this->componentFactory->createRawContents($contents)
                 )
             ),
-            $statusCode
+            $error->getStatusCode()
         );
     }
 }

@@ -51,7 +51,7 @@ use ReflectionClass;
 /**
  * @codeCoverageIgnore
  */
-abstract class AbstractRenderTest extends TestCase
+abstract class AbstractRenderTestCase extends TestCase
 {
     abstract public function getRenderer(): ComponentRendererInterface;
 
