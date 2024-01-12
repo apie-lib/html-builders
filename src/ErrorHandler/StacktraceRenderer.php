@@ -8,8 +8,8 @@ use Throwable;
 
 final class StacktraceRenderer implements Stringable
 {
-    private const DEFAULT_CDN = 'https://unpkg.com/apie-stacktrace@0.0.3/dist/apie-stacktrace/apie-stacktrace.esm.js';
-    private const DEFAULT_STYLE_CDN = 'https://unpkg.com/apie-stacktrace@0.0.3/dist/apie-stacktrace/apie-stacktrace.css';
+    private const DEFAULT_CDN = 'https://unpkg.com/apie-stacktrace@0.0.4/dist/apie-stacktrace/apie-stacktrace.esm.js';
+    private const DEFAULT_STYLE_CDN = 'https://unpkg.com/apie-stacktrace@0.0.4/dist/apie-stacktrace/apie-stacktrace.css';
 
     public function __construct(
         private readonly Throwable $error,
