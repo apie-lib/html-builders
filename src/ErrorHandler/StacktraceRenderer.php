@@ -1,8 +1,6 @@
 <?php
 namespace Apie\HtmlBuilders\ErrorHandler;
 
-use Apie\HtmlBuilders\ErrorHandler\LoadScript\CheckIfLoaded;
-use DOMDocument;
 use Stringable;
 use Throwable;
 
@@ -19,7 +17,7 @@ final class StacktraceRenderer implements Stringable
     }
 
     public function __toString(): string
-    {        
+    {
         $loadCdnScript = '<script type="module" src="' . htmlentities($this->cdn) . '"></script>';
         $loadCdnScript .= '<link rel="stylesheet" href="' . htmlentities($this->styleCdn) . '" />';
         $wrapped = new WrappedError($this->error);
