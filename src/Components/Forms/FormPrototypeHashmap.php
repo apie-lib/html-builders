@@ -8,12 +8,9 @@ use Apie\HtmlBuilders\ValueObjects\FormName;
 
 class FormPrototypeHashmap extends BaseComponent
 {
-    private string $protoKey;
-
     /** @param array<string|int, mixed>|null $value */
     public function __construct(FormName $name, ?array $value, ComponentInterface $prototype)
     {
-        $this->protoKey = $name->getPrototypeName();
         $prototypeComponent = $prototype->withName($name->createChildForm($name->getPrototypeName()));
         parent::__construct(
             [
@@ -21,23 +18,8 @@ class FormPrototypeHashmap extends BaseComponent
                 'value' => $value,
             ],
             new ComponentHashmap([
-                $this->protoKey => $prototypeComponent,
-                '__PROTO__' => $prototypeComponent,
+                '__proto__' => $prototypeComponent,
             ])
         );
-    }
-
-    public function withName(FormName $name): ComponentInterface
-    {
-        $item = clone $this;
-        $item->attributes['name'] = $name;
-        $item->childComponents = new ComponentHashmap();
-        $oldComponent = $this->childComponents[$this->protoKey];
-        $item->protoKey = $name->getPrototypeName();
-
-        $item->childComponents['__PROTO__'] =
-        $item->childComponents[$item->protoKey] = $oldComponent
-            ->withName($name->createChildForm($name->getPrototypeName()));
-        return $item;
     }
 }
