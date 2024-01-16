@@ -22,16 +22,4 @@ class FormPrototypeList extends BaseComponent
             ])
         );
     }
-
-    public function withName(FormName $name): ComponentInterface
-    {
-        $item = clone $this;
-        $item->attributes['name'] = $name;
-        $item->childComponents = new ComponentHashmap();
-        $oldComponent = $this->childComponents['__proto__'];
-
-        $item->childComponents['__proto__'] = $oldComponent
-            ->withName($name->createChildForm($name->getPrototypeName()));
-        return $item;
-    }
 }
