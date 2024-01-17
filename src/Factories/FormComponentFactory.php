@@ -109,13 +109,17 @@ final class FormComponentFactory
     {
         $childContext = $context->createChildContext($parameter->name);
         $typehint = $parameter->getType();
-        $component = $this->createFromType($typehint, $childContext);
         if ($parameter->isVariadic()) {
+            $prototypeName = $context->getFormName()->getPrototypeName();
+            $component = $this->createFromType($typehint, $context->createChildContext($prototypeName));
             return new FormPrototypeList(
                 $childContext->getFormName(),
                 $childContext->getFilledInValue([]),
+                $prototypeName,
                 $component
             );
+        } else {
+            $component = $this->createFromType($typehint, $childContext);
         }
         return $component;
     }

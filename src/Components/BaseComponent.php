@@ -36,7 +36,7 @@ abstract class BaseComponent implements ComponentInterface
         $item = clone $this;
         $item->attributes['name'] = $name;
         foreach ($this->childComponents as $childComponentKey => $childComponent) {
-            $item->childComponents[$name] = $childComponent->withName($name->createChildForm($childComponentKey));
+            $item->childComponents[$childComponentKey] = $childComponent->withName($name->createChildForm($childComponentKey));
         }
         return $item;
     }

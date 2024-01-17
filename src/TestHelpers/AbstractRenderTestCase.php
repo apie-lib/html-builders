@@ -245,7 +245,8 @@ abstract class AbstractRenderTestCase extends TestCase
             new FormPrototypeList(
                 new FormName('name'),
                 [],
-                new Input('name', 'value', 'tel')
+                '__NAME__',
+                new Input('__NAME__', 'value', 'tel')
             )
         ];
         yield 'CSRF token' => [

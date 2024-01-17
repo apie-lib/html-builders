@@ -28,12 +28,14 @@ class ItemListComponentProvider implements FormComponentProviderInterface
     {
         $formComponentFactory = $context->getComponentFactory();
         $refl = new ReflectionClass($type->getName());
+        $prototypeName = $context->getFormName()->getPrototypeName();
         return new FormPrototypeList(
             $context->getFormName(),
             $context->getFilledInValue($type->allowsNull() ? null : []),
+            $prototypeName,
             $formComponentFactory->createFromType(
                 $refl->getMethod('offsetGet')->getReturnType(),
-                $context->createChildContext('__PROTO__')
+                $context->createChildContext($prototypeName)
             )
         );
     }
