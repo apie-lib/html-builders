@@ -2,11 +2,13 @@
 namespace Apie\HtmlBuilders\Factories;
 
 use Apie\Core\Context\ApieContext;
+use Apie\HtmlBuilders\Columns\ColumnSelector;
 use Apie\HtmlBuilders\FieldDisplayBuildContext;
 use Apie\HtmlBuilders\FieldDisplayProviders\ArrayDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\BooleanDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\EnumDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\FallbackDisplayProvider;
+use Apie\HtmlBuilders\FieldDisplayProviders\ListDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\NullDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\SegmentDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\ValueObjectDisplayProvider;
@@ -25,10 +27,11 @@ final class FieldDisplayComponentFactory
         $this->valueComponentProviders = $valueComponentProviders;
     }
 
-    public static function create(): self
+    public static function create(?ColumnSelector $columnSelector = null): self
     {
         return new self(
             new ArrayDisplayProvider(),
+            new ListDisplayProvider($columnSelector ?? new ColumnSelector()),
             new ValueObjectDisplayProvider(),
             new EnumDisplayProvider(),
             new BooleanDisplayProvider(),

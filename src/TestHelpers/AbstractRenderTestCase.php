@@ -29,6 +29,7 @@ use Apie\HtmlBuilders\Components\Layout\LoginSelect;
 use Apie\HtmlBuilders\Components\Layout\Logo;
 use Apie\HtmlBuilders\Components\Resource\Detail;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\BooleanDisplay;
+use Apie\HtmlBuilders\Components\Resource\FieldDisplay\ListDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\NullDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\SegmentDisplay;
 use Apie\HtmlBuilders\Components\Resource\Overview;
@@ -260,6 +261,23 @@ abstract class AbstractRenderTestCase extends TestCase
                 null,
                 'label',
                 new HOTPSecret(HOTP::create(str_repeat('A', 103)))
+            )
+        ];
+        yield 'List display' => [
+            'expected-list-display.html',
+            new ListDisplay(
+                [
+                    [
+                        'id' => 1,
+                        'description' => 'Description of 1',
+                    ],
+                    [
+                        'id' => 2,
+                        'description' => 'Description of 2',
+                        'extra' => 'extra field',
+                    ]
+                ],
+                ['id', 'description', 'extra'],
             )
         ];
         yield 'Segment display' => [
