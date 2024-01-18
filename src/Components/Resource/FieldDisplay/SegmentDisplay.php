@@ -10,11 +10,12 @@ class SegmentDisplay extends BaseComponent
     /**
      * @param array<string, ComponentInterface> $detailComponents
      */
-    public function __construct(array $detailComponents)
+    public function __construct(array $detailComponents, bool $showKeys = true)
     {
         parent::__construct(
             [
                 'componentNames' => array_keys($detailComponents),
+                'showKeys' => $showKeys,
             ],
             new ComponentHashmap($detailComponents)
         );

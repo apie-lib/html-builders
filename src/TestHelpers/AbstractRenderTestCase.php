@@ -287,6 +287,16 @@ abstract class AbstractRenderTestCase extends TestCase
                 'test2' => new RawContents('value2'),
             ]),
         ];
+        yield 'Segment display, hide keys' => [
+            'expected-segment-display-no-keys.html',
+            new SegmentDisplay(
+                [
+                    new RawContents('value1'),
+                    new RawContents('value2'),
+                ],
+                showKeys: false,
+            ),
+        ];
         yield 'EmptySegment display' => [
             'expected-empty-segment-display.html',
             new SegmentDisplay([

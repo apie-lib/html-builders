@@ -5,6 +5,8 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\ItemList;
 use Apie\Core\Metadata\MetadataFactory;
+use Apie\Core\Utils\ConverterUtils;
+use Apie\Core\Utils\HashmapUtils;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Columns\ColumnSelector;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\ListDisplay;
@@ -12,6 +14,7 @@ use Apie\HtmlBuilders\Components\Resource\FieldDisplay\SegmentDisplay;
 use Apie\HtmlBuilders\FieldDisplayBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FieldDisplayComponentProviderInterface;
+use Apie\Serializer\Serializer;
 use ReflectionClass;
 
 final class ListDisplayProvider implements FieldDisplayComponentProviderInterface
@@ -28,6 +31,9 @@ final class ListDisplayProvider implements FieldDisplayComponentProviderInterfac
 
     private function isSimpleList(ReflectionClass $refl, ApieContext $apieContext): bool
     {
+        if (!$apieContext->hasContext(Serializer::class)) {
+            return false;
+        }
         $display = MetadataFactory::getResultMetadata($refl, $apieContext);
         foreach ($display->getHashmap() as $fieldMetadata) {
             $typehint = $fieldMetadata->getTypehint();
@@ -42,11 +48,16 @@ final class ListDisplayProvider implements FieldDisplayComponentProviderInterfac
     public function createComponentFor(mixed $object, FieldDisplayBuildContext $context): ComponentInterface
     {
         assert($object instanceof ItemList);
+        $apieContext = $context->getApieContext();
         $refl = new ReflectionClass($object);
-        if ($this->isSimpleList($refl, $context->getApieContext())) {
+        $arrayType = ConverterUtils::toReflectionClass(HashmapUtils::getArrayType($refl));
+        if ($arrayType && $this->isSimpleList($refl, $apieContext)) {
+            $serializer = $apieContext->getContext(Serializer::class);
+            assert($serializer instanceof Serializer);
+
             return new ListDisplay(
-                Utils::toArray($object),
-                $this->columnSelector->getColumns($refl, $context->getApieContext())
+                Utils::toArray($serializer->normalize($object, $apieContext)),
+                $this->columnSelector->getColumns($arrayType, $apieContext)
             );
         }
         /** @var array<string, mixed> $detailComponents */
@@ -55,6 +66,6 @@ final class ListDisplayProvider implements FieldDisplayComponentProviderInterfac
         foreach ($object as $key => $value) {
             $detailComponents[$key] = $childContext->createComponentFor($value);
         }
-        return new SegmentDisplay($detailComponents);
+        return new SegmentDisplay($detailComponents, showKeys: false);
     }
 }
