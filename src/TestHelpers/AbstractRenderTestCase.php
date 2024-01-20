@@ -7,9 +7,11 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\Fixtures\Entities\Order;
+use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
 use Apie\Fixtures\Identifiers\OrderIdentifier;
 use Apie\Fixtures\Lists\OrderLineList;
+use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
@@ -27,6 +29,7 @@ use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
 use Apie\HtmlBuilders\Components\Layout\Logo;
+use Apie\HtmlBuilders\Components\Layout\ShowProfile;
 use Apie\HtmlBuilders\Components\Resource\Detail;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\BooleanDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\ListDisplay;
@@ -43,6 +46,7 @@ use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ResourceActions\CreateResourceAction;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 use Apie\OtpValueObjects\HOTPSecret;
+use Apie\TextValueObjects\DatabaseText;
 use Apie\TextValueObjects\StrongPassword;
 use Generator;
 use OTPHP\HOTP;
@@ -129,6 +133,21 @@ abstract class AbstractRenderTestCase extends TestCase
             'expected-login-select.html',
             new LoginSelect(
                 $defaultConfiguration
+            )
+        ];
+
+        yield 'Profile' => [
+            'expected-profile.html',
+            new ShowProfile(
+                $defaultConfiguration,
+                new UserWithAddress(
+                    new AddressWithZipcodeCheck(
+                        new DatabaseText('Evergreen Terrace'),
+                        new DatabaseText('742'),
+                        new DatabaseText('11111'),
+                        new DatabaseText('Springfield'),
+                    )
+                )
             )
         ];
 
