@@ -8,7 +8,7 @@ use Apie\HtmlBuilders\Lists\ComponentHashmap;
 class SegmentDisplay extends BaseComponent
 {
     /**
-     * @param array<string, ComponentInterface> $detailComponents
+     * @param array<string|int, ComponentInterface> $detailComponents
      */
     public function __construct(array $detailComponents, bool $showKeys = true)
     {

@@ -29,6 +29,9 @@ final class ListDisplayProvider implements FieldDisplayComponentProviderInterfac
         return $object instanceof ItemList;
     }
 
+    /**
+     * @param ReflectionClass<ItemList> $refl
+     */
     private function isSimpleList(ReflectionClass $refl, ApieContext $apieContext): bool
     {
         if (!$apieContext->hasContext(Serializer::class)) {
