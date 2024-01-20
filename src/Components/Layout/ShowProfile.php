@@ -75,9 +75,7 @@ class ShowProfile extends BaseComponent
                 'gravatarUrl' => 'https://gravatar.com/avatar/' . md5(strtolower($fields['email'] ?? '')),
                 'fieldNames' => array_keys($fields),
                 'fields' => $fields,
-            ],
-            new ComponentHashmap([
-            ])
+            ]
         );
     }
 }
