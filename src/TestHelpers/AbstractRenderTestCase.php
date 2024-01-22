@@ -10,6 +10,7 @@ use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
 use Apie\Fixtures\Identifiers\OrderIdentifier;
+use Apie\Fixtures\Identifiers\UserWithAddressIdentifier;
 use Apie\Fixtures\Lists\OrderLineList;
 use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
@@ -146,7 +147,8 @@ abstract class AbstractRenderTestCase extends TestCase
                         new DatabaseText('742'),
                         new DatabaseText('11111'),
                         new DatabaseText('Springfield'),
-                    )
+                    ),
+                    new UserWithAddressIdentifier('d788c9f5-6493-4386-89f4-374be3b28764'),
                 )
             )
         ];
@@ -296,6 +298,13 @@ abstract class AbstractRenderTestCase extends TestCase
                         'extra' => 'extra field',
                     ]
                 ],
+                ['id', 'description', 'extra'],
+            )
+        ];
+        yield 'Empty list display' => [
+            'expected-empty-list-display.html',
+            new ListDisplay(
+                [],
                 ['id', 'description', 'extra'],
             )
         ];
