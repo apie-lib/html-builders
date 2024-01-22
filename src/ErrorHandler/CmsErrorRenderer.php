@@ -31,7 +31,6 @@ class CmsErrorRenderer
      */
     public function createCmsResponse(Request $request, Throwable $error): Response
     {
-        $error = new WrappedError($error);
         $contents = $this->dashboardContentFactory->create($this->errorTemplate, ['error' => $error]);
         $boundedContextId = null;
         if ($request->attributes->has(ContextConstants::BOUNDED_CONTEXT_ID)) {

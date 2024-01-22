@@ -26,11 +26,6 @@ final class WrappedErrorTrace implements ValueObjectInterface, JsonSerializable
     private string $type;
 
     /**
-     * @var array<int, mixed>
-     */
-    private array $args = [];
-
-    /**
      * @codeCoverageIgnore
      */
     private function __construct()
