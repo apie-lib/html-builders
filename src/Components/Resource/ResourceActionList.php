@@ -3,21 +3,25 @@ namespace Apie\HtmlBuilders\Components\Resource;
 
 use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
+use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Lists\ActionList;
+use Apie\HtmlBuilders\Lists\ComponentHashmap;
 
 class ResourceActionList extends BaseComponent
 {
     public function __construct(
         CurrentConfiguration $currentConfiguration,
         ActionList $resourceActionList,
-        string $textSearch = '',
+        ComponentInterface $filterColumns,
     ) {
         parent::__construct(
             [
                 'actions' => $resourceActionList,
                 'config' => $currentConfiguration,
-                'textSearch' => $textSearch,
-            ]
+            ],
+            new ComponentHashmap([
+                'filterColumns' => $filterColumns,
+            ])
         );
     }
 }

@@ -6,9 +6,12 @@ use Apie\Core\Actions\ActionResponse;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Datalayers\ApieDatalayer;
+use Apie\Core\Datalayers\ApieDatalayerWithFilters;
 use Apie\Core\Datalayers\Lists\PaginatedResult;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Enums\RequestMethod;
+use Apie\Core\Lists\StringList;
 use Apie\Core\Session\CsrfTokenProvider;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Columns\ColumnSelector;
@@ -19,6 +22,7 @@ use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\RemoveConfirm;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Resource\Detail;
+use Apie\HtmlBuilders\Components\Resource\FilterColumns;
 use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Components\Resource\Pagination;
 use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
@@ -109,19 +113,12 @@ class ComponentFactory
             $this->boundedContextHashmap,
             $boundedContextId
         );
-        $textSearch = '';
-        if ($actionResponse->apieContext->hasContext(RequestInterface::class)) {
-            $request = $actionResponse->apieContext->getContext(RequestInterface::class);
-            assert($request instanceof RequestInterface);
-            $query = $request->getUri()->getQuery();
-            parse_str($query, $result);
-            $textSearch = $result['search'] ?? '';
-        }
+        $filterColumns = $this->createFilterColumns($className, $actionResponse->apieContext);
         
         $actionList = new ResourceActionList(
             $configuration,
             $this->resourceActionFactory->createResourceActionForOverview($className, $actionResponse->apieContext),
-            $textSearch
+            $filterColumns
         );
         return $this->createWrapLayout(
             $className->getShortName() . ' overview',
@@ -129,6 +126,26 @@ class ComponentFactory
             $actionResponse->apieContext,
             new Overview($listData, $columns, $actionList, $pagination)
         );
+    }
+    
+    public function createFilterColumns(ReflectionClass $className, ApieContext $apieContext): ComponentInterface
+    {
+        $searchFilters = [];
+        if ($apieContext->hasContext(RequestInterface::class)) {
+            $request = $apieContext->getContext(RequestInterface::class);
+            assert($request instanceof RequestInterface);
+            $query = $request->getUri()->getQuery();
+            parse_str($query, $searchFilters);
+        }
+        if ($apieContext->hasContext(ApieDatalayer::class) && $apieContext->hasContext(BoundedContextId::class)) {
+            $datalayer = $apieContext->getContext(ApieDatalayer::class);
+            if ($datalayer instanceof ApieDatalayerWithFilters) {
+                $boundedContextId = $apieContext->getContext(BoundedContextId::class);
+                $filterColumns = $datalayer->getFilterColumns($className, $boundedContextId);
+                return new FilterColumns($filterColumns, $searchFilters['search'] ?? '', Utils::toArray($searchFilters['query'] ?? []));
+            }
+        }
+        return new FilterColumns(new StringList(), $searchFilters['search'] ?? '', []);
     }
 
     public function createWrapLayout(

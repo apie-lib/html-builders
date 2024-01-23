@@ -5,6 +5,7 @@ use Apie\Common\ActionDefinitions\CreateResourceActionDefinition;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
+use Apie\Core\Lists\StringList;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\UserWithAddress;
@@ -36,6 +37,7 @@ use Apie\HtmlBuilders\Components\Resource\FieldDisplay\BooleanDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\ListDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\NullDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\SegmentDisplay;
+use Apie\HtmlBuilders\Components\Resource\FilterColumns;
 use Apie\HtmlBuilders\Components\Resource\Overview;
 use Apie\HtmlBuilders\Components\Resource\ResourceActionList;
 use Apie\HtmlBuilders\Components\Resource\SingleResourceActionList;
@@ -157,13 +159,26 @@ abstract class AbstractRenderTestCase extends TestCase
             'expected-menu.html',
             new Layout\Menu($defaultConfiguration),
         ];
+
+        yield 'Resource overview filters' => [
+            'expected-resource-overview-filters.html',
+            new FilterColumns(
+                new StringList(['id', 'description']),
+                'text search',
+                ['description' => 'test'],
+            )
+            ];
         
         yield 'Resource overview' => [
             'expected-resource-overview.html',
             new Overview(
                 [['id' => 12, 'name' => 'Pizza']],
                 ['id', 'name'],
-                new ResourceActionList($defaultConfiguration, new ActionList([]))
+                new ResourceActionList(
+                    $defaultConfiguration,
+                    new ActionList([]),
+                    new FilterColumns(new StringList(), '', []),
+                )
             )
         ];
 
@@ -174,7 +189,11 @@ abstract class AbstractRenderTestCase extends TestCase
                 new BoundedContextId('default')
             )
         );
-        $resourceActionList = new ResourceActionList($defaultConfiguration, new ActionList([$createResourceAction]));
+        $resourceActionList = new ResourceActionList(
+            $defaultConfiguration,
+            new ActionList([$createResourceAction]),
+            new FilterColumns(new StringList(), '', []),
+        );
         yield 'Resource action list' => [
             'expected-resource-action-list.html',
             $resourceActionList
