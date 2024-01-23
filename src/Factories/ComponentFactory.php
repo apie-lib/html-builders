@@ -137,13 +137,12 @@ class ComponentFactory
             $query = $request->getUri()->getQuery();
             parse_str($query, $searchFilters);
         }
-        if ($apieContext->hasContext(ApieDatalayer::class) && $apieContext->hasContext(BoundedContextId::class)) {
-            $datalayer = $apieContext->getContext(ApieDatalayer::class);
-            if ($datalayer instanceof ApieDatalayerWithFilters) {
-                $boundedContextId = $apieContext->getContext(BoundedContextId::class);
-                $filterColumns = $datalayer->getFilterColumns($className, $boundedContextId);
-                return new FilterColumns($filterColumns, $searchFilters['search'] ?? '', Utils::toArray($searchFilters['query'] ?? []));
-            }
+        if ($apieContext->hasContext(ApieDatalayerWithFilters::class) && $apieContext->hasContext(BoundedContextId::class)) {
+            $datalayer = $apieContext->getContext(ApieDatalayerWithFilters::class);
+            assert($datalayer instanceof ApieDatalayerWithFilters);
+            $boundedContextId = $apieContext->getContext(BoundedContextId::class);
+            $filterColumns = $datalayer->getFilterColumns($className, new BoundedContextId($boundedContextId));
+            return new FilterColumns($filterColumns, $searchFilters['search'] ?? '', Utils::toArray($searchFilters['query'] ?? []));
         }
         return new FilterColumns(new StringList(), $searchFilters['search'] ?? '', []);
     }

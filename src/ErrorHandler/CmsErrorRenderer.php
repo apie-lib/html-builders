@@ -45,7 +45,7 @@ class CmsErrorRenderer
                     $this->componentFactory->createRawContents($contents)
                 )
             ),
-            $error->getStatusCode()
+            (new WrappedError($error))->getStatusCode()
         );
     }
 }
