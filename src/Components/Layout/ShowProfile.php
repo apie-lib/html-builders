@@ -1,14 +1,11 @@
 <?php
 namespace Apie\HtmlBuilders\Components\Layout;
 
-use Apie\CommonValueObjects\Email;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
-use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
-use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\Serializer\Serializer;
 use ReflectionClass;
 use Symfony\Component\PropertyAccess\PropertyAccessorBuilder;

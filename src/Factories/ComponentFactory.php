@@ -6,7 +6,6 @@ use Apie\Core\Actions\ActionResponse;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Datalayers\ApieDatalayerWithFilters;
 use Apie\Core\Datalayers\Lists\PaginatedResult;
 use Apie\Core\Entities\EntityInterface;
@@ -128,6 +127,9 @@ class ComponentFactory
         );
     }
     
+    /**
+     * @param ReflectionClass<EntityInterface> $className
+     */
     public function createFilterColumns(ReflectionClass $className, ApieContext $apieContext): ComponentInterface
     {
         $searchFilters = [];
