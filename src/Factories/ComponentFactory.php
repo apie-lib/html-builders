@@ -3,6 +3,7 @@ namespace Apie\HtmlBuilders\Factories;
 
 use Apie\Common\ContextConstants;
 use Apie\Core\Actions\ActionResponse;
+use Apie\Core\Attributes\Context;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
@@ -183,6 +184,9 @@ class ComponentFactory
             : [];
         $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
         foreach ($method->getParameters() as $parameter) {
+            if ($parameter->getAttributes(Context::class)) {
+                continue;
+            }
             $formFields[$parameter->name] = $this->formComponentFactory->createFromParameter($parameter, $formBuildContext);
         }
         return $this->createWrapLayout(
