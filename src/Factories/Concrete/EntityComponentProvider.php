@@ -34,7 +34,7 @@ class EntityComponentProvider implements FormComponentProviderInterface
         return $formComponentFactory->createFromClass(
             new ReflectionClass($type->getName()),
             $context,
-            false
+            $this
         );
     }
 }

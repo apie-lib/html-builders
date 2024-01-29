@@ -127,14 +127,12 @@ final class FormComponentFactory
     /**
      * @param ReflectionClass<object> $class
      */
-    public function createFromClass(ReflectionClass $class, FormBuildContext $context, bool $providerCheck = true): ComponentInterface
+    public function createFromClass(ReflectionClass $class, FormBuildContext $context, ?FormComponentProviderInterface $skipProvider = null): ComponentInterface
     {
-        if ($providerCheck) {
-            $typehint = ReflectionTypeFactory::createReflectionType($class->name);
-            foreach ($this->formComponentProviders as $formComponentProvider) {
-                if ($formComponentProvider->supports($typehint, $context)) {
-                    return $formComponentProvider->createComponentFor($typehint, $context);
-                }
+        $typehint = ReflectionTypeFactory::createReflectionType($class->name);
+        foreach ($this->formComponentProviders as $formComponentProvider) {
+            if ($skipProvider !== $formComponentProvider && $formComponentProvider->supports($typehint, $context)) {
+                return $formComponentProvider->createComponentFor($typehint, $context);
             }
         }
 
