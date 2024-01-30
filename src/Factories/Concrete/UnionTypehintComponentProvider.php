@@ -25,8 +25,9 @@ class UnionTypehintComponentProvider implements FormComponentProviderInterface
         assert($type instanceof ReflectionUnionType);
         $formComponentFactory = $context->getComponentFactory();
         $metadata = MetadataFactory::getMetadataStrategyForType($type);
-        if ($metadata instanceof UnionTypeMetadata) {
-            $scalar = $metadata->toScalarType(true);
+        if ($metadata instanceof UnionTypeStrategy) {
+            // TODO handle empty string/null
+            $scalar = $metadata->getCreationMetadata($context->getApieContext())->toScalarType(true);
             if (!in_array($scalar, [ScalarType::ARRAY, ScalarType::STDCLASS, ScalarType::MIXED])) {
                 return $formComponentFactory->createFromType($scalar->toReflectionType(), $context);
             }
