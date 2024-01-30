@@ -8,6 +8,7 @@ use Apie\Core\Metadata\Fields\DiscriminatorColumn;
 use Apie\Core\Metadata\Fields\SetterMethod;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
+use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\Input;
@@ -32,6 +33,7 @@ use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionType;
+use Throwable;
 
 final class FormComponentFactory
 {
@@ -95,9 +97,14 @@ final class FormComponentFactory
         }
         $allowsNull = $typehint === null || $typehint->allowsNull();
 
+        $value = null;
+        try {
+            $value = Utils::toString($context->getFilledInValue($allowsNull ? null : ''));
+        } catch (Throwable) {
+        }
         return new Input(
             $context->getFormName(),
-            $context->getFilledInValue($allowsNull ? null : ''),
+            $value,
             'text',
             [],
             $allowsNull,
