@@ -27,7 +27,13 @@ class GlobalMethodResourceAction implements ResourceActionInterface
             $method = $actionDefinition->getMethod();
             try {
                 $class = ConverterUtils::toReflectionClass($method);
-                return $class?->name === $entityClass->name ? new self($actionDefinition) : null;
+                if ($class?->name === $entityClass->name) {
+                    return new self($actionDefinition);
+                }
+                $class = ConverterUtils::toReflectionClass($method->getReturnType());
+                if ($class?->name === $entityClass->name) {
+                    return new self($actionDefinition);
+                }
             } catch (CanNotConvertObjectException) {
             }
         }
@@ -39,7 +45,7 @@ class GlobalMethodResourceAction implements ResourceActionInterface
     {
         $method = $this->actionDefinition->getMethod();
         return $currentConfiguration->getContextUrl(
-            'resource/action/' . $method->getDeclaringClass()->name . '/' . $method->getName()
+            'action/' . $method->getDeclaringClass()->getShortName() . '/' . $method->getName()
         );
     }
 
