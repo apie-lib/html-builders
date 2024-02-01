@@ -2,6 +2,7 @@
 namespace Apie\HtmlBuilders\ErrorHandler;
 
 use Apie\Core\Exceptions\HttpStatusCodeException;
+use Apie\TypeConverter\Exceptions\GetMultipleChainedExceptionInterface;
 use JsonSerializable;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
@@ -36,7 +37,16 @@ final class WrappedError implements JsonSerializable
             ]
         ];
         $files = $trace->getFiles();
-        if ($this->wrappedError->getPrevious()) {
+        if ($this->wrappedError instanceof GetMultipleChainedExceptionInterface) {
+            foreach ($this->wrappedError->getChainedExceptions() as $exception) {
+                $next = new WrappedError($exception);
+                $json = $next->jsonSerialize();
+                if (isset($json['exceptions'])) {
+                    $data = [...$data, ...$json['exceptions']];
+                }
+                $files = array_merge($files, $json['files']);
+            }
+        } else if ($this->wrappedError->getPrevious()) {
             $previous = new WrappedError($this->wrappedError->getPrevious());
             $json = $previous->jsonSerialize();
             if (isset($json['exceptions'])) {
