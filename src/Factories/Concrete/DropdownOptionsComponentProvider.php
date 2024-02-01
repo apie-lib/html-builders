@@ -29,7 +29,7 @@ class DropdownOptionsComponentProvider implements FormComponentProviderInterface
         }
         $dropdownOptionProvider = $apieContext->getContext(DropdownOptionProviderInterface::class);
         assert($dropdownOptionProvider instanceof DropdownOptionProviderInterface);
-        
+
         return $dropdownOptionProvider->supports(
             $apieContext->withContext('property', $context->getFormName()->toValidationErrorKey())
         );
@@ -42,12 +42,24 @@ class DropdownOptionsComponentProvider implements FormComponentProviderInterface
             $apieContext->getContext(BoundedContextHashmap::class),
             new BoundedContextId($apieContext->getContext(ContextConstants::BOUNDED_CONTEXT_ID))
         );
-        $resource = new ReflectionClass($apieContext->getContext(ContextConstants::RESOURCE_NAME));
-        
+        if ($apieContext->hasContext(ContextConstants::RESOURCE_NAME)) {
+            $resource = new ReflectionClass($apieContext->getContext(ContextConstants::RESOURCE_NAME));
+
+            return new InputWithAutocomplete(
+                $context->getFormName(),
+                $context->getFilledInValue(),
+                $configuration->getContextUrl('/' . $resource->getShortName() . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey()),
+                [],
+                $type->allowsNull(),
+                $context->getValidationError()
+            );
+        }
+        $resource = new ReflectionClass($apieContext->getContext(ContextConstants::SERVICE_CLASS));
+
         return new InputWithAutocomplete(
             $context->getFormName(),
             $context->getFilledInValue(),
-            $configuration->getContextUrl('/' . $resource->getShortName() . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey()),
+            $configuration->getContextUrl('/action/' . $resource->getShortName() . '/' . $apieContext->getContext(ContextConstants::METHOD_NAME) . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey()),
             [],
             $type->allowsNull(),
             $context->getValidationError()
