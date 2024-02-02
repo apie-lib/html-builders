@@ -4,7 +4,6 @@ namespace Apie\HtmlBuilders\Factories\Concrete;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\Strategy\UnionTypeStrategy;
-use Apie\Core\Metadata\UnionTypeMetadata;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;

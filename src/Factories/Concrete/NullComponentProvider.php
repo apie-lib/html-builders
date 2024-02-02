@@ -1,11 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Enums\ScalarType;
-use Apie\Core\Metadata\MetadataFactory;
-use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
-use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;

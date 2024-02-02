@@ -46,7 +46,7 @@ final class WrappedError implements JsonSerializable
                 }
                 $files = array_merge($files, $json['files']);
             }
-        } else if ($this->wrappedError->getPrevious()) {
+        } elseif ($this->wrappedError->getPrevious()) {
             $previous = new WrappedError($this->wrappedError->getPrevious());
             $json = $previous->jsonSerialize();
             if (isset($json['exceptions'])) {
