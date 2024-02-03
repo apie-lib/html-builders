@@ -19,6 +19,7 @@ use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
 use Apie\HtmlBuilders\Components\Forms\Form;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
+use Apie\HtmlBuilders\Components\Forms\FormPrototypeHashmap;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
 use Apie\HtmlBuilders\Components\Forms\HiddenField;
@@ -290,6 +291,43 @@ abstract class AbstractRenderTestCase extends TestCase
                 new Input('__NAME__', 'value', 'tel')
             )
         ];
+
+        yield 'Form list with values' => [
+            'expected-form-list-with-values.html',
+            new FormPrototypeList(
+                new FormName('name'),
+                [
+                    '0611223344',
+                    '0123456789',
+                ],
+                '__NAME__',
+                new Input('__NAME__', 'value', 'tel')
+            )
+        ];
+
+        yield 'Form hashmap' => [
+            'expected-form-hashmap.html',
+            new FormPrototypeHashmap(
+                new FormName('name'),
+                [],
+                '__NAME__',
+                new Input('__NAME__', 'value', 'tel')
+            )
+        ];
+
+        yield 'Form hashmap with values' => [
+            'expected-form-hashmap-with-values.html',
+            new FormPrototypeHashmap(
+                new FormName('name'),
+                [
+                    'first' => '0611223344',
+                    'second' => '0123456789',
+                ],
+                '__NAME__',
+                new Input('__NAME__', 'value', 'tel')
+            )
+        ];
+
         yield 'CSRF token' => [
             'expected-csrf-token.html',
             new Csrf('token-123')

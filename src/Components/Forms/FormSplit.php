@@ -20,12 +20,12 @@ class FormSplit extends BaseComponent
         );
     }
 
-    public function withName(FormName $name): ComponentInterface
+    public function withName(FormName $name, mixed $value = null): ComponentInterface
     {
         $item = clone $this;
         $item->attributes['name'] = $name;
         foreach ($item->childComponents as $key => $component) {
-            $item->childComponents[$key] = $component->withName($name);
+            $item->childComponents[$key] = $component->withName($name, $value);
         }
         return $item;
     }

@@ -31,10 +31,13 @@ abstract class BaseComponent implements ComponentInterface
         return $this->attributes[$key] ?? null;
     }
 
-    public function withName(FormName $name): ComponentInterface
+    public function withName(FormName $name, mixed $value = null): ComponentInterface
     {
         $item = clone $this;
         $item->attributes['name'] = $name;
+        if ($value !== null || isset($item->attributes['value'])) {
+            $item->attributes['value'] = $value;
+        }
         foreach ($this->childComponents as $childComponentKey => $childComponent) {
             $item->childComponents[$childComponentKey] = $childComponent->withName($name->createChildForm($childComponentKey));
         }

@@ -10,7 +10,7 @@ interface ComponentInterface
 
     public function getAttribute(string $key): mixed;
 
-    public function withName(FormName $name): ComponentInterface;
+    public function withName(FormName $name, mixed $value = null): ComponentInterface;
 
     /**
      * @return array<string, string>
