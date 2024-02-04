@@ -12,9 +12,9 @@ class FormPrototypeList extends BaseComponent
     public function __construct(FormName $name, ?array $value, string $prototypeName, ComponentInterface $prototype)
     {
         $rendered = [];
-        foreach ($value ?? [] as $key => $value) {
+        /*foreach ($value ?? [] as $key => $value) {
             $rendered[$key] = $prototype->withName($name->createChildForm($key), $value);
-        }
+        }*/
         parent::__construct(
             [
                 'name' => $name,
