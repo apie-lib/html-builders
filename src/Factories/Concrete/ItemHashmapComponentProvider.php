@@ -1,7 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Lists\ItemHashmap;
+use Apie\Core\Utils\HashmapUtils;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeHashmap;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
@@ -14,9 +14,10 @@ class ItemHashmapComponentProvider implements FormComponentProviderInterface
 {
     public function supports(ReflectionType $type, FormBuildContext $formBuildContext): bool
     {
-        if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName())) {
+        if (HashmapUtils::isHashmap($type)) {
+            assert($type instanceof ReflectionNamedType);
             $refl = new ReflectionClass($type->getName());
-            return $refl->isInstantiable() && $refl->isSubclassOf(ItemHashmap::class);
+            return $refl->isInstantiable();
         }
         return false;
     }
