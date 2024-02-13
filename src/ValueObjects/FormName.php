@@ -84,6 +84,9 @@ final class FormName implements ValueObjectInterface, Stringable
 
     public function __toString(): string
     {
+        if (empty($this->internal)) {
+            return 'form';
+        }
         return 'form[' . implode('][', $this->internal) . ']';
     }
 
