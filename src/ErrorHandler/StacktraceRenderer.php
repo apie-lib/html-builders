@@ -1,13 +1,14 @@
 <?php
 namespace Apie\HtmlBuilders\ErrorHandler;
 
+use Apie\Core\ApieLib;
 use Stringable;
 use Throwable;
 
 final class StacktraceRenderer implements Stringable
 {
-    private const DEFAULT_CDN = 'https://unpkg.com/apie-stacktrace@0.1.6/dist/apie-stacktrace/apie-stacktrace.esm.js';
-    private const DEFAULT_STYLE_CDN = 'https://unpkg.com/apie-stacktrace@0.1.6/dist/apie-stacktrace/apie-stacktrace.css';
+    private const DEFAULT_CDN = 'https://unpkg.com/apie-stacktrace@' . ApieLib::APIE_STACKTRACE . '/dist/apie-stacktrace/apie-stacktrace.esm.js';
+    private const DEFAULT_STYLE_CDN = 'https://unpkg.com/apie-stacktrace@' . ApieLib::APIE_STACKTRACE . '/dist/apie-stacktrace/apie-stacktrace.css';
 
     public function __construct(
         private readonly Throwable $error,

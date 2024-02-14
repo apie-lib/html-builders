@@ -3,6 +3,7 @@ namespace Apie\HtmlBuilders\ResourceActions;
 
 use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
 use Apie\Common\ActionDefinitions\CreateResourceActionDefinition;
+use Apie\Common\ActionDefinitions\ReplaceResourceActionDefinition;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Metadata\MetadataFactory;
@@ -18,13 +19,16 @@ class CreateResourceAction implements ResourceActionInterface
      */
     public function __construct(
         private readonly ReflectionClass $entityClass,
-        private readonly CreateResourceActionDefinition $actionDefinition
+        private readonly CreateResourceActionDefinition|ReplaceResourceActionDefinition $actionDefinition
     ) {
     }
 
     public static function createFor(ReflectionClass $entityClass, ActionDefinitionInterface $actionDefinition): ?self
     {
         if ($actionDefinition instanceof CreateResourceActionDefinition) {
+            return $actionDefinition->getResourceName()->name === $entityClass->name ? new self($entityClass, $actionDefinition) : null;
+        }
+        if ($actionDefinition instanceof ReplaceResourceActionDefinition) {
             return $actionDefinition->getResourceName()->name === $entityClass->name ? new self($entityClass, $actionDefinition) : null;
         }
 
