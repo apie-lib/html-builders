@@ -221,11 +221,6 @@ class ComponentFactory
         $csrfToken = $csrfTokenProvider->createToken();
         
         $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
-        $form = new FormGroup(
-            new FormName(''),
-            $formBuildContext->getValidationError(),
-            $formBuildContext->getMissingValidationErrors([])
-        );
         return $this->createWrapLayout(
             $pageTitle,
             $boundedContextId,

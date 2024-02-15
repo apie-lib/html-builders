@@ -220,7 +220,7 @@ abstract class AbstractRenderTestCase extends TestCase
 
         yield 'Form group with unknown validation errors' => [
             'expected-form-group-with-unknown-validation-error.html',
-            new FormGroup(new FormName('test'), null, ['id' => 'unknown field'], new RawContents('test')),
+            new FormGroup(new FormName('test'), null, ['id' => 'unknown field'], true, new RawContents('test')),
         ];
 
         yield 'Form with validation error' => [

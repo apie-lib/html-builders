@@ -24,7 +24,13 @@ class Form extends BaseComponent
                 'method' => $method->value,
             ],
             new ComponentHashmap([
-                'formElements' => new FormGroup(new FormName(), $validationError, $formValidationErrors, ...$formElements),
+                'formElements' => new FormGroup(
+                    new FormName(),
+                    $validationError,
+                    $formValidationErrors,
+                    false,
+                    ...$formElements
+                ),
             ])
         );
     }

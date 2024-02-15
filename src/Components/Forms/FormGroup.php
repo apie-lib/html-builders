@@ -11,19 +11,18 @@ class FormGroup extends BaseComponent
     /**
      * @param array<string, string> $missingValidationErrors
      */
-    public function __construct(FormName $name, ?string $validationError, array $missingValidationErrors, ComponentInterface... $formElements)
-    {
-        // empty form: we need to send something so we can serialize {} in the form submit
-        if (empty($formElements)) {
-            $formElements['_type'] = new HiddenField(
-                $name->getTypehintName(),
-                'object'
-            );
-        }
+    public function __construct(
+        FormName $name,
+        ?string $validationError,
+        array $missingValidationErrors,
+        bool $wrapScalar,
+        ComponentInterface... $formElements
+    ) {
         parent::__construct(
             [
                 'groupName' => $name,
                 'keys' => array_keys($formElements),
+                'wrapScalar' => $wrapScalar,
                 'validationError' => $validationError,
                 'missingValidationErrors' => $missingValidationErrors
             ],
