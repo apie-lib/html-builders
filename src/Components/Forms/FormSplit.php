@@ -10,11 +10,17 @@ class FormSplit extends BaseComponent
 {
     public function __construct(FormName $name, mixed $value, ComponentHashmap $tabComponents)
     {
+        $valuePerType = [];
+        foreach ($tabComponents as $componentName => $component) {
+            $valuePerType[$componentName] = $component->attributes['value'] ?? null;
+        }
         parent::__construct(
             [
                 'name' => $name,
+                'tmpl' => 's' . md5((string) $name),
                 'tabs' => array_keys($tabComponents->toArray()),
                 'value' => $value,
+                'valuePerType' => $valuePerType,
             ],
             $tabComponents
         );
