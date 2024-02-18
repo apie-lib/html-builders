@@ -17,20 +17,23 @@ class Form extends BaseComponent
         RequestMethod $method,
         ?string $validationError,
         array $formValidationErrors,
+        mixed $value,
         ComponentInterface... $formElements
     ) {
+        $formGroup = new FormGroup(
+            new FormName(),
+            $validationError,
+            $formValidationErrors,
+            ...$formElements
+        );
+        $formGroup->attributes['extraClass'] = 'unhandled-form-group';
         parent::__construct(
             [
                 'method' => $method->value,
+                'value' => $value,
             ],
             new ComponentHashmap([
-                'formElements' => new FormGroup(
-                    new FormName(),
-                    $validationError,
-                    $formValidationErrors,
-                    false,
-                    ...$formElements
-                ),
+                'formElements' => $formGroup,
             ])
         );
     }

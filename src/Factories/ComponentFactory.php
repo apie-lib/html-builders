@@ -197,6 +197,7 @@ class ComponentFactory
                 RequestMethod::POST,
                 $formBuildContext->getValidationError(),
                 $formBuildContext->getMissingValidationErrors($formFields),
+                $filledIn,
                 ...$formFields
             ),
             $layoutEnum
@@ -229,6 +230,7 @@ class ComponentFactory
                 RequestMethod::POST,
                 $formBuildContext->getValidationError(),
                 $formBuildContext->getMissingValidationErrors([]),
+                [],
                 new RemoveConfirm($class),
                 new Csrf($csrfToken)
             ),
@@ -263,6 +265,7 @@ class ComponentFactory
                 RequestMethod::POST,
                 $formBuildContext->getValidationError(),
                 $form->getMissingValidationErrors($formBuildContext),
+                $filledIn,
                 new Csrf($csrfToken),
                 $form
             ),
@@ -297,6 +300,7 @@ class ComponentFactory
                 RequestMethod::POST,
                 $formBuildContext->getValidationError(),
                 $form->getMissingValidationErrors($formBuildContext),
+                $filledIn,
                 new Csrf($csrfToken),
                 $form
             ),

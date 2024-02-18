@@ -211,21 +211,21 @@ abstract class AbstractRenderTestCase extends TestCase
 
         yield 'Form' => [
             'expected-form.html',
-            new Form(RequestMethod::POST, null, [], new RawContents('test'), new RawContents('test2')),
+            new Form(RequestMethod::POST, null, [], [], new RawContents('test'), new RawContents('test2')),
         ];
-        yield 'Form with unknown validation errors' => [
+        yield 'Form with validation errors' => [
             'expected-form-with-unknown-validation-error.html',
-            new Form(RequestMethod::POST, null, ['id' => 'unknown field'], new RawContents('test')),
+            new Form(RequestMethod::POST, null, ['id' => 'unknown field'], [], new RawContents('test')),
         ];
 
-        yield 'Form group with unknown validation errors' => [
-            'expected-form-group-with-unknown-validation-error.html',
-            new FormGroup(new FormName('test'), null, ['id' => 'unknown field'], true, new RawContents('test')),
+        yield 'Form group with validation errors' => [
+            'expected-form-group-with-validation-error.html',
+            new FormGroup(new FormName('test'), null, ['id' => 'unknown field'], new RawContents('test')),
         ];
 
         yield 'Form with validation error' => [
             'expected-form-with-validation-error.html',
-            new Form(RequestMethod::POST, 'validation error', [], new RawContents('test'), new RawContents('test2')),
+            new Form(RequestMethod::POST, 'validation error', [], [], new RawContents('test'), new RawContents('test2')),
         ];
 
         yield 'Simple input field' => [

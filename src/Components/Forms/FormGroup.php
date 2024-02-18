@@ -10,13 +10,12 @@ use Apie\HtmlBuilders\ValueObjects\FormName;
 class FormGroup extends BaseComponent
 {
     /**
-     * @param array<string, string> $missingValidationErrors
+     * @param array<string, string> $validationErrors
      */
     public function __construct(
         FormName $name,
         ?string $validationError,
-        array $missingValidationErrors,
-        bool $wrapScalar,
+        array $validationErrors,
         ComponentInterface... $formElements
     ) {
         $names = [];
@@ -28,9 +27,8 @@ class FormGroup extends BaseComponent
                 'groupName' => $name,
                 'names' => $names,
                 'keys' => array_keys($formElements),
-                'wrapScalar' => $wrapScalar,
                 'validationError' => $validationError,
-                'missingValidationErrors' => $missingValidationErrors
+                'validationErrors' => $validationErrors,
             ],
             new ComponentHashmap($formElements)
         );
