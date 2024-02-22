@@ -22,6 +22,7 @@ use Apie\HtmlBuilders\Factories\Concrete\HideUuidAsIdComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\IntComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ItemHashmapComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ItemListComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\MixedComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\NullComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PasswordComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
@@ -56,6 +57,7 @@ final class FormComponentFactory
             new PasswordComponentProvider(),
             new HideUuidAsIdComponentProvider(),
             new HiddenIdComponentProvider(),
+            new MixedComponentProvider(),
             new UnionTypehintComponentProvider(),
             new PolymorphicEntityComponentProvider(),
             new ItemListComponentProvider(),
