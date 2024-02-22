@@ -10,6 +10,7 @@ use ReflectionType;
 
 final class MixedComponentProvider implements FormComponentProviderInterface
 {
+    /** @var array<string, bool> */
     private array $handled = [];
 
     public function supports(ReflectionType $type, FormBuildContext $context): bool
