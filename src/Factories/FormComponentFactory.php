@@ -105,7 +105,7 @@ final class FormComponentFactory
 
         $value = null;
         try {
-            $value = Utils::toString($context->getFilledInValue($allowsNull ? null : ''));
+            $value = Utils::toString($context->getFilledInValue($allowsNull ? null : '', true));
         } catch (Throwable) {
         }
         return new Input(

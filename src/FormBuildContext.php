@@ -3,6 +3,7 @@ namespace Apie\HtmlBuilders;
 
 use Apie\Common\ContextConstants;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Factories\FormComponentFactory;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\ValueObjects\FormName;
@@ -46,9 +47,13 @@ final class FormBuildContext
         return $this->formComponentFactory;
     }
 
-    public function getFilledInValue(mixed $defaultValue = null): mixed
+    public function getFilledInValue(mixed $defaultValue = null, bool $toString = false): mixed
     {
-        return $this->filledIn ?? $defaultValue;
+        $result = $this->filledIn ?? $defaultValue;
+        if ($toString) {
+            return Utils::toString($result);
+        }
+        return $result;
     }
 
     public function getValidationError(): string|null

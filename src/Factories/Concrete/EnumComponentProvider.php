@@ -24,7 +24,7 @@ class EnumComponentProvider implements FormComponentProviderInterface
     {
         return new Select(
             $context->getFormName(),
-            $context->getFilledInValue(''),
+            $context->getFilledInValue('', true),
             ChoiceList::createFromEnum(new ReflectionEnum($type->getName()), $type->allowsNull())
         );
     }

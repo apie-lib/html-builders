@@ -29,7 +29,7 @@ class HideUuidAsIdComponentProvider implements FormComponentProviderInterface
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        $id = Utils::toString($context->getFilledInValue(''));
+        $id = Utils::toString($context->getFilledInValue('', true));
         if (!preg_match(Uuid::getRegularExpression(), $id)) {
             $id = UuidV4::createRandom()->toNative();
         };

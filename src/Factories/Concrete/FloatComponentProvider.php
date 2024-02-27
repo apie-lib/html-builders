@@ -21,7 +21,7 @@ class FloatComponentProvider implements FormComponentProviderInterface
     {
         return new Input(
             $context->getFormName(),
-            $context->getFilledInValue($type->allowsNull() ? null : ''),
+            $context->getFilledInValue($type->allowsNull() ? null : '', true),
             'number',
             [],
             $type->allowsNull(),

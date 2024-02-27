@@ -31,7 +31,7 @@ class PasswordComponentProvider implements FormComponentProviderInterface
      */
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        $value = $context->getFilledInValue($type->allowsNull() ? null : '');
+        $value = $context->getFilledInValue($type->allowsNull() ? null : '', true);
 
         return new Password(
             $type->getName(),

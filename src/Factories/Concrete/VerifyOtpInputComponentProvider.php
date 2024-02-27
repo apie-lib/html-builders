@@ -33,7 +33,7 @@ class VerifyOtpInputComponentProvider implements FormComponentProviderInterface
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        $value = $context->getFilledInValue($type->allowsNull() ? null : false);
+        $value = $context->getFilledInValue($type->allowsNull() ? null : false, true);
         $class = ConverterUtils::toReflectionClass($type);
         /** @var ReflectionProperty $property */
         $property = $class->getMethod('getOtpReference')->invoke(null);

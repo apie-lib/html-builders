@@ -47,7 +47,7 @@ class DropdownOptionsComponentProvider implements FormComponentProviderInterface
 
             return new InputWithAutocomplete(
                 $context->getFormName(),
-                $context->getFilledInValue(),
+                $context->getFilledInValue(toString: true),
                 $configuration->getContextUrl('/' . $resource->getShortName() . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey()),
                 [],
                 $type->allowsNull(),
@@ -58,7 +58,7 @@ class DropdownOptionsComponentProvider implements FormComponentProviderInterface
 
         return new InputWithAutocomplete(
             $context->getFormName(),
-            $context->getFilledInValue(),
+            $context->getFilledInValue(toString: true),
             $configuration->getContextUrl('/action/' . $resource->getShortName() . '/' . $apieContext->getContext(ContextConstants::METHOD_NAME) . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey()),
             [],
             $type->allowsNull(),
