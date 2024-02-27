@@ -51,6 +51,9 @@ final class FormBuildContext
     {
         $result = $this->filledIn ?? $defaultValue;
         if ($toString) {
+            if (is_array($result)) {
+                return $defaultValue;
+            }
             return Utils::toString($result);
         }
         return $result;
