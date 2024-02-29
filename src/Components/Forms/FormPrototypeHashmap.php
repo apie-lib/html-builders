@@ -9,7 +9,7 @@ use Apie\HtmlBuilders\ValueObjects\FormName;
 class FormPrototypeHashmap extends BaseComponent
 {
     /**
-     * @param array<string|int, mixed>|null $value
+     * @param null|array<string|int, mixed> $value
      * @param array<string, string> $validationErrors
      */
     public function __construct(
@@ -23,7 +23,7 @@ class FormPrototypeHashmap extends BaseComponent
         parent::__construct(
             [
                 'name' => $name,
-                'value' => $value ?? [],
+                'value' => $value,
                 'prototypeName' => $prototypeName,
                 'validationErrors' => $validationErrors,
             ],
