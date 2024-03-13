@@ -8,6 +8,7 @@ use Apie\Core\Entities\EntityInterface;
 use Apie\HtmlBuilders\Lists\ActionList;
 use Apie\HtmlBuilders\ResourceActions\CreateResourceAction;
 use Apie\HtmlBuilders\ResourceActions\GlobalMethodResourceAction;
+use Apie\HtmlBuilders\ResourceActions\ModifyResourceAction;
 use Apie\HtmlBuilders\ResourceActions\RemoveResourceAction;
 use Apie\HtmlBuilders\ResourceActions\RunResourceMethodResourceAction;
 use ReflectionClass;
@@ -21,6 +22,7 @@ final class ResourceActionFactory
     ];
 
     private const DETAIL_CLASSES = [
+        ModifyResourceAction::class,
         RunResourceMethodResourceAction::class,
         RemoveResourceAction::class,
     ];
