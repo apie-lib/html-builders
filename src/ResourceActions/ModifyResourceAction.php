@@ -3,7 +3,6 @@ namespace Apie\HtmlBuilders\ResourceActions;
 
 use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
 use Apie\Common\ActionDefinitions\ModifyResourceActionDefinition;
-use Apie\Common\ActionDefinitions\RemoveResourceActionDefinition;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Metadata\MetadataFactory;
