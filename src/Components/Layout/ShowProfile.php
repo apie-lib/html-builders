@@ -1,13 +1,16 @@
 <?php
 namespace Apie\HtmlBuilders\Components\Layout;
 
+use Apie\Common\ContextConstants;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\Serializer\Serializer;
+use DateTimeInterface;
 use ReflectionClass;
+use Stringable;
 use Symfony\Component\PropertyAccess\PropertyAccessorBuilder;
 
 class ShowProfile extends BaseComponent
@@ -26,11 +29,15 @@ class ShowProfile extends BaseComponent
         if ($apieContext->hasContext(Serializer::class)) {
             $serializer = $apieContext->getContext(Serializer::class);
             assert($serializer instanceof Serializer);
-            $allFields = Utils::toArray($serializer->normalize($user, $apieContext));
+            $allFields = Utils::toArray(
+                $serializer->normalize($user, $apieContext->withContext(ContextConstants::SHOW_PROFILE, true))
+            );
             foreach (self::PROFILE_FIELDS as $profileFieldList) {
                 foreach ($profileFieldList as $profileField) {
                     if (isset($allFields[$profileField])) {
-                        $fields[$profileField] = $allFields[$profileField];
+                        if ($this->canBeDisplayed($allFields[$profileField])) {
+                            $fields[$profileField] = Utils::toString($allFields[$profileField]);
+                        }
                         break;
                     }
                 }
@@ -41,12 +48,27 @@ class ShowProfile extends BaseComponent
         foreach (self::PROFILE_FIELDS as $profileFieldList) {
             foreach ($profileFieldList as $profileField) {
                 if ($propertyAccess->isReadable($user, $profileField)) {
-                    $fields[$profileField] = $propertyAccess->getValue($user, $profileField);
+                    $fieldValue = $propertyAccess->getValue($user, $profileField);
+                    if ($this->canBeDisplayed($fieldValue)) {
+                        $fields[$profileField] = Utils::toString($fieldValue);
+                    }
                     break;
                 }
             }
         }
         return $fields;
+    }
+
+    private function canBeDisplayed(mixed $value): bool
+    {
+        if (!is_object($value)) {
+            return true;
+        }
+        if ($value instanceof Stringable || $value instanceof DateTimeInterface) {
+            return true;
+        }
+        dump($value);
+        return ((new ReflectionClass($value))->isEnum());
     }
 
     public function __construct(
