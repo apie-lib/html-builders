@@ -11,12 +11,15 @@ class Menu extends BaseComponent
     {
         $menuItems = [];
         $boundedContext = $currentConfiguration->getSelectedBoundedContext();
+        $apieContext = $currentConfiguration->getApieContext();
         if ($boundedContext) {
             foreach ($boundedContext->resources as $resource) {
-                $menuItems[] = [
-                    'url' => $currentConfiguration->getContextUrl('resource/' . $resource->getShortName()),
-                    'title' => $resource->getShortName(),
-                ];
+                if ($apieContext->appliesToContext($resource)) {
+                    $menuItems[] = [
+                        'url' => $currentConfiguration->getContextUrl('resource/' . $resource->getShortName()),
+                        'title' => $resource->getShortName(),
+                    ];
+                }
             }
         }
         parent::__construct([
