@@ -35,6 +35,7 @@ services:
       - '@Apie\HtmlBuilders\Interfaces\ComponentRendererInterface'
       - '@Apie\Common\Interfaces\DashboardContentFactoryInterface'
       - '%apie.cms.error_template%'
+      - '%kernel.debug%'
 
   Apie\HtmlBuilders\Assets\AssetManager:
     factory: ['Apie\HtmlBuilders\Assets\AssetManager', 'create']

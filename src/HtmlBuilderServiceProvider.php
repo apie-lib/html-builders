@@ -85,7 +85,8 @@ class HtmlBuilderServiceProvider extends ServiceProvider
                     $app->make(\Apie\HtmlBuilders\Factories\ComponentFactory::class),
                     $app->make(\Apie\HtmlBuilders\Interfaces\ComponentRendererInterface::class),
                     $app->make(\Apie\Common\Interfaces\DashboardContentFactoryInterface::class),
-                    $this->parseArgument('%apie.cms.error_template%')
+                    $this->parseArgument('%apie.cms.error_template%'),
+                    $this->parseArgument('%kernel.debug%')
                 );
             }
         );

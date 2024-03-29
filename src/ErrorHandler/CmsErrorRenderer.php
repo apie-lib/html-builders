@@ -18,7 +18,8 @@ class CmsErrorRenderer
         private readonly ComponentFactory $componentFactory,
         private readonly ComponentRendererInterface $componentRenderer,
         private readonly DashboardContentFactoryInterface $dashboardContentFactory,
-        private readonly string $errorTemplate
+        private readonly string $errorTemplate,
+        private readonly bool $debugMode
     ) {
     }
 
@@ -31,7 +32,7 @@ class CmsErrorRenderer
      */
     public function createCmsResponse(Request $request, Throwable $error): Response
     {
-        $contents = $this->dashboardContentFactory->create($this->errorTemplate, ['error' => $error]);
+        $contents = $this->dashboardContentFactory->create($this->errorTemplate, ['error' => $error, 'debugMode' => $this->debugMode]);
         $boundedContextId = null;
         if ($request->attributes->has(ContextConstants::BOUNDED_CONTEXT_ID)) {
             $boundedContextId = new BoundedContextId($request->attributes->get(ContextConstants::BOUNDED_CONTEXT_ID));
