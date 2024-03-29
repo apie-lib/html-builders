@@ -40,7 +40,7 @@ final class ListDisplayProvider implements FieldDisplayComponentProviderInterfac
         $display = MetadataFactory::getResultMetadata($refl, $apieContext);
         foreach ($display->getHashmap() as $fieldMetadata) {
             $typehint = $fieldMetadata->getTypehint();
-            $scalar = MetadataFactory::getScalarForType($typehint, $fieldMetadata->allowsNull());
+            $scalar = MetadataFactory::getScalarForType($typehint, true);
             if (!in_array($scalar, ScalarType::PRIMITIVES)) {
                 return false;
             }
@@ -53,14 +53,16 @@ final class ListDisplayProvider implements FieldDisplayComponentProviderInterfac
         assert($object instanceof ItemList);
         $apieContext = $context->getApieContext();
         $refl = new ReflectionClass($object);
-        $arrayType = ConverterUtils::toReflectionClass(HashmapUtils::getArrayType($refl));
-        if ($arrayType && $this->isSimpleList($refl, $apieContext)) {
+        $arrayType = HashmapUtils::getArrayType($refl);
+        $arrayTypeClass = ConverterUtils::toReflectionClass($arrayType);
+        $scalar = MetadataFactory::getScalarForType($arrayType, true);
+        if ($arrayTypeClass && !in_array($scalar, ScalarType::PRIMITIVES) && $this->isSimpleList($refl, $apieContext)) {
             $serializer = $apieContext->getContext(Serializer::class);
             assert($serializer instanceof Serializer);
 
             return new ListDisplay(
                 Utils::toArray($serializer->normalize($object, $apieContext)),
-                $this->columnSelector->getColumns($arrayType, $apieContext)
+                $this->columnSelector->getColumns($arrayTypeClass, $apieContext)
             );
         }
         /** @var array<string, mixed> $detailComponents */

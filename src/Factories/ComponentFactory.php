@@ -112,7 +112,7 @@ class ComponentFactory
             $boundedContextId
         );
         $filterColumns = $this->createFilterColumns($className, $actionResponse->apieContext);
-        
+
         $actionList = new ResourceActionList(
             $configuration,
             $this->resourceActionFactory->createResourceActionForOverview($className, $actionResponse->apieContext),
@@ -125,7 +125,7 @@ class ComponentFactory
             new Overview($listData, $columns, $actionList, $pagination)
         );
     }
-    
+
     /**
      * @param ReflectionClass<EntityInterface> $className
      */
@@ -218,7 +218,7 @@ class ComponentFactory
         /** @var CsrfTokenProvider $csrfTokenProvider */
         $csrfTokenProvider = $context->getContext(CsrfTokenProvider::class);
         $csrfToken = $csrfTokenProvider->createToken();
-        
+
         $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
         return $this->createWrapLayout(
             $pageTitle,
@@ -252,7 +252,7 @@ class ComponentFactory
         /** @var CsrfTokenProvider $csrfTokenProvider */
         $csrfTokenProvider = $context->getContext(CsrfTokenProvider::class);
         $csrfToken = $csrfTokenProvider->createToken();
-        
+
         $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
         $form = $this->formComponentFactory->createFromClass($class, $formBuildContext);
         return $this->createWrapLayout(
@@ -287,7 +287,7 @@ class ComponentFactory
         /** @var CsrfTokenProvider $csrfTokenProvider */
         $csrfTokenProvider = $context->getContext(CsrfTokenProvider::class);
         $csrfToken = $csrfTokenProvider->createToken();
-        
+
         $formBuildContext = $this->formComponentFactory->createFormBuildContext($context, $filledIn);
         $form = $this->formComponentFactory->createFromClass($class, $formBuildContext);
         return $this->createWrapLayout(
