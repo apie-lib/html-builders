@@ -23,6 +23,7 @@ use Apie\HtmlBuilders\Components\Forms\FormPrototypeHashmap;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
 use Apie\HtmlBuilders\Components\Forms\HiddenField;
+use Apie\HtmlBuilders\Components\Forms\HtmlField;
 use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Components\Forms\InputWithAutocomplete;
 use Apie\HtmlBuilders\Components\Forms\Password;
@@ -246,6 +247,10 @@ abstract class AbstractRenderTestCase extends TestCase
         yield 'Simple input field with autocomplete' => [
             'expected-input-with-autocomplete.html',
             new InputWithAutocomplete(new FormName('name'), 'value', 'https://www.example.com/ajaxCall')
+        ];
+        yield 'HTML Editor' => [
+            'expected-html-field.html',
+            new HtmlField('form[name]', '<div></div>', false, validationError: 'validation error')
         ];
 
         yield 'Simple input field with autocomplete and validation error' => [

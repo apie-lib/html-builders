@@ -27,6 +27,7 @@ use Apie\HtmlBuilders\Factories\Concrete\MixedComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\NullComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PasswordComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\SafeHtmlComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\UnionTypehintComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\VerifyOtpInputComponentProvider;
 use Apie\HtmlBuilders\FormBuildContext;
@@ -55,6 +56,7 @@ final class FormComponentFactory
     {
         return new self(
             new VerifyOtpInputComponentProvider(),
+            new SafeHtmlComponentProvider(),
             new PasswordComponentProvider(),
             new HideUuidAsIdComponentProvider(),
             new HiddenIdComponentProvider(),
