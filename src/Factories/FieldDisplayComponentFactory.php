@@ -10,6 +10,7 @@ use Apie\HtmlBuilders\FieldDisplayProviders\EnumDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\FallbackDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\ListDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\NullDisplayProvider;
+use Apie\HtmlBuilders\FieldDisplayProviders\SafeHtmlDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\SegmentDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\ValueObjectDisplayProvider;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
@@ -30,6 +31,7 @@ final class FieldDisplayComponentFactory
     public static function create(?ColumnSelector $columnSelector = null): self
     {
         return new self(
+            new SafeHtmlDisplayProvider(),
             new ArrayDisplayProvider(),
             new ListDisplayProvider($columnSelector ?? new ColumnSelector()),
             new ValueObjectDisplayProvider(),
