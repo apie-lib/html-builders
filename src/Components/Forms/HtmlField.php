@@ -2,13 +2,9 @@
 namespace Apie\HtmlBuilders\Components\Forms;
 
 use Apie\HtmlBuilders\Components\BaseComponent;
-use LogicException;
 
 class HtmlField extends BaseComponent
 {
-    /**
-     * @param array<string, string|int> $additionalAttributes
-     */
     public function __construct(
         string $name,
         ?string $value,
