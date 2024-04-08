@@ -21,7 +21,8 @@ class SafeHtmlComponentProvider implements FormComponentProviderInterface
             $context->getFormName(),
             $context->getFilledInValue($type->allowsNull() ? null : '', true),
             $type->allowsNull(),
-            $context->getValidationError()
+            $context->getValidationError(),
+            SafeHtml::class
         );
     }
 }
