@@ -44,7 +44,8 @@ class CmsErrorRenderer
                     $boundedContextId,
                     new ApieContext(),
                     $this->componentFactory->createRawContents($contents)
-                )
+                ),
+                new ApieContext(),
             ),
             (new WrappedError($error))->getStatusCode()
         );

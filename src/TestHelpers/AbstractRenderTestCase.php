@@ -6,6 +6,8 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\Lists\StringList;
+use Apie\Core\Translator\ApieTranslator;
+use Apie\Core\Translator\ApieTranslatorInterface;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\UserWithAddress;
@@ -81,7 +83,10 @@ abstract class AbstractRenderTestCase extends TestCase
     public function testRender(string $expectedFixtureFile, ComponentInterface $component): void
     {
         $renderer = $this->getRenderer();
-        $actual = $renderer->render($component);
+        $context = new ApieContext([
+            ApieTranslatorInterface::class => new ApieTranslator(),
+        ]);
+        $actual = $renderer->render($component, $context);
         $fixtureFile = $this->getFixturesPath() . DIRECTORY_SEPARATOR . $expectedFixtureFile;
         if ($this->shouldOverwriteFixture()) {
             file_put_contents($fixtureFile, $actual);
