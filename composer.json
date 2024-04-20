@@ -19,6 +19,14 @@
       "Apie\\Tests\\HtmlBuilders\\": "tests/"
     }
   },
+  "extra": {
+    "apie-objects": [
+      "Apie\\HtmlBuilders\\Dto\\Choice",
+      "Apie\\HtmlBuilders\\Enums\\ActionDefinitionVariant",
+      "Apie\\HtmlBuilders\\Enums\\LayoutEnum",
+      "Apie\\HtmlBuilders\\ValueObjects\\Formname"
+    ]
+  },
   "require": {
     "php": ">=8.1",
     "apie/core": "self.version",
