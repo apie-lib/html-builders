@@ -24,7 +24,7 @@
       "Apie\\HtmlBuilders\\Dto\\Choice",
       "Apie\\HtmlBuilders\\Enums\\ActionDefinitionVariant",
       "Apie\\HtmlBuilders\\Enums\\LayoutEnum",
-      "Apie\\HtmlBuilders\\ValueObjects\\Formname"
+      "Apie\\HtmlBuilders\\ValueObjects\\FormName"
     ]
   },
   "require": {
