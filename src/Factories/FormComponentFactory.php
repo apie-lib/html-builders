@@ -16,7 +16,6 @@ use Apie\HtmlBuilders\Factories\Concrete\ArrayComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\BooleanComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\DateTimeComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\EntityComponentProvider;
-use Apie\HtmlBuilders\Factories\Concrete\EnumComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\FloatComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\HiddenIdComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\HideUuidAsIdComponentProvider;
@@ -24,7 +23,9 @@ use Apie\HtmlBuilders\Factories\Concrete\IntComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ItemHashmapComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ItemListComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\MixedComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\MultiSelectComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\NullComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\OptionsComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PasswordComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\SafeHtmlComponentProvider;
@@ -61,6 +62,8 @@ final class FormComponentFactory
             new HideUuidAsIdComponentProvider(),
             new HiddenIdComponentProvider(),
             new MixedComponentProvider(),
+            new MultiSelectComponentProvider(),
+            new OptionsComponentProvider(),
             new UnionTypehintComponentProvider(),
             new PolymorphicEntityComponentProvider(),
             new ArrayComponentProvider(),
@@ -68,7 +71,6 @@ final class FormComponentFactory
             new ItemHashmapComponentProvider(),
             new NullComponentProvider(),
             new BooleanComponentProvider(),
-            new EnumComponentProvider(),
             new FloatComponentProvider(),
             new IntComponentProvider(),
             new DateTimeComponentProvider(),

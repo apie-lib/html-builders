@@ -4,14 +4,17 @@ namespace Apie\HtmlBuilders\TestHelpers;
 use Apie\Common\ActionDefinitions\CreateResourceActionDefinition;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Dto\ValueOption;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\Lists\StringList;
+use Apie\Core\Lists\ValueOptionList;
 use Apie\Core\Translator\ApieTranslator;
 use Apie\Core\Translator\ApieTranslatorInterface;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
+use Apie\Fixtures\Enums\Gender;
 use Apie\Fixtures\Identifiers\OrderIdentifier;
 use Apie\Fixtures\Identifiers\UserWithAddressIdentifier;
 use Apie\Fixtures\Lists\OrderLineList;
@@ -28,8 +31,10 @@ use Apie\HtmlBuilders\Components\Forms\HiddenField;
 use Apie\HtmlBuilders\Components\Forms\HtmlField;
 use Apie\HtmlBuilders\Components\Forms\Input;
 use Apie\HtmlBuilders\Components\Forms\InputWithAutocomplete;
+use Apie\HtmlBuilders\Components\Forms\MultiSelect;
 use Apie\HtmlBuilders\Components\Forms\Password;
 use Apie\HtmlBuilders\Components\Forms\RemoveConfirm;
+use Apie\HtmlBuilders\Components\Forms\Select;
 use Apie\HtmlBuilders\Components\Forms\VerifyOtpInput;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
@@ -278,6 +283,35 @@ abstract class AbstractRenderTestCase extends TestCase
         yield 'Password field with validation error' => [
             'expected-password-field-with-validation-error.html',
             new Password(StrongPassword::class, new FormName('name'), 'value', false, 'Validation Error')
+        ];
+        yield 'Multi select' => [
+            'expected-multi-select.html',
+            new MultiSelect(
+                new FormName('set'),
+                [],
+                new ValueOptionList(
+                    [
+                        new ValueOption('boolean true', true),
+                        new ValueOption('male', Gender::MALE),
+                        new ValueOption('female', Gender::FEMALE),
+                    ]
+                )
+            )
+        ];
+
+        yield 'Select' => [
+            'expected-select.html',
+            new Select(
+                new FormName('set'),
+                'male',
+                new ValueOptionList(
+                    [
+                        new ValueOption('boolean true', true),
+                        new ValueOption('male', Gender::MALE),
+                        new ValueOption('female', Gender::FEMALE),
+                    ]
+                )
+            )
         ];
 
         yield 'Union type' => [

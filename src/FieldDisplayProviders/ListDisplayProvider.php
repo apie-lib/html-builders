@@ -4,6 +4,7 @@ namespace Apie\HtmlBuilders\FieldDisplayProviders;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Lists\ItemList;
+use Apie\Core\Lists\ItemSet;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Utils\ConverterUtils;
 use Apie\Core\Utils\HashmapUtils;
@@ -26,11 +27,11 @@ final class ListDisplayProvider implements FieldDisplayComponentProviderInterfac
 
     public function supports(mixed $object, FieldDisplayBuildContext $context): bool
     {
-        return $object instanceof ItemList;
+        return $object instanceof ItemList || $object instanceof ItemSet;
     }
 
     /**
-     * @param ReflectionClass<ItemList> $refl
+     * @param ReflectionClass<ItemList|ItemSet> $refl
      */
     private function isSimpleList(ReflectionClass $refl, ApieContext $apieContext): bool
     {
@@ -50,7 +51,7 @@ final class ListDisplayProvider implements FieldDisplayComponentProviderInterfac
 
     public function createComponentFor(mixed $object, FieldDisplayBuildContext $context): ComponentInterface
     {
-        assert($object instanceof ItemList);
+        assert($object instanceof ItemList || $object instanceof ItemSet);
         $apieContext = $context->getApieContext();
         $refl = new ReflectionClass($object);
         $arrayType = HashmapUtils::getArrayType($refl);

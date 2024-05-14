@@ -1,8 +1,10 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Lists\ValueOptionList;
 use Apie\Core\Utils\HashmapUtils;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
+use Apie\HtmlBuilders\Components\Forms\MultiSelect;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -15,6 +17,11 @@ class ItemListComponentProvider implements FormComponentProviderInterface
     public function supports(ReflectionType $type, FormBuildContext $formBuildContext): bool
     {
         if (HashmapUtils::isList($type)) {
+            assert($type instanceof ReflectionNamedType);
+            $refl = new ReflectionClass($type->getName());
+            return $refl->isInstantiable();
+        }
+        if (HashmapUtils::isSet($type)) {
             assert($type instanceof ReflectionNamedType);
             $refl = new ReflectionClass($type->getName());
             return $refl->isInstantiable();

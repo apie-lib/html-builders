@@ -21,7 +21,6 @@
   },
   "extra": {
     "apie-objects": [
-      "Apie\\HtmlBuilders\\Dto\\Choice",
       "Apie\\HtmlBuilders\\Enums\\ActionDefinitionVariant",
       "Apie\\HtmlBuilders\\Enums\\LayoutEnum",
       "Apie\\HtmlBuilders\\ValueObjects\\FormName"

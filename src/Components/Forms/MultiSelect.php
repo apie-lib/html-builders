@@ -5,15 +5,15 @@ use Apie\Core\Lists\ValueOptionList;
 use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 
-class Select extends BaseComponent
+class MultiSelect extends BaseComponent
 {
-    public function __construct(FormName $name, string $value, ValueOptionList $choiceList)
+    public function __construct(FormName $name, mixed $value, ValueOptionList $optionList)
     {
         parent::__construct(
             [
                 'name' => $name,
                 'value' => $value,
-                'options' => $choiceList
+                'options' => $optionList
             ]
         );
     }

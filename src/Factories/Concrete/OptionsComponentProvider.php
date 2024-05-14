@@ -1,31 +1,28 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Metadata\MetadataFactory;
 use Apie\HtmlBuilders\Components\Forms\Select;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
-use Apie\HtmlBuilders\Lists\ChoiceList;
-use ReflectionEnum;
-use ReflectionNamedType;
 use ReflectionType;
 
-class EnumComponentProvider implements FormComponentProviderInterface
+class OptionsComponentProvider implements FormComponentProviderInterface
 {
     public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
-        return ($type instanceof ReflectionNamedType && !$type->isBuiltin() && enum_exists($type->getName()));
+        $metadata = MetadataFactory::getCreationMetadata($type, $context->getApieContext());
+        return !empty($metadata->getValueOptions($context->getApieContext(), true)?->toArray());
     }
 
-    /**
-     * @param ReflectionNamedType $type
-     */
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
         return new Select(
             $context->getFormName(),
             $context->getFilledInValue('', true),
-            ChoiceList::createFromEnum(new ReflectionEnum($type->getName()), $type->allowsNull())
+            MetadataFactory::getCreationMetadata($type, $context->getApieContext())
+                ->getValueOptions($context->getApieContext(), true)
         );
     }
 }
