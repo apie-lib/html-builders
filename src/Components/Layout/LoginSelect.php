@@ -1,7 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\Components\Layout;
 
-use Apie\Common\ContextConstants;
+use Apie\Core\ContextConstants;
 use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
