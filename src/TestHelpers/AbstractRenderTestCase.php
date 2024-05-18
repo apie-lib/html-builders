@@ -20,6 +20,7 @@ use Apie\Fixtures\Identifiers\OrderIdentifier;
 use Apie\Fixtures\Identifiers\UserWithAddressIdentifier;
 use Apie\Fixtures\Lists\OrderLineList;
 use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
+use Apie\Fixtures\ValueObjects\Password as StrongPassword;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
@@ -59,7 +60,6 @@ use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ResourceActions\CreateResourceAction;
 use Apie\HtmlBuilders\ValueObjects\FormName;
 use Apie\OtpValueObjects\HOTPSecret;
-use Apie\TextValueObjects\StrongPassword;
 use Generator;
 use OTPHP\HOTP;
 use PHPUnit\Framework\TestCase;
@@ -260,7 +260,13 @@ abstract class AbstractRenderTestCase extends TestCase
         ];
         yield 'HTML Editor' => [
             'expected-html-field.html',
-            new HtmlField('form[name]', '<div></div>', false, validationError: 'validation error')
+            new HtmlField(
+                'form[name]',
+                '<div></div>',
+                false,
+                validationError: 'validation error',
+                valueObjectClass: DatabaseText::class
+            )
         ];
 
         yield 'Simple input field with autocomplete and validation error' => [
@@ -376,15 +382,17 @@ abstract class AbstractRenderTestCase extends TestCase
             'expected-csrf-token.html',
             new Csrf('token-123')
         ];
-        yield 'OTP secret' => [
-            'expected-otp-secret.html',
-            new VerifyOtpInput(
-                'name',
-                null,
-                'label',
-                new HOTPSecret(HOTP::create(str_repeat('A', 103)))
-            )
-        ];
+        if (class_exists(HOTPSecret::class)) {
+            yield 'OTP secret' => [
+                'expected-otp-secret.html',
+                new VerifyOtpInput(
+                    'name',
+                    null,
+                    'label',
+                    new HOTPSecret(HOTP::create(str_repeat('A', 103)))
+                )
+            ];
+        }
         yield 'List display' => [
             'expected-list-display.html',
             new ListDisplay(
