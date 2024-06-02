@@ -31,7 +31,7 @@
     "apie/common": "self.version",
     "apie/core": "self.version",
     "ramsey/uuid": "^4.3.1",
-    "symfony/mime":  "6.*"
+    "symfony/mime":  "^6.4"
   },
   "require-dev": {
     "apie/fixtures": "self.version",

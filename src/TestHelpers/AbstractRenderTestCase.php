@@ -383,13 +383,15 @@ abstract class AbstractRenderTestCase extends TestCase
             new Csrf('token-123')
         ];
         if (class_exists(HOTPSecret::class)) {
+            $hotp = HOTP::create(str_repeat('A', 103));
+            assert($hotp instanceof HOTP);
             yield 'OTP secret' => [
                 'expected-otp-secret.html',
                 new VerifyOtpInput(
                     'name',
                     null,
                     'label',
-                    new HOTPSecret(HOTP::create(str_repeat('A', 103)))
+                    new HOTPSecret($hotp)
                 )
             ];
         }

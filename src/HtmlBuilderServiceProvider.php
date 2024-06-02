@@ -32,7 +32,6 @@ class HtmlBuilderServiceProvider extends ServiceProvider
                 return \Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory::create(
                 
                 );
-                
             }
         );
         $this->app->singleton(
@@ -49,7 +48,6 @@ class HtmlBuilderServiceProvider extends ServiceProvider
                 return \Apie\HtmlBuilders\Factories\FormComponentFactory::create(
                     $this->getTaggedServicesIterator(\Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface::class)
                 );
-                
             }
         );
         $this->app->singleton(
@@ -96,7 +94,6 @@ class HtmlBuilderServiceProvider extends ServiceProvider
                 return \Apie\HtmlBuilders\Assets\AssetManager::create(
                     $this->parseArgument('%apie.cms.asset_folders%')
                 );
-                
             }
         );
         $this->app->singleton(
@@ -105,9 +102,7 @@ class HtmlBuilderServiceProvider extends ServiceProvider
                 return \Apie\Common\Wrappers\CmsRendererFactory::createRenderer(
                     $app->make(\Apie\HtmlBuilders\Assets\AssetManager::class)
                 );
-                
             }
         );
-        
     }
 }
