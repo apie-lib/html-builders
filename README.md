@@ -6,7 +6,7 @@
 
 
 
- [![Latest Stable Version](http://poser.pugx.org/apie/html-builders/v)](https://packagist.org/packages/apie/html-builders) [![Total Downloads](http://poser.pugx.org/apie/html-builders/downloads)](https://packagist.org/packages/apie/html-builders) [![Latest Unstable Version](http://poser.pugx.org/apie/html-builders/v/unstable)](https://packagist.org/packages/apie/html-builders) [![License](http://poser.pugx.org/apie/html-builders/license)](https://packagist.org/packages/apie/html-builders) [![PHP Version Require](http://poser.pugx.org/apie/html-builders/require/php)](https://packagist.org/packages/apie/html-builders) [![Code coverage](https://raw.githubusercontent.com/apie-lib/html-builders/main/coverage_badge.svg)](https://apie-lib.github.io/coverage/html-builders/index.html)  
+ [![Latest Stable Version](http://poser.pugx.org/apie/html-builders/v)](https://packagist.org/packages/apie/html-builders) [![Total Downloads](http://poser.pugx.org/apie/html-builders/downloads)](https://packagist.org/packages/apie/html-builders) [![Latest Unstable Version](http://poser.pugx.org/apie/html-builders/v/unstable)](https://packagist.org/packages/apie/html-builders) [![License](http://poser.pugx.org/apie/html-builders/license)](https://packagist.org/packages/apie/html-builders) [![PHP Version Require](http://poser.pugx.org/apie/html-builders/require/php)](https://packagist.org/packages/apie/html-builders) [![PHP Composer](https://apie-lib.github.io/projectCoverage/coverage-html-builders.svg)](https://apie-lib.github.io/projectCoverage/app/packages/html-builders/index.html)  
 
 [![PHP Composer](https://github.com/apie-lib/html-builders/actions/workflows/php.yml/badge.svg?event=push)](https://github.com/apie-lib/html-builders/actions/workflows/php.yml)
 
