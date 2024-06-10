@@ -67,7 +67,6 @@ class ShowProfile extends BaseComponent
         if ($value instanceof Stringable || $value instanceof DateTimeInterface) {
             return true;
         }
-        dump($value);
         return ((new ReflectionClass($value))->isEnum());
     }
 
