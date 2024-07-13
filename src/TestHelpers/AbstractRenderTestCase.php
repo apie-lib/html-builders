@@ -45,6 +45,7 @@ use Apie\HtmlBuilders\Components\Layout\Logo;
 use Apie\HtmlBuilders\Components\Layout\ShowProfile;
 use Apie\HtmlBuilders\Components\Resource\Detail;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\BooleanDisplay;
+use Apie\HtmlBuilders\Components\Resource\FieldDisplay\LinkDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\ListDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\NullDisplay;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\SegmentDisplay;
@@ -436,10 +437,14 @@ abstract class AbstractRenderTestCase extends TestCase
                 showKeys: false,
             ),
         ];
-        yield 'EmptySegment display' => [
+        yield 'Empty segment display' => [
             'expected-empty-segment-display.html',
             new SegmentDisplay([
             ]),
+        ];
+        yield 'Link display' => [
+            'expected-link-display.html',
+            new LinkDisplay('this is a link', 'https://apie-lib.github.io/projectCoverage/index.html')
         ];
         yield 'Display true' => [
             'expected-true-display.html',

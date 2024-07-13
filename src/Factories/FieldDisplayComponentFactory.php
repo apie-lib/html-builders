@@ -12,6 +12,7 @@ use Apie\HtmlBuilders\FieldDisplayProviders\ListDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\NullDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\SafeHtmlDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\SegmentDisplayProvider;
+use Apie\HtmlBuilders\FieldDisplayProviders\UploadedFileDisplayProvider;
 use Apie\HtmlBuilders\FieldDisplayProviders\ValueObjectDisplayProvider;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FieldDisplayComponentProviderInterface;
@@ -32,6 +33,7 @@ final class FieldDisplayComponentFactory
     {
         return new self(
             new SafeHtmlDisplayProvider(),
+            new UploadedFileDisplayProvider(),
             new ArrayDisplayProvider(),
             new ListDisplayProvider($columnSelector ?? new ColumnSelector()),
             new ValueObjectDisplayProvider(),
