@@ -2,6 +2,7 @@
 namespace Apie\HtmlBuilders\FieldDisplayProviders;
 
 use Apie\Core\Entities\EntityInterface;
+use Apie\Core\FileStorage\StoredFile;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\LinkDisplay;
 use Apie\HtmlBuilders\FieldDisplayBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
@@ -18,13 +19,17 @@ final class UploadedFileDisplayProvider implements FieldDisplayComponentProvider
     }
     public function createComponentFor(mixed $object, FieldDisplayBuildContext $context): ComponentInterface
     {
-        $text = 'download';
+        $text = null;
         if ($object instanceof UploadedFileInterface) {
             $text = $object->getClientFilename();
+            if (null === $text && $object instanceof StoredFile) {
+                $text = $object->getServerPath();
+            }
         }
         if ($object instanceof UploadedFile) {
             $text = $object->getClientOriginalName();
         }
+        $text ??= 'download';
         $resource = $context->getResource();
         assert($resource instanceof EntityInterface);
         return new LinkDisplay($text, './' . $resource->getId()->toNative() . '/' . implode('/', $context->getVisitedNodes()));
