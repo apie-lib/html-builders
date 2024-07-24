@@ -1,6 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\FieldDisplayProviders;
 
+use Apie\Core\ContextConstants;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\FileStorage\StoredFile;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\LinkDisplay;
@@ -8,6 +9,7 @@ use Apie\HtmlBuilders\FieldDisplayBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FieldDisplayComponentProviderInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use ReflectionClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class UploadedFileDisplayProvider implements FieldDisplayComponentProviderInterface
@@ -32,6 +34,7 @@ final class UploadedFileDisplayProvider implements FieldDisplayComponentProvider
         $text ??= 'download';
         $resource = $context->getResource();
         assert($resource instanceof EntityInterface);
-        return new LinkDisplay($text, './' . $resource->getId()->toNative() . '/' . implode('/', $context->getVisitedNodes()));
+        $resourceName = (new ReflectionClass($context->getApieContext()->getContext(ContextConstants::RESOURCE_NAME)))->getShortName();
+        return new LinkDisplay($text, '../action/' . $resourceName . '/' . $resource->getId()->toNative() . '/' . implode('/', $context->getVisitedNodes()));
     }
 }

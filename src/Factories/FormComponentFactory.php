@@ -16,6 +16,7 @@ use Apie\HtmlBuilders\Factories\Concrete\ArrayComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\BooleanComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\DateTimeComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\EntityComponentProvider;
+use Apie\HtmlBuilders\Factories\Concrete\FileUploadComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\FloatComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\HiddenIdComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\HideUuidAsIdComponentProvider;
@@ -57,6 +58,7 @@ final class FormComponentFactory
     {
         return new self(
             new VerifyOtpInputComponentProvider(),
+            new FileUploadComponentProvider(),
             new SafeHtmlComponentProvider(),
             new PasswordComponentProvider(),
             new HideUuidAsIdComponentProvider(),
