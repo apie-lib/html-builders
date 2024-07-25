@@ -10,14 +10,13 @@ use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FieldDisplayComponentProviderInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class UploadedFileDisplayProvider implements FieldDisplayComponentProviderInterface
 {
     public function supports(mixed $object, FieldDisplayBuildContext $context): bool
     {
         return $context->getResource() instanceof EntityInterface
-            && ($object instanceof UploadedFileInterface || $object instanceof UploadedFile || is_resource($object));
+            && ($object instanceof UploadedFileInterface || is_resource($object));
     }
     public function createComponentFor(mixed $object, FieldDisplayBuildContext $context): ComponentInterface
     {
@@ -27,9 +26,10 @@ final class UploadedFileDisplayProvider implements FieldDisplayComponentProvider
             if (null === $text && $object instanceof StoredFile) {
                 $text = $object->getServerPath();
             }
-        }
-        if ($object instanceof UploadedFile) {
-            $text = $object->getClientOriginalName();
+            $size = $object->getSize();
+            if ($size !== null) {
+                $text .= ' (' . $size . ' bytes)';
+            }
         }
         $text ??= 'download';
         $resource = $context->getResource();

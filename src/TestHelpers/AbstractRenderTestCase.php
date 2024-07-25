@@ -24,6 +24,7 @@ use Apie\Fixtures\ValueObjects\Password as StrongPassword;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
+use Apie\HtmlBuilders\Components\Forms\FileInput;
 use Apie\HtmlBuilders\Components\Forms\Form;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeHashmap;
@@ -223,11 +224,15 @@ abstract class AbstractRenderTestCase extends TestCase
 
         yield 'Form' => [
             'expected-form.html',
-            new Form(RequestMethod::POST, null, [], [], new RawContents('test'), new RawContents('test2')),
+            new Form(RequestMethod::POST, null, [], [], false, new RawContents('test'), new RawContents('test2')),
+        ];
+        yield 'Form-Upload' => [
+            'expected-form-with-upload.html',
+            new Form(RequestMethod::POST, null, [], [], true, new RawContents('test'), new RawContents('test2')),
         ];
         yield 'Form with validation errors' => [
             'expected-form-with-unknown-validation-error.html',
-            new Form(RequestMethod::POST, null, ['id' => 'unknown field'], [], new RawContents('test')),
+            new Form(RequestMethod::POST, null, ['id' => 'unknown field'], [], false, new RawContents('test')),
         ];
 
         yield 'Form group with validation errors' => [
@@ -237,7 +242,7 @@ abstract class AbstractRenderTestCase extends TestCase
 
         yield 'Form with validation error' => [
             'expected-form-with-validation-error.html',
-            new Form(RequestMethod::POST, 'validation error', [], [], new RawContents('test'), new RawContents('test2')),
+            new Form(RequestMethod::POST, 'validation error', [], [], false, new RawContents('test'), new RawContents('test2')),
         ];
 
         yield 'Simple input field' => [
@@ -267,6 +272,33 @@ abstract class AbstractRenderTestCase extends TestCase
                 false,
                 validationError: 'validation error',
                 valueObjectClass: DatabaseText::class
+            )
+        ];
+
+        yield 'File upload with multipart encoding disabled' => [
+            'expected-file-upload-raw.html',
+            new FileInput(
+                'form[name]',
+                [
+                    'contents' => 'Hello World',
+                    'originalFilename' => 'hello.txt'
+                ],
+                false,
+                [],
+                true,
+                null
+            )
+        ];
+
+        yield 'File upload with multipart encoding enabled' => [
+            'expected-file-upload-multipart.html',
+            new FileInput(
+                'form[name]',
+                null,
+                true,
+                [],
+                true,
+                null
             )
         ];
 

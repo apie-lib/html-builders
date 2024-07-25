@@ -18,6 +18,7 @@ class Form extends BaseComponent
         ?string $validationError,
         array $formValidationErrors,
         mixed $value,
+        bool $multipart,
         ComponentInterface... $formElements
     ) {
         $formGroup = new FormGroup(
@@ -31,6 +32,7 @@ class Form extends BaseComponent
             [
                 'method' => $method->value,
                 'value' => $value,
+                'multipart' => $multipart
             ],
             new ComponentHashmap([
                 'formElements' => $formGroup,

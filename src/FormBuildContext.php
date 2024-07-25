@@ -28,13 +28,19 @@ final class FormBuildContext
     public function __construct(
         private FormComponentFactory $formComponentFactory,
         private ApieContext $context,
-        array $filledIn
+        array $filledIn,
+        private bool $multipart = false
     ) {
         $this->filledIn = $filledIn;
         $this->formName = new FormName();
         $this->validationErrors = $context->hasContext(ContextConstants::VALIDATION_ERRORS)
             ? $context->getContext(ContextConstants::VALIDATION_ERRORS)
             : [];
+    }
+
+    public function isMultipart(): bool
+    {
+        return $this->multipart;
     }
 
     public function getApieContext(): ApieContext

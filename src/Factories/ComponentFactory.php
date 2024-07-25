@@ -196,6 +196,7 @@ class ComponentFactory
                 $formBuildContext->getValidationError(),
                 $formBuildContext->getMissingValidationErrors($formFields),
                 $filledIn,
+                $formBuildContext->isMultipart(),
                 ...$formFields
             ),
             $layoutEnum
@@ -229,6 +230,7 @@ class ComponentFactory
                 $formBuildContext->getValidationError(),
                 $formBuildContext->getMissingValidationErrors([]),
                 [],
+                $formBuildContext->isMultipart(),
                 new RemoveConfirm($class),
                 new Csrf($csrfToken)
             ),
@@ -264,6 +266,7 @@ class ComponentFactory
                 $formBuildContext->getValidationError(),
                 $form->getMissingValidationErrors($formBuildContext),
                 $filledIn,
+                $formBuildContext->isMultipart(),
                 new Csrf($csrfToken),
                 $form
             ),
@@ -299,6 +302,7 @@ class ComponentFactory
                 $formBuildContext->getValidationError(),
                 $form->getMissingValidationErrors($formBuildContext),
                 $filledIn,
+                $formBuildContext->isMultipart(),
                 new Csrf($csrfToken),
                 $form
             ),

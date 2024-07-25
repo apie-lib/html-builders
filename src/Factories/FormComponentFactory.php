@@ -1,7 +1,9 @@
 <?php
 namespace Apie\HtmlBuilders\Factories;
 
+use Apie\Core\Attributes\AllowMultipart;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\DiscriminatorColumn;
@@ -86,10 +88,17 @@ final class FormComponentFactory
      */
     public function createFormBuildContext(ApieContext $context, array $filledIn = []): FormBuildContext
     {
+        $multipart = false;
+        $resourceName = $context->getContext(ContextConstants::RESOURCE_NAME, false);
+        if ($resourceName && class_exists($resourceName)) {
+            $refl = new ReflectionClass($resourceName);
+            $multipart = !empty($refl->getAttributes(AllowMultipart::class));
+        }
         return new FormBuildContext(
             $this,
             $context->withContext(FormComponentFactory::class, $this),
-            $filledIn
+            $filledIn,
+            $multipart
         );
     }
 
