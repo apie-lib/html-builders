@@ -1,6 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\Columns;
 
+use Apie\Core\Attributes\HideIdOnOverview;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\PolymorphicEntityInterface;
 use Apie\Core\Other\DiscriminatorMapping;
@@ -16,7 +17,11 @@ final class ColumnSelector
     public function getColumns(ReflectionClass $class, ApieContext $context): array
     {
         $done = [];
-        return $this->getInternalColumns($class, $context, $done);
+        $columns = $this->getInternalColumns($class, $context, $done);
+        if ($class->getAttributes(HideIdOnOverview::class)) {
+            $columns = array_values(array_filter($columns, function ($value) { return $value !== 'id'; }));
+        }
+        return $columns;
     }
 
     /**

@@ -20,6 +20,9 @@ final class FieldUtils
         $count = 1;
         if ($metadata->toScalarType() === ScalarType::STDCLASS) {
             foreach ($metadata->getHashmap() as $fieldMeta) {
+                if (!$fieldMeta->isField()) {
+                    continue;
+                }
                 $type = $fieldMeta->getTypehint();
                 if ($type) {
                     $foundMetadata = MetadataFactory::getCreationMetadata($type, $apieContext);
