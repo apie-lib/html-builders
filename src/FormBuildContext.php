@@ -1,12 +1,15 @@
 <?php
 namespace Apie\HtmlBuilders;
 
+use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextConstants;
+use Apie\Core\Translator\Lists\TranslationStringSet;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Factories\FormComponentFactory;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\ValueObjects\FormName;
+use ReflectionClass;
 
 final class FormBuildContext
 {
@@ -46,6 +49,13 @@ final class FormBuildContext
     public function getApieContext(): ApieContext
     {
         return $this->context;
+    }
+
+    public function withApieContext(string $key, mixed $value): FormBuildContext
+    {
+        $res = clone $this;
+        $res->context = $res->context->withContext($key, $value);
+        return $res;
     }
 
     public function getComponentFactory(): FormComponentFactory
@@ -100,21 +110,27 @@ final class FormBuildContext
      */
     public function getValidationErrorsInContext(): array
     {
-        $prefix = $this->formName->toValidationErrorKey();
-        $result = [];
-        $prefixLength = strlen($prefix) + 1;
-        foreach ($this->validationErrors as $key => $message) {
-            if (str_starts_with($key, $prefix)) {
-                $result[substr($key, $prefixLength)] = $message;
-            }
-        }
-
-        return $result;
+        return $this->validationErrors;
     }
 
     public function getFormName(): FormName
     {
         return $this->formName;
+    }
+
+    public function createTranslationLabel(): TranslationStringSet
+    {
+        $translations = [];
+        $boundedContextId = $this->context->getContext(ContextConstants::BOUNDED_CONTEXT_ID, false);
+        $resourceName = $this->context->getContext(ContextConstants::RESOURCE_NAME, false);
+        $resourceName ??= $this->context->getContext(ContextConstants::METHOD_CLASS, false);
+        $resourceName ??= $this->context->getContext(ContextConstants::SERVICE_CLASS, false);
+        // TODO add more variations
+        $translations[] = $this->formName->createTranslationString(
+            new ReflectionClass($resourceName),
+            $boundedContextId ? new BoundedContextId($boundedContextId) : null,
+        );
+        return new TranslationStringSet($translations);
     }
 
     public function createChildContext(string $propertyName): self
@@ -123,8 +139,6 @@ final class FormBuildContext
         $result->formName = $this->formName->createChildForm($propertyName);
         $filledIn = $this->filledIn[$propertyName] ?? null;
         $result->filledIn = $filledIn;
-        $result->validationErrors = $this->validationErrors;
-
         return $result;
     }
 }

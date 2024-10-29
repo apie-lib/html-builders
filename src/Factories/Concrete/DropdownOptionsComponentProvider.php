@@ -2,10 +2,12 @@
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
 use Apie\CmsApiDropdownOption\DropdownOptionProvider\DropdownOptionProviderInterface;
+use Apie\Core\Attributes\CmsSingleInput;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\ContextConstants;
-use Apie\HtmlBuilders\Components\Forms\InputWithAutocomplete;
+use Apie\Core\Dto\CmsInputOption;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
@@ -44,25 +46,21 @@ class DropdownOptionsComponentProvider implements FormComponentProviderInterface
         );
         if ($apieContext->hasContext(ContextConstants::RESOURCE_NAME)) {
             $resource = new ReflectionClass($apieContext->getContext(ContextConstants::RESOURCE_NAME));
-
-            return new InputWithAutocomplete(
-                $context->getFormName(),
-                $context->getFilledInValue(toString: true),
-                $configuration->getContextUrl('/' . $resource->getShortName() . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey()),
-                [],
-                $type->allowsNull(),
-                $context->getValidationError()
-            );
+            $autocompleteUrl = $configuration->getContextUrl('/' . $resource->getShortName() . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey());
+        } else {
+            $resource = new ReflectionClass($apieContext->getContext(ContextConstants::SERVICE_CLASS));
+            $autocompleteUrl = $configuration->getContextUrl('/action/' . $resource->getShortName() . '/' . $apieContext->getContext(ContextConstants::METHOD_NAME) . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey());
         }
-        $resource = new ReflectionClass($apieContext->getContext(ContextConstants::SERVICE_CLASS));
-
-        return new InputWithAutocomplete(
+        return new SingleInput(
             $context->getFormName(),
-            $context->getFilledInValue(toString: true),
-            $configuration->getContextUrl('/action/' . $resource->getShortName() . '/' . $apieContext->getContext(ContextConstants::METHOD_NAME) . '/dropdown-options/' . $context->getFormName()->toValidationErrorKey()),
-            [],
+            $context->getFilledInValue(),
+            $context->createTranslationLabel(),
             $type->allowsNull(),
-            $context->getValidationError()
+            $type,
+            new CmsSingleInput(
+                ['combobox', 'text'],
+                new CmsInputOption(autocompleteUrl: $autocompleteUrl)
+            )
         );
     }
 }

@@ -21,6 +21,12 @@ class Form extends BaseComponent
         bool $multipart,
         ComponentInterface... $formElements
     ) {
+        $csrfToken = null;
+        foreach ($formElements as $formElement) {
+            if ($formElement instanceof Csrf) {
+                $csrfToken = $formElement->getAttribute('token');
+            }
+        }
         $formGroup = new FormGroup(
             new FormName(),
             $validationError,
@@ -32,7 +38,10 @@ class Form extends BaseComponent
             [
                 'method' => $method->value,
                 'value' => $value,
-                'multipart' => $multipart
+                'csrf' => $csrfToken,
+                'multipart' => $multipart,
+                'validationError' => $validationError,
+                'validationErrors' => $formValidationErrors,
             ],
             new ComponentHashmap([
                 'formElements' => $formGroup,

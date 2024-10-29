@@ -2,8 +2,10 @@
 namespace Apie\HtmlBuilders\Factories;
 
 use Apie\Core\Attributes\AllowMultipart;
+use Apie\Core\Attributes\CmsSingleInput;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextConstants;
+use Apie\Core\Dto\CmsInputOption;
 use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\DiscriminatorColumn;
@@ -13,7 +15,8 @@ use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
-use Apie\HtmlBuilders\Components\Forms\Input;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
+use Apie\HtmlBuilders\Factories\Concrete\ApieSingleInputComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ArrayComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\BooleanComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\DateTimeComponentProvider;
@@ -29,9 +32,7 @@ use Apie\HtmlBuilders\Factories\Concrete\MixedComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\MultiSelectComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\NullComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\OptionsComponentProvider;
-use Apie\HtmlBuilders\Factories\Concrete\PasswordComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\PolymorphicEntityComponentProvider;
-use Apie\HtmlBuilders\Factories\Concrete\SafeHtmlComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\UnionTypehintComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\VerifyOtpInputComponentProvider;
 use Apie\HtmlBuilders\FormBuildContext;
@@ -60,9 +61,8 @@ final class FormComponentFactory
     {
         return new self(
             new VerifyOtpInputComponentProvider(),
+            new ApieSingleInputComponentProvider(),
             new FileUploadComponentProvider(),
-            new SafeHtmlComponentProvider(),
-            new PasswordComponentProvider(),
             new HideUuidAsIdComponentProvider(),
             new HiddenIdComponentProvider(),
             new MixedComponentProvider(),
@@ -123,13 +123,13 @@ final class FormComponentFactory
             $value = Utils::toString($context->getFilledInValue($allowsNull ? null : '', true));
         } catch (Throwable) {
         }
-        return new Input(
+        return new SingleInput(
             $context->getFormName(),
-            $value,
-            'text',
-            [],
+            $context->getFilledInValue(),
+            $context->createTranslationLabel(),
             $allowsNull,
-            $context->getValidationError()
+            $typehint,
+            new CmsSingleInput(['text']),
         );
     }
 
@@ -190,6 +190,17 @@ final class FormComponentFactory
                     }
                     break;
                 case DiscriminatorColumn::class:
+                    $components[$fieldName] = new SingleInput(
+                        $childContext->getFormName(),
+                        $childContext->getFilledInValue(),
+                        $childContext->createTranslationLabel(),
+                        false,
+                        ReflectionTypeFactory::createReflectionType('string'),
+                        new CmsSingleInput(
+                            ['forced_hidden', 'hidden'],
+                            new CmsInputOption(forcedValue: $reflectionData->getValueForClass($metadata->toClass()))
+                        ),
+                    );
                     break;
                 default:
                     $components[$fieldName] = $this->createFromType($reflectionData->getTypehint(), $childContext);

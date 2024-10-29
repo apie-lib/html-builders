@@ -31,6 +31,14 @@ abstract class BaseComponent implements ComponentInterface
         return $this->attributes[$key] ?? null;
     }
 
+    final public function makePrototype(string $prototypeName, BaseComponent $component): BaseComponent
+    {
+        $component->attributes['additionalAttributes'] ??= [];
+        $component->attributes['additionalAttributes']['id'] = $prototypeName;
+        $component->attributes['additionalAttributes']['prototyped'] = 'prototyped';
+        return $component;
+    }
+
     public function withName(FormName $name, mixed $value = null): ComponentInterface
     {
         $item = clone $this;

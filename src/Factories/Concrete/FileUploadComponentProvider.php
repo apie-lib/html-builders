@@ -1,8 +1,9 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Attributes\CmsSingleInput;
 use Apie\Core\Utils\ConverterUtils;
-use Apie\HtmlBuilders\Components\Forms\FileInput;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -18,13 +19,15 @@ final class FileUploadComponentProvider implements FormComponentProviderInterfac
     }
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        return new FileInput(
+        return new SingleInput(
             $context->getFormName(),
             $context->getFilledInValue(),
-            $context->isMultipart(),
-            [],
+            $context->createTranslationLabel(),
             $type->allowsNull(),
-            $context->getValidationError(),
+            $type,
+            new CmsSingleInput(
+                ['file']
+            )
         );
     }
 }

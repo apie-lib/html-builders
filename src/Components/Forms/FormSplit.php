@@ -8,21 +8,28 @@ use Apie\HtmlBuilders\ValueObjects\FormName;
 
 class FormSplit extends BaseComponent
 {
-    public function __construct(FormName $name, mixed $value, ComponentHashmap $tabComponents)
+    public function __construct(FormName $name, bool $isRootObject, bool $isPolymorphic, mixed $value, ComponentHashmap $tabComponents)
     {
-        $valuePerType = [];
-        foreach ($tabComponents as $componentName => $component) {
-            $valuePerType[$componentName] = $component->attributes['value'] ?? null;
+        $newTabsComponent = [];
+        $componentMap = [];
+        foreach ($tabComponents as $key => $component) {
+            $md5 = 's' . md5((string) $name . ',' . $key);
+            $newTabsComponent[$key] = $this->makePrototype($md5, $component);
+            $subName = $newTabsComponent[$key]->attributes['name'] ??
+                $newTabsComponent[$key]->attributes['groupName'];
+            $componentMap[(string) $subName] = $key;
         }
+        
         parent::__construct(
             [
                 'name' => $name,
-                'tmpl' => 's' . md5((string) $name),
-                'tabs' => array_keys($tabComponents->toArray()),
+                'isRootObject' => $isRootObject,
+                'isPolymorphic' => $isPolymorphic,
+                'tabs' => array_keys($newTabsComponent),
+                'mapping' => $componentMap,
                 'value' => $value,
-                'valuePerType' => $valuePerType,
             ],
-            $tabComponents
+            new ComponentHashmap($newTabsComponent)
         );
     }
 

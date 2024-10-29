@@ -45,10 +45,16 @@ class PolymorphicEntityComponentProvider implements FormComponentProviderInterfa
         foreach ($configs as $config) {
             $components[$config->getDiscriminator()] = $formComponentFactory->createFromClass(
                 new ReflectionClass($config->getClassName()),
-                $context
+                $context->withApieContext('not-root', true)
             );
         }
 
-        return new FormSplit($context->getFormName(), $value, new ComponentHashmap($components));
+        return new FormSplit(
+            $context->getFormName()->createChildForm($propertyName),
+            isRootObject: !$context->getFormName()->hasChildFormFieldName() && !$context->getApieContext()->getContext('not-root', false),
+            isPolymorphic: true,
+            value: $value,
+            tabComponents: new ComponentHashmap($components)
+        );
     }
 }

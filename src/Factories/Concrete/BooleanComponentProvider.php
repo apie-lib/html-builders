@@ -1,10 +1,14 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Attributes\CmsSingleInput;
+use Apie\Core\Dto\CmsInputOption;
+use Apie\Core\Dto\ValueOption;
 use Apie\Core\Enums\ScalarType;
+use Apie\Core\Lists\ValueOptionList;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\ValueObjects\Utils;
-use Apie\HtmlBuilders\Components\Forms\Checkbox;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -27,11 +31,22 @@ class BooleanComponentProvider implements FormComponentProviderInterface
         if ($value !== null) {
             $value = Utils::toBoolean($value);
         }
-        return new Checkbox(
+        return new SingleInput(
             $context->getFormName(),
             $value,
+            $context->createTranslationLabel(),
             $type->allowsNull(),
-            $context->getValidationError()
+            $type,
+            new CmsSingleInput(
+                $type->allowsNull() ? ['select'] : ['checkbox', 'select'],
+                new CmsInputOption(
+                    options: new ValueOptionList([
+                        new ValueOption('On', true),
+                        new ValueOption('Off', false),
+                        ...($type->allowsNull() ? [new ValueOption('-', null)] : [])
+                    ])
+                )
+            )
         );
     }
 }

@@ -2,43 +2,34 @@
 namespace Apie\HtmlBuilders\TestHelpers;
 
 use Apie\Common\ActionDefinitions\CreateResourceActionDefinition;
+use Apie\Core\Attributes\CmsSingleInput;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Dto\ValueOption;
+use Apie\Core\Dto\CmsInputOption;
 use Apie\Core\Enums\RequestMethod;
 use Apie\Core\Lists\StringList;
-use Apie\Core\Lists\ValueOptionList;
 use Apie\Core\Translator\ApieTranslator;
 use Apie\Core\Translator\ApieTranslatorInterface;
+use Apie\Core\Translator\Lists\TranslationStringSet;
+use Apie\Core\Translator\ValueObjects\TranslationString;
 use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\Fixtures\Entities\Order;
 use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
-use Apie\Fixtures\Enums\Gender;
 use Apie\Fixtures\Identifiers\OrderIdentifier;
 use Apie\Fixtures\Identifiers\UserWithAddressIdentifier;
 use Apie\Fixtures\Lists\OrderLineList;
 use Apie\Fixtures\ValueObjects\AddressWithZipcodeCheck;
-use Apie\Fixtures\ValueObjects\Password as StrongPassword;
 use Apie\HtmlBuilders\Components\Dashboard\RawContents;
-use Apie\HtmlBuilders\Components\Forms\Checkbox;
 use Apie\HtmlBuilders\Components\Forms\Csrf;
-use Apie\HtmlBuilders\Components\Forms\FileInput;
 use Apie\HtmlBuilders\Components\Forms\Form;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeHashmap;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
-use Apie\HtmlBuilders\Components\Forms\HiddenField;
-use Apie\HtmlBuilders\Components\Forms\HtmlField;
-use Apie\HtmlBuilders\Components\Forms\Input;
-use Apie\HtmlBuilders\Components\Forms\InputWithAutocomplete;
-use Apie\HtmlBuilders\Components\Forms\MultiSelect;
-use Apie\HtmlBuilders\Components\Forms\Password;
 use Apie\HtmlBuilders\Components\Forms\RemoveConfirm;
-use Apie\HtmlBuilders\Components\Forms\Select;
-use Apie\HtmlBuilders\Components\Forms\VerifyOtpInput;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
@@ -61,9 +52,8 @@ use Apie\HtmlBuilders\Lists\ActionList;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ResourceActions\CreateResourceAction;
 use Apie\HtmlBuilders\ValueObjects\FormName;
-use Apie\OtpValueObjects\HOTPSecret;
+use Apie\TypeConverter\ReflectionTypeFactory;
 use Generator;
-use OTPHP\HOTP;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
@@ -245,122 +235,28 @@ abstract class AbstractRenderTestCase extends TestCase
             new Form(RequestMethod::POST, 'validation error', [], [], false, new RawContents('test'), new RawContents('test2')),
         ];
 
-        yield 'Simple input field' => [
-            'expected-input.html',
-            new Input('name', 'value')
-        ];
-
-        yield 'Simple checkbox with validation error' => [
-            'expected-checkbox-with-validation-error.html',
-            new Checkbox(new FormName('name'), true, validationError: 'validation error')
-        ];
-
-        yield 'Simple input field with validation error' => [
-            'expected-input-with-validation-error.html',
-            new InputWithAutocomplete(new FormName('name'), 'value', 'https://www.example.com/ajaxCall', validationError: 'validation error')
-        ];
-
-        yield 'Simple input field with autocomplete' => [
-            'expected-input-with-autocomplete.html',
-            new InputWithAutocomplete(new FormName('name'), 'value', 'https://www.example.com/ajaxCall')
-        ];
-        yield 'HTML Editor' => [
-            'expected-html-field.html',
-            new HtmlField(
-                'form[name]',
-                '<div></div>',
+        yield 'Configured input' => [
+            'expected-single-input.html',
+            new SingleInput(
+                new FormName('name'),
+                42,
+                new TranslationStringSet([new TranslationString('test')]),
                 false,
-                validationError: 'validation error',
-                valueObjectClass: DatabaseText::class
+                ReflectionTypeFactory::createReflectionType('string'),
+                new CmsSingleInput(['datetimetz', 'text'], new CmsInputOption())
             )
         ];
-
-        yield 'File upload with multipart encoding disabled' => [
-            'expected-file-upload-raw.html',
-            new FileInput(
-                'form[name]',
-                [
-                    'contents' => 'Hello World',
-                    'originalFilename' => 'hello.txt'
-                ],
-                false,
-                [],
-                true,
-                null
-            )
-        ];
-
-        yield 'File upload with multipart encoding enabled' => [
-            'expected-file-upload-multipart.html',
-            new FileInput(
-                'form[name]',
-                null,
-                true,
-                [],
-                true,
-                null
-            )
-        ];
-
-        yield 'Simple input field with autocomplete and validation error' => [
-            'expected-input-with-autocomplete-and-validation-error.html',
-            new Input('name', 'value', validationError: 'validation error')
-        ];
-
-        yield 'Simple password field' => [
-            'expected-input-password.html',
-            new Input('name', 'value', 'password')
-        ];
-        yield 'Hidden field' => [
-            'expected-hidden-field.html',
-            new HiddenField('name', 'value')
-        ];
-        yield 'Password field' => [
-            'expected-password-field.html',
-            new Password(StrongPassword::class, new FormName('name'), null, false)
-        ];
-        yield 'Password field with validation error' => [
-            'expected-password-field-with-validation-error.html',
-            new Password(StrongPassword::class, new FormName('name'), 'value', false, 'Validation Error')
-        ];
-        yield 'Multi select' => [
-            'expected-multi-select.html',
-            new MultiSelect(
-                new FormName('set'),
-                [],
-                new ValueOptionList(
-                    [
-                        new ValueOption('boolean true', true),
-                        new ValueOption('male', Gender::MALE),
-                        new ValueOption('female', Gender::FEMALE),
-                    ]
-                )
-            )
-        ];
-
-        yield 'Select' => [
-            'expected-select.html',
-            new Select(
-                new FormName('set'),
-                'male',
-                new ValueOptionList(
-                    [
-                        new ValueOption('boolean true', true),
-                        new ValueOption('male', Gender::MALE),
-                        new ValueOption('female', Gender::FEMALE),
-                    ]
-                )
-            )
-        ];
-
+        $type = ReflectionTypeFactory::createReflectionType('string');
         yield 'Union type' => [
             'expected-type-split.html',
             new FormSplit(
                 new FormName('name'),
+                false,
+                false,
                 '42',
                 new ComponentHashmap([
-                    'input' => new Input('name', 'value'),
-                    'password' => new Input('name', 'value', 'password')
+                    'input' => new SingleInput(new FormName('input'), null, new TranslationStringSet([]), false, $type, new CmsSingleInput(['text'])),
+                    'password' => new SingleInput(new FormName('password'), null, new TranslationStringSet([]), false, $type, new CmsSingleInput(['text'])),
                 ])
             )
         ];
@@ -371,7 +267,7 @@ abstract class AbstractRenderTestCase extends TestCase
                 new FormName('name'),
                 [],
                 '__NAME__',
-                new Input('__NAME__', 'value', 'tel')
+                new RawContents('<div>Row</div>')
             )
         ];
 
@@ -384,7 +280,7 @@ abstract class AbstractRenderTestCase extends TestCase
                     '0123456789',
                 ],
                 '__NAME__',
-                new Input('__NAME__', 'value', 'tel')
+                new RawContents('<div>Row</div>')
             )
         ];
 
@@ -394,7 +290,7 @@ abstract class AbstractRenderTestCase extends TestCase
                 new FormName('name'),
                 [],
                 '__NAME__',
-                new Input('__NAME__', 'value', 'tel')
+                new RawContents('<div>Row</div>')
             )
         ];
 
@@ -407,7 +303,7 @@ abstract class AbstractRenderTestCase extends TestCase
                     'second' => '0123456789',
                 ],
                 '__NAME__',
-                new Input('__NAME__', 'value', 'tel')
+                new RawContents('<div>Row</div>')
             )
         ];
 
@@ -415,19 +311,6 @@ abstract class AbstractRenderTestCase extends TestCase
             'expected-csrf-token.html',
             new Csrf('token-123')
         ];
-        if (class_exists(HOTPSecret::class)) {
-            $hotp = HOTP::create(str_repeat('A', 103));
-            assert($hotp instanceof HOTP);
-            yield 'OTP secret' => [
-                'expected-otp-secret.html',
-                new VerifyOtpInput(
-                    'name',
-                    null,
-                    'label',
-                    new HOTPSecret($hotp)
-                )
-            ];
-        }
         yield 'List display' => [
             'expected-list-display.html',
             new ListDisplay(

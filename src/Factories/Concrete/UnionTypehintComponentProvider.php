@@ -1,11 +1,13 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Attributes\CmsSingleInput;
+use Apie\Core\Dto\CmsInputOption;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\Strategy\UnionTypeStrategy;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
-use Apie\HtmlBuilders\Components\Forms\Select;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -31,11 +33,16 @@ class UnionTypehintComponentProvider implements FormComponentProviderInterface
             if (!in_array($scalar, [ScalarType::ARRAY, ScalarType::STDCLASS, ScalarType::MIXED])) {
                 $options = $metadata->getValueOptions($context->getApieContext(), true);
                 if ($options) {
-                    return new Select(
+                    return new SingleInput(
                         $context->getFormName(),
                         $context->getFilledInValue(),
-                        MetadataFactory::getCreationMetadata($type, $context->getApieContext())
-                            ->getValueOptions($context->getApieContext(), true)
+                        $context->createTranslationLabel(),
+                        $type->allowsNull(),
+                        $type,
+                        new CmsSingleInput(
+                            ['select'],
+                            new CmsInputOption(options: $options)
+                        )
                     );
                 }
                 return $formComponentFactory->createFromType($scalar->toReflectionType(), $context);
@@ -46,7 +53,13 @@ class UnionTypehintComponentProvider implements FormComponentProviderInterface
             $key = $this->getSafePanelName($subType);
             $components[$key] = $formComponentFactory->createFromType($subType, $context);
         }
-        return new FormSplit($context->getFormName(), $context->getFilledInValue($type->allowsNull() ? null : ''), new ComponentHashmap($components));
+        return new FormSplit(
+            $context->getFormName(),
+            false,
+            false,
+            $context->getFilledInValue($type->allowsNull() ? null : ''),
+            new ComponentHashmap($components)
+        );
     }
 
     public function getSafePanelName(ReflectionType $type): string

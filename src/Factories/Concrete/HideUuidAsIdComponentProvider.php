@@ -1,10 +1,12 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Attributes\CmsSingleInput;
+use Apie\Core\Dto\CmsInputOption;
 use Apie\Core\Identifiers\Uuid;
 use Apie\Core\Identifiers\UuidV4;
 use Apie\Core\ValueObjects\Utils;
-use Apie\HtmlBuilders\Components\Forms\HiddenField;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -33,9 +35,16 @@ class HideUuidAsIdComponentProvider implements FormComponentProviderInterface
         if (!preg_match(Uuid::getRegularExpression(), $id)) {
             $id = UuidV4::createRandom()->toNative();
         };
-        return new HiddenField(
+        return new SingleInput(
             $context->getFormName(),
-            $id
+            $context->getFilledInValue(),
+            $context->createTranslationLabel(),
+            $type->allowsNull(),
+            $type,
+            new CmsSingleInput(
+                ['forced_hidden', 'hidden'],
+                new CmsInputOption(forcedValue: $id)
+            ),
         );
     }
 }

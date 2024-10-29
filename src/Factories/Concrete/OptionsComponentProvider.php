@@ -1,8 +1,10 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Attributes\CmsSingleInput;
+use Apie\Core\Dto\CmsInputOption;
 use Apie\Core\Metadata\MetadataFactory;
-use Apie\HtmlBuilders\Components\Forms\Select;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -18,11 +20,20 @@ class OptionsComponentProvider implements FormComponentProviderInterface
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        return new Select(
+        $options = MetadataFactory::getCreationMetadata($type, $context->getApieContext())
+            ->getValueOptions($context->getApieContext(), true);
+        return new SingleInput(
             $context->getFormName(),
-            $context->getFilledInValue('', true),
-            MetadataFactory::getCreationMetadata($type, $context->getApieContext())
-                ->getValueOptions($context->getApieContext(), true)
+            $context->getFilledInValue(),
+            $context->createTranslationLabel(),
+            $type->allowsNull(),
+            $type,
+            new CmsSingleInput(
+                ['select'],
+                new CmsInputOption(
+                    options: $options
+                )
+            )
         );
     }
 }

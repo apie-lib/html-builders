@@ -1,7 +1,8 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\HtmlBuilders\Components\Dashboard\RawContents;
+use Apie\Core\Attributes\CmsSingleInput;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -20,9 +21,15 @@ class NullComponentProvider implements FormComponentProviderInterface
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        return new RawContents(sprintf(
-            '<input type="hidden" name="%s" value="null"/>',
-            htmlentities($context->getFormName()->getTypehintName())
-        ));
+        return new SingleInput(
+            $context->getFormName(),
+            $context->getFilledInValue(),
+            $context->createTranslationLabel(),
+            $type->allowsNull(),
+            $type,
+            new CmsSingleInput(
+                ['null']
+            )
+        );
     }
 }

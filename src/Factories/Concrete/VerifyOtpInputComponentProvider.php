@@ -1,9 +1,11 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Attributes\CmsSingleInput;
 use Apie\Core\ContextConstants;
+use Apie\Core\Dto\CmsInputOption;
 use Apie\Core\Utils\ConverterUtils;
-use Apie\HtmlBuilders\Components\Forms\VerifyOtpInput;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -42,13 +44,16 @@ class VerifyOtpInputComponentProvider implements FormComponentProviderInterface
         $label = $class->getMethod('getOtpLabel')->invoke(null, $resource);
         $otpSecret = $property->getValue($resource);
 
-        return new VerifyOtpInput(
+        return new SingleInput(
             $context->getFormName(),
             $value,
-            $label,
-            $otpSecret,
+            $context->createTranslationLabel(),
             $type->allowsNull(),
-            $context->getValidationError(),
+            $type,
+            new CmsSingleInput(
+                ['otp', 'text'],
+                new CmsInputOption(imageUrl: $otpSecret->getUrl($label))
+            )
         );
     }
 }

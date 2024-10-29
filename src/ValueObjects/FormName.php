@@ -2,9 +2,13 @@
 namespace Apie\HtmlBuilders\ValueObjects;
 
 use Apie\Core\Attributes\SchemaMethod;
+use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Exceptions\InvalidTypeException;
+use Apie\Core\Identifiers\SnakeCaseSlug;
+use Apie\Core\Translator\ValueObjects\TranslationString;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\HtmlBuilders\Exceptions\EmptyFormNameException;
+use ReflectionClass;
 use Stringable;
 
 #[SchemaMethod('createSchema')]
@@ -70,16 +74,22 @@ final class FormName implements ValueObjectInterface, Stringable
 
     public function getPrototypeName(): string
     {
-        return strtoupper(str_replace(
-            ['[', ']'],
-            '__',
-            '__' . $this . '__'
-        )) . md5((string) $this);
+        return '__' . end($this->internal);
     }
 
-    public function getTypehintName(): string
+    /**
+     * @param ReflectionClass<object> $class
+     */
+    public function createTranslationString(ReflectionClass $class, ?BoundedContextId $boundedContextId = null): TranslationString
     {
-        return '_apie[typehint][' . implode('][', $this->internal) . ']';
+        $suffix = '.'
+            . SnakeCaseSlug::fromClass($class)
+            . '.properties.'
+            . strtolower(implode('.', $this->internal));
+        if ($boundedContextId === null) {
+            return new TranslationString('apie.resource' . $suffix);
+        }
+        return new TranslationString('apie.bounded.' .  $boundedContextId . $suffix);
     }
 
     public function __toString(): string

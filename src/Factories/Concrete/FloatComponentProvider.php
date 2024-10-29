@@ -1,9 +1,10 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Attributes\CmsSingleInput;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\MetadataFactory;
-use Apie\HtmlBuilders\Components\Forms\Input;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -19,13 +20,15 @@ class FloatComponentProvider implements FormComponentProviderInterface
 
     public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        return new Input(
+        return new SingleInput(
             $context->getFormName(),
-            $context->getFilledInValue($type->allowsNull() ? null : '', true),
-            'number',
-            [],
+            $context->getFilledInValue(),
+            $context->createTranslationLabel(),
             $type->allowsNull(),
-            $context->getValidationError()
+            $type,
+            new CmsSingleInput(
+                ['number', 'text']
+            )
         );
     }
 }

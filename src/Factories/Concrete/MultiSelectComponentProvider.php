@@ -1,10 +1,12 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
+use Apie\Core\Attributes\CmsSingleInput;
+use Apie\Core\Dto\CmsInputOption;
 use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Utils\HashmapUtils;
-use Apie\HtmlBuilders\Components\Forms\MultiSelect;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
@@ -41,10 +43,16 @@ class MultiSelectComponentProvider implements FormComponentProviderInterface
     {
         $metadata = MetadataFactory::getCreationMetadata($type, $formBuildContext->getApieContext());
         $options = $metadata->getArrayItemType()->getValueOptions($formBuildContext->getApieContext(), true);
-        return new MultiSelect(
+        return new SingleInput(
             $formBuildContext->getFormName(),
-            $formBuildContext->getFilledInValue($type->allowsNull() ? null : []),
-            $options
+            $formBuildContext->getFilledInValue(),
+            $formBuildContext->createTranslationLabel(),
+            $type->allowsNull(),
+            $type,
+            new CmsSingleInput(
+                ['multi'],
+                new CmsInputOption(options: $options)
+            )
         );
     }
 }
