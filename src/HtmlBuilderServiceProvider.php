@@ -30,9 +30,18 @@ class HtmlBuilderServiceProvider extends ServiceProvider
             \Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory::class,
             function ($app) {
                 return \Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory::create(
-                
+                    $this->getTaggedServicesIterator(\Apie\HtmlBuilders\Interfaces\FieldDisplayComponentProviderInterface::class),
+                    $app->make(\Apie\HtmlBuilders\Columns\ColumnSelector::class)
                 );
                 
+            }
+        );
+        $this->app->singleton(
+            \Apie\HtmlBuilders\Columns\ColumnSelector::class,
+            function ($app) {
+                return new \Apie\HtmlBuilders\Columns\ColumnSelector(
+                
+                );
             }
         );
         $this->app->singleton(

@@ -9,6 +9,11 @@ services:
 
   Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory:
     factory: ['Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory', 'create']
+    arguments:
+      - !tagged_iterator Apie\HtmlBuilders\Interfaces\FieldDisplayComponentProviderInterface
+      - '@Apie\HtmlBuilders\Columns\ColumnSelector'
+
+  Apie\HtmlBuilders\Columns\ColumnSelector:
 
   Apie\HtmlBuilders\Factories\ResourceActionFactory:
     arguments:

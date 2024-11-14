@@ -40,6 +40,9 @@
     "phpunit/phpunit": "^9.6.19",
     "phpspec/prophecy-phpunit": "^2.2"
   },
+  "conflict": {
+    "phpstan/phpdoc-parser": "2.*"
+  },
   "minimum-stability": "dev",
   "prefer-stable": true
 }

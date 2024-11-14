@@ -29,19 +29,27 @@ final class FieldDisplayComponentFactory
         $this->valueComponentProviders = $valueComponentProviders;
     }
 
-    public static function create(?ColumnSelector $columnSelector = null): self
-    {
+    /**
+     * @param iterable<int, FieldDisplayComponentProviderInterface> $customDisplayProviders
+     */
+    public static function create(
+        iterable $customDisplayProviders,
+        ?ColumnSelector $columnSelector = null
+    ): self {
         return new self(
-            new SafeHtmlDisplayProvider(),
-            new UploadedFileDisplayProvider(),
-            new ArrayDisplayProvider(),
-            new ListDisplayProvider($columnSelector ?? new ColumnSelector()),
-            new ValueObjectDisplayProvider(),
-            new EnumDisplayProvider(),
-            new BooleanDisplayProvider(),
-            new NullDisplayProvider(),
-            new SegmentDisplayProvider(),
-            new FallbackDisplayProvider(),
+            ...[
+                ...$customDisplayProviders,
+                new SafeHtmlDisplayProvider(),
+                new UploadedFileDisplayProvider(),
+                new ArrayDisplayProvider(),
+                new ListDisplayProvider($columnSelector ?? new ColumnSelector()),
+                new ValueObjectDisplayProvider(),
+                new EnumDisplayProvider(),
+                new BooleanDisplayProvider(),
+                new NullDisplayProvider(),
+                new SegmentDisplayProvider(),
+                new FallbackDisplayProvider(),
+            ]
         );
     }
 

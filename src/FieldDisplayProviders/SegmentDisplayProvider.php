@@ -33,7 +33,7 @@ class SegmentDisplayProvider implements FieldDisplayComponentProviderInterface
         $nodes = $context->getVisitedNodes();
         $prefix = empty($nodes) ? '' : (implode('.', $nodes) . '.');
         $detailComponents = [];
-        foreach ($metadata->getHashmap() as $propertyName => $fieldMetadata) {
+        foreach ($metadata->getHashmap()->filterOnContext($context->getApieContext()) as $propertyName => $fieldMetadata) {
             if ($fieldMetadata instanceof GetterInterface) {
                 $propertyContext = $context->createChildContext($propertyName);
                 $detailComponents[$prefix . $propertyName] = $propertyContext->createComponentFor(

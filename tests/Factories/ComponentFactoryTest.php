@@ -24,7 +24,7 @@ class ComponentFactoryTest extends TestCase
             new ApplicationConfiguration([]),
             new BoundedContextHashmap([]),
             FormComponentFactory::create(),
-            FieldDisplayComponentFactory::create(),
+            FieldDisplayComponentFactory::create([]),
             new ResourceActionFactory(new ActionDefinitionProvider)
         );
         $this->assertInstanceOf(
