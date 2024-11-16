@@ -9,6 +9,7 @@ use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Factories\FormComponentFactory;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\ValueObjects\FormName;
+use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
 
 final class FormBuildContext
@@ -21,9 +22,9 @@ final class FormBuildContext
     private array $validationErrors;
 
     /**
-     * @var array<string|int, mixed>|string|null $filledIn
+     * @var array<string|int, mixed>|string|int|float|UploadedFileInterface|null $filledIn
      */
-    private array|string|null $filledIn;
+    private array|string|int|float|null|UploadedFileInterface $filledIn;
 
     /**
      * @param array<string|int, mixed> $filledIn

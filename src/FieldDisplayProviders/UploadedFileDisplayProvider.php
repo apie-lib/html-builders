@@ -35,6 +35,6 @@ final class UploadedFileDisplayProvider implements FieldDisplayComponentProvider
         $resource = $context->getResource();
         assert($resource instanceof EntityInterface);
         $resourceName = (new ReflectionClass($context->getApieContext()->getContext(ContextConstants::RESOURCE_NAME)))->getShortName();
-        return new LinkDisplay($text, '../action/' . $resourceName . '/' . $resource->getId()->toNative() . '/' . implode('/', $context->getVisitedNodes()));
+        return new LinkDisplay($text, '../action/' . $resourceName . '/' . $resource->getId()->toNative() . '/download/' . implode('/', $context->getVisitedNodes()));
     }
 }
