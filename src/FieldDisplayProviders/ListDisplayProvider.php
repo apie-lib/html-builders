@@ -38,15 +38,20 @@ final class ListDisplayProvider implements FieldDisplayComponentProviderInterfac
         if (!$apieContext->hasContext(Serializer::class)) {
             return false;
         }
+        $columns = $this->columnSelector->getColumns($refl, $apieContext);
         $display = MetadataFactory::getResultMetadata($refl, $apieContext);
-        foreach ($display->getHashmap() as $fieldMetadata) {
+        $noMatchingColumns = true;
+        foreach ($display->getHashmap() as $fieldName => $fieldMetadata) {
             $typehint = $fieldMetadata->getTypehint();
             $scalar = MetadataFactory::getScalarForType($typehint, true);
             if (!in_array($scalar, ScalarType::PRIMITIVES)) {
                 return false;
             }
+            if (in_array($fieldName, $columns)) {
+                $noMatchingColumns = false;
+            }
         }
-        return true;
+        return !$noMatchingColumns;
     }
 
     public function createComponentFor(mixed $object, FieldDisplayBuildContext $context): ComponentInterface
