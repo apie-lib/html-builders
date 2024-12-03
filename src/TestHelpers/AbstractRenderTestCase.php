@@ -15,6 +15,7 @@ use Apie\Core\Translator\ValueObjects\TranslationString;
 use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\Fixtures\Entities\Order;
+use Apie\Fixtures\Entities\Polymorphic\Animal;
 use Apie\Fixtures\Entities\UserWithAddress;
 use Apie\Fixtures\Entities\UserWithAutoincrementKey;
 use Apie\Fixtures\Identifiers\OrderIdentifier;
@@ -28,6 +29,7 @@ use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeHashmap;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
+use Apie\HtmlBuilders\Components\Forms\PolymorphicForm;
 use Apie\HtmlBuilders\Components\Forms\RemoveConfirm;
 use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\Components\Layout;
@@ -219,6 +221,38 @@ abstract class AbstractRenderTestCase extends TestCase
         yield 'Form-Upload' => [
             'expected-form-with-upload.html',
             new Form(RequestMethod::POST, null, [], [], true, new RawContents('test'), new RawContents('test2')),
+        ];
+        yield 'Polymorphic Form' => [
+            'expected-polymorphic-form.html',
+            new PolymorphicForm(
+                RequestMethod::POST,
+                new ReflectionClass(Animal::class),
+                null,
+                [],
+                [],
+                false,
+                new Csrf('temp'),
+                new ComponentHashmap([
+                    'test1' => new RawContents('test3'),
+                    'test2' => new RawContents('test4'),
+                ])
+            ),
+        ];
+        yield 'Polymorphic Form-Upload' => [
+            'expected-polymorphic-form-with-upload.html',
+            new PolymorphicForm(
+                RequestMethod::POST,
+                new ReflectionClass(Animal::class),
+                null,
+                [],
+                [],
+                true,
+                new Csrf('temp'),
+                new ComponentHashmap([
+                    'test1' => new RawContents('test3'),
+                    'test2' => new RawContents('test4'),
+                ])
+            ),
         ];
         yield 'Form with validation errors' => [
             'expected-form-with-unknown-validation-error.html',
