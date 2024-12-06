@@ -60,26 +60,28 @@ final class FormComponentFactory
     public static function create(iterable $formComponentProviders = []): FormComponentFactory
     {
         return new self(
-            new VerifyOtpInputComponentProvider(),
-            new ApieSingleInputComponentProvider(),
-            new FileUploadComponentProvider(),
-            new HideUuidAsIdComponentProvider(),
-            new HiddenIdComponentProvider(),
-            new MixedComponentProvider(),
-            new MultiSelectComponentProvider(),
-            new OptionsComponentProvider(),
-            new UnionTypehintComponentProvider(),
-            new PolymorphicEntityComponentProvider(),
-            new ArrayComponentProvider(),
-            new ItemListComponentProvider(),
-            new ItemHashmapComponentProvider(),
-            new NullComponentProvider(),
-            new BooleanComponentProvider(),
-            new FloatComponentProvider(),
-            new IntComponentProvider(),
-            new DateTimeComponentProvider(),
-            new EntityComponentProvider(),
-            ...$formComponentProviders,
+            ...[
+                ...$formComponentProviders,
+                new VerifyOtpInputComponentProvider(),
+                new ApieSingleInputComponentProvider(),
+                new FileUploadComponentProvider(),
+                new HideUuidAsIdComponentProvider(),
+                new HiddenIdComponentProvider(),
+                new MixedComponentProvider(),
+                new MultiSelectComponentProvider(),
+                new OptionsComponentProvider(),
+                new UnionTypehintComponentProvider(),
+                new PolymorphicEntityComponentProvider(),
+                new ArrayComponentProvider(),
+                new ItemListComponentProvider(),
+                new ItemHashmapComponentProvider(),
+                new NullComponentProvider(),
+                new BooleanComponentProvider(),
+                new FloatComponentProvider(),
+                new IntComponentProvider(),
+                new DateTimeComponentProvider(),
+                new EntityComponentProvider(),
+            ]
         );
     }
 

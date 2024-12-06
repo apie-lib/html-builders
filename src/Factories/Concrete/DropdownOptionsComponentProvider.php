@@ -31,7 +31,6 @@ class DropdownOptionsComponentProvider implements FormComponentProviderInterface
         }
         $dropdownOptionProvider = $apieContext->getContext(DropdownOptionProviderInterface::class);
         assert($dropdownOptionProvider instanceof DropdownOptionProviderInterface);
-
         return $dropdownOptionProvider->supports(
             $apieContext->withContext('property', $context->getFormName()->toValidationErrorKey())
         );
@@ -58,7 +57,7 @@ class DropdownOptionsComponentProvider implements FormComponentProviderInterface
             $type->allowsNull(),
             $type,
             new CmsSingleInput(
-                ['combobox', 'text'],
+                ['combobox'],
                 new CmsInputOption(autocompleteUrl: $autocompleteUrl)
             )
         );
