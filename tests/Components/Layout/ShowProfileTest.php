@@ -14,9 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class ShowProfileTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_display_some_profile_fields()
     {
         $defaultConfiguration = new CurrentConfiguration([], new ApieContext(), BoundedContextFactory::createHashmap(), new BoundedContextId('default'));

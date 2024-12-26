@@ -68,7 +68,8 @@ final class ColumnSelector
 
     /**
      * @param ReflectionClass<object> $class
-     * @param array<string, bool> $done
+     * @param array<int|string, string> $done
+     * @param-out array<int|string, string> $done
      * @return Generator<int, ReflectionClass<PolymorphicEntityInterface>>
      */
     private function iterateOverChildClasses(ReflectionClass $class, array& $done): Generator

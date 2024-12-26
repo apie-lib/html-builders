@@ -6,9 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class StacktraceRendererTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_renders_html_for_a_stacktrace()
     {
         $testItem = new StacktraceRenderer(new \Exception('<test>'));

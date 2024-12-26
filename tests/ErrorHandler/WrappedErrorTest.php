@@ -7,9 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class WrappedErrorTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_be_converted_to_json()
     {
         $error = new Exception(

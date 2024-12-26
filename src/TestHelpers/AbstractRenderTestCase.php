@@ -76,9 +76,7 @@ abstract class AbstractRenderTestCase extends TestCase
         return true;//false;
     }
 
-    /**
-     * @dataProvider provideComponents
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideComponents')]
     public function testRender(string $expectedFixtureFile, ComponentInterface $component): void
     {
         $renderer = $this->getRenderer();
@@ -94,7 +92,7 @@ abstract class AbstractRenderTestCase extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function provideComponents(): Generator
+    public static function provideComponents(): Generator
     {
         $rawContents = new RawContents('<marquee>Hello world</marquee>');
         $defaultConfiguration = new CurrentConfiguration([], new ApieContext(), BoundedContextFactory::createHashmap(), new BoundedContextId('default'));

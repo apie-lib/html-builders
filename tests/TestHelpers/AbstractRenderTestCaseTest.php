@@ -23,9 +23,7 @@ class AbstractRenderTestCaseTest extends AbstractRenderTestCase
         return __DIR__ . '/../../fixtures';
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_provides_a_list_of_components()
     {
         $list = iterator_to_array($this->provideComponents());

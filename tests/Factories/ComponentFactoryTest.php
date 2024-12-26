@@ -15,9 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class ComponentFactoryTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_create_a_layout_component()
     {
         $testItem = new ComponentFactory(

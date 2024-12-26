@@ -9,9 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class FormBuildContextTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_be_constructed()
     {
         $factory = FormComponentFactory::create();
@@ -49,10 +47,8 @@ class FormBuildContextTest extends TestCase
         return $testItem;
     }
 
-    /**
-     * @test
-     * @depends clone it_can_be_constructed
-     */
+    #[\PHPUnit\Framework\Attributes\DependsUsingDeepClone('it_can_be_constructed')]
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_change_context_immutable(FormBuildContext $testItem)
     {
         $apieContext = $testItem->getApieContext();
