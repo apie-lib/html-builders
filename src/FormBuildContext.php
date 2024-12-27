@@ -16,6 +16,8 @@ final class FormBuildContext
 {
     private FormName $formName;
 
+    private bool $sensitive = false;
+
     /**
      * @var array<string|int, string> $validationErrors
      */
@@ -45,6 +47,11 @@ final class FormBuildContext
     public function isMultipart(): bool
     {
         return $this->multipart;
+    }
+
+    public function isSensitive(): bool
+    {
+        return $this->sensitive;
     }
 
     public function getApieContext(): ApieContext
@@ -134,10 +141,11 @@ final class FormBuildContext
         return new TranslationStringSet($translations);
     }
 
-    public function createChildContext(string $propertyName): self
+    public function createChildContext(string $propertyName, ?bool $sensitive = null): self
     {
         $result = clone $this;
         $result->formName = $this->formName->createChildForm($propertyName);
+        $result->sensitive = $sensitive ?? $this->sensitive;
         $filledIn = $this->filledIn[$propertyName] ?? null;
         $result->filledIn = $filledIn;
         return $result;

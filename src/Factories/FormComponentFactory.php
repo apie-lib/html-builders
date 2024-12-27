@@ -42,6 +42,7 @@ use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionType;
+use SensitiveParameter;
 use Throwable;
 
 final class FormComponentFactory
@@ -131,13 +132,17 @@ final class FormComponentFactory
             $context->createTranslationLabel(),
             $allowsNull,
             $typehint,
-            new CmsSingleInput(['text']),
+            new CmsSingleInput($context->isSensitive() ? ['password'] : ['text']),
         );
     }
 
     public function createFromParameter(ReflectionParameter $parameter, FormBuildContext $context): ComponentInterface
     {
-        $childContext = $context->createChildContext($parameter->name);
+        $sensitive = $context->isSensitive();
+        foreach ($parameter->getAttributes(SensitiveParameter::class) as $param) {
+            $sensitive = true;
+        }
+        $childContext = $context->createChildContext($parameter->name, $sensitive);
         $typehint = $parameter->getType();
         if ($parameter->isVariadic()) {
             $prototypeName = $context->getFormName()->getPrototypeName();
