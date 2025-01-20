@@ -11,7 +11,7 @@ use Apie\Core\Datalayers\ApieDatalayerWithFilters;
 use Apie\Core\Datalayers\Lists\PaginatedResult;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Enums\RequestMethod;
-use Apie\Core\Lists\StringList;
+use Apie\Core\Lists\StringSet;
 use Apie\Core\Session\CsrfTokenProvider;
 use Apie\Core\Utils\EntityUtils;
 use Apie\Core\ValueObjects\Utils;
@@ -148,7 +148,7 @@ class ComponentFactory
             $filterColumns = $datalayer->getFilterColumns($className, new BoundedContextId($boundedContextId));
             return new FilterColumns($filterColumns, $searchFilters['search'] ?? '', Utils::toArray($searchFilters['query'] ?? []));
         }
-        return new FilterColumns(new StringList(), $searchFilters['search'] ?? '', []);
+        return new FilterColumns(new StringSet(), $searchFilters['search'] ?? '', []);
     }
 
     public function createWrapLayout(

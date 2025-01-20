@@ -7,7 +7,7 @@ use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Dto\CmsInputOption;
 use Apie\Core\Enums\RequestMethod;
-use Apie\Core\Lists\StringList;
+use Apie\Core\Lists\StringSet;
 use Apie\Core\Translator\ApieTranslator;
 use Apie\Core\Translator\ApieTranslatorInterface;
 use Apie\Core\Translator\Lists\TranslationStringSet;
@@ -167,7 +167,7 @@ abstract class AbstractRenderTestCase extends TestCase
         yield 'Resource overview filters' => [
             'expected-resource-overview-filters.html',
             new FilterColumns(
-                new StringList(['id', 'description']),
+                new StringSet(['id', 'description']),
                 'text search',
                 ['description' => 'test'],
             )
@@ -181,7 +181,7 @@ abstract class AbstractRenderTestCase extends TestCase
                 new ResourceActionList(
                     $defaultConfiguration,
                     new ActionList([]),
-                    new FilterColumns(new StringList(), '', []),
+                    new FilterColumns(new StringSet(), '', []),
                 )
             )
         ];
@@ -196,7 +196,7 @@ abstract class AbstractRenderTestCase extends TestCase
         $resourceActionList = new ResourceActionList(
             $defaultConfiguration,
             new ActionList([$createResourceAction]),
-            new FilterColumns(new StringList(), '', []),
+            new FilterColumns(new StringSet(), '', []),
         );
         yield 'Resource action list' => [
             'expected-resource-action-list.html',
