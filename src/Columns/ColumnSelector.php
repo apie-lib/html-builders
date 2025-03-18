@@ -1,22 +1,34 @@
 <?php
 namespace Apie\HtmlBuilders\Columns;
 
+use Apie\Core\Attributes\HideIdOnOverview;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\PolymorphicEntityInterface;
+use Apie\Core\Other\DiscriminatorMapping;
 use Generator;
 use ReflectionClass;
 
 final class ColumnSelector
 {
     /**
+     * @param ReflectionClass<object> $class
      * @return array<int, string>
      */
     public function getColumns(ReflectionClass $class, ApieContext $context): array
     {
         $done = [];
-        return $this->getInternalColumns($class, $context, $done);
+        $columns = $this->getInternalColumns($class, $context, $done);
+        if ($class->getAttributes(HideIdOnOverview::class)) {
+            $columns = array_values(array_filter($columns, function ($value) { return $value !== 'id'; }));
+        }
+        return $columns;
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     * @param array<string, bool> $internalDone
+     * @return array<int, string>
+     */
     public function getInternalColumns(ReflectionClass $class, ApieContext $context, array& $internalDone): array
     {
         if (isset($internalDone[$class->name])) {
@@ -40,6 +52,7 @@ final class ColumnSelector
     }
 
     /**
+     * @param ReflectionClass<object> $class
      * @return Generator<int, DiscriminatorMapping>
      */
     private function iterateOverDiscriminatorMappings(ReflectionClass $class): Generator
@@ -54,6 +67,9 @@ final class ColumnSelector
     }
 
     /**
+     * @param ReflectionClass<object> $class
+     * @param array<int|string, string> $done
+     * @param-out array<int|string, string> $done
      * @return Generator<int, ReflectionClass<PolymorphicEntityInterface>>
      */
     private function iterateOverChildClasses(ReflectionClass $class, array& $done): Generator
@@ -73,6 +89,8 @@ final class ColumnSelector
     }
 
     /**
+     * @param ReflectionClass<object> $class
+     * @param array<string, bool> $done
      * @return array<int, string>
      */
     public function getPolymorphicColumns(ReflectionClass $class, array& $done): array
@@ -93,6 +111,7 @@ final class ColumnSelector
     }
 
     /**
+     * @param ReflectionClass<object> $class
      * @return array<int, string>
      */
     private function getFromSingleClass(ReflectionClass $class, ApieContext $context): array

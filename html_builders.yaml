@@ -1,0 +1,55 @@
+services:
+  Apie\HtmlBuilders\Factories\ComponentFactory:
+    arguments:
+      - '@Apie\HtmlBuilders\Configuration\ApplicationConfiguration'
+      - '@Apie\Core\BoundedContext\BoundedContextHashmap'
+      - '@Apie\HtmlBuilders\Factories\FormComponentFactory'
+      - '@Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory'
+      - '@Apie\HtmlBuilders\Factories\ResourceActionFactory'
+
+  Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory:
+    factory: ['Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory', 'create']
+    arguments:
+      - !tagged_iterator Apie\HtmlBuilders\Interfaces\FieldDisplayComponentProviderInterface
+      - '@Apie\HtmlBuilders\Columns\ColumnSelector'
+
+  Apie\HtmlBuilders\Columns\ColumnSelector:
+
+  Apie\HtmlBuilders\Factories\ResourceActionFactory:
+    arguments:
+      - '@Apie\Common\ActionDefinitionProvider'
+
+  Apie\HtmlBuilders\Factories\FormComponentFactory:
+    factory: ['Apie\HtmlBuilders\Factories\FormComponentFactory', 'create']
+    arguments:
+      - !tagged_iterator Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface
+
+  Apie\HtmlBuilders\Factories\Concrete\DropdownOptionsComponentProvider:
+    arguments:
+      - '@Apie\HtmlBuilders\Configuration\ApplicationConfiguration'
+    tags: ['Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface']
+
+  Apie\HtmlBuilders\Configuration\ApplicationConfiguration:
+    arguments:
+      -
+        base_url: '%apie.cms.base_url%'
+
+  Apie\HtmlBuilders\ErrorHandler\CmsErrorRenderer:
+    arguments:
+      - '@Apie\HtmlBuilders\Factories\ComponentFactory'
+      - '@Apie\HtmlBuilders\Interfaces\ComponentRendererInterface'
+      - '@Apie\Common\Interfaces\DashboardContentFactoryInterface'
+      - '%apie.cms.error_template%'
+      - '%kernel.debug%'
+
+  Apie\HtmlBuilders\Assets\AssetManager:
+    factory: ['Apie\HtmlBuilders\Assets\AssetManager', 'create']
+    arguments:
+      - '%apie.cms.asset_folders%'
+  Apie\HtmlBuilders\Interfaces\ComponentRendererInterface:
+    factory:
+      - 'Apie\Common\Wrappers\CmsRendererFactory'
+      - createRenderer
+    arguments:
+      - '@Apie\HtmlBuilders\Assets\AssetManager'
+

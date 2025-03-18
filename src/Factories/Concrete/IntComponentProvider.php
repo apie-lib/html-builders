@@ -1,30 +1,33 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Context\ApieContext;
-use Apie\HtmlBuilders\Components\Forms\Input;
+use Apie\Core\Attributes\CmsSingleInput;
+use Apie\Core\Enums\ScalarType;
+use Apie\Core\Metadata\MetadataFactory;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
+use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
-use Apie\HtmlBuilders\Utils;
-use ReflectionNamedType;
 use ReflectionType;
 
 class IntComponentProvider implements FormComponentProviderInterface
 {
-    public function supports(ReflectionType $type, ApieContext $context): bool
+    public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
-        return $type instanceof ReflectionNamedType && $type->isBuiltin() && $type->getName() === 'int';
+        $metadata = MetadataFactory::getCreationMetadata($type, $context->getApieContext());
+        return $metadata->toScalarType() === ScalarType::INTEGER;
     }
-    public function createComponentFor(ReflectionType $type, ApieContext $context, array $prefix, array $filledIn): ComponentInterface
+    public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        return new Input(
-            Utils::toFormName($prefix),
-            $filledIn[end($prefix)] ?? '',
-            'text',
-            [
-                'inputmode' => 'numeric',
-                'pattern' => '[1-9]\d*'
-            ]
+        return new SingleInput(
+            $context->getFormName(),
+            $context->getFilledInValue(),
+            $context->createTranslationLabel(),
+            $type->allowsNull(),
+            $type,
+            new CmsSingleInput(
+                ['integer', 'number', 'text']
+            )
         );
     }
 }

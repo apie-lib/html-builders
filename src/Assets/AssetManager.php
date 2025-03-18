@@ -6,12 +6,24 @@ use RuntimeException;
 
 final class AssetManager
 {
-    private array $paths = [];
+    /** @var array<int, string> $paths */
+    private array $paths;
+
+    public function __construct(string ...$paths)
+    {
+        $this->paths = $paths;
+    }
+
+    /** @param array<int, string> $paths */
+    public static function create(array $paths): self
+    {
+        return new self(...$paths);
+    }
 
     public function withAddedPath(string... $paths): self
     {
         $returnValue = new self();
-        $returnValue->paths = [...$paths, ...$this->paths];
+        $returnValue->paths = [...$this->paths, ...$paths];
 
         return $returnValue;
     }

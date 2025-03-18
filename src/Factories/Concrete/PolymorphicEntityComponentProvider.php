@@ -1,24 +1,22 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\PolymorphicEntityInterface;
 use Apie\Core\Other\DiscriminatorMapping;
 use Apie\HtmlBuilders\Components\Forms\FormSplit;
-use Apie\HtmlBuilders\Factories\FormComponentFactory;
+use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
-use Apie\HtmlBuilders\Utils;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionType;
 
 class PolymorphicEntityComponentProvider implements FormComponentProviderInterface
 {
-    public function supports(ReflectionType $type, ApieContext $context): bool
+    public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
-        if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName()) && $context->hasContext(FormComponentFactory::class)) {
+        if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName())) {
             $refl = new ReflectionClass($type->getName());
             return $refl->implementsInterface(PolymorphicEntityInterface::class)
                 && $refl->getMethod('getDiscriminatorMapping')->getDeclaringClass()->name === $refl->name;
@@ -29,27 +27,34 @@ class PolymorphicEntityComponentProvider implements FormComponentProviderInterfa
     /**
      * @param ReflectionNamedType $type
      */
-    public function createComponentFor(ReflectionType $type, ApieContext $context, array $prefix, array $filledIn): ComponentInterface
+    public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        /** @var FormComponentFactory $formComponentFactory */
-        $formComponentFactory = $context->getContext(FormComponentFactory::class);
+        $formComponentFactory = $context->getComponentFactory();
         $refl = new ReflectionClass($type->getName());
         $method = $refl->getMethod('getDiscriminatorMapping');
         /** @var DiscriminatorMapping $mapping */
         $mapping = $method->invoke(null);
         $propertyName = $mapping->getPropertyName();
         $configs = $mapping->getConfigs();
-        $value = $filledIn[$propertyName] ?? reset($configs);
+        $value = $context->createChildContext($propertyName)->getFilledInValue(
+            ($type->allowsNull() || empty($configs))
+            ? null
+            : reset($configs)->getDiscriminator()
+        );
         $components = [];
         foreach ($configs as $config) {
             $components[$config->getDiscriminator()] = $formComponentFactory->createFromClass(
-                $context,
                 new ReflectionClass($config->getClassName()),
-                $prefix,
-                $filledIn
+                $context->withApieContext('not-root', true)
             );
         }
 
-        return new FormSplit(Utils::toFormName([...$prefix, $propertyName]), $value, new ComponentHashmap($components));
+        return new FormSplit(
+            $context->getFormName()->createChildForm($propertyName),
+            isRootObject: !$context->getFormName()->hasChildFormFieldName() && !$context->getApieContext()->getContext('not-root', false),
+            isPolymorphic: true,
+            value: $value,
+            tabComponents: new ComponentHashmap($components)
+        );
     }
 }

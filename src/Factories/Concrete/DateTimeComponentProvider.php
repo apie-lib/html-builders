@@ -1,19 +1,22 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Context\ApieContext;
-use Apie\HtmlBuilders\Components\Forms\Input;
+use Apie\Core\Attributes\CmsSingleInput;
+use Apie\HtmlBuilders\Components\Forms\SingleInput;
+use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
-use Apie\HtmlBuilders\Utils;
 use DateTimeInterface;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionType;
 
+/**
+ * Renders a date field.
+ */
 class DateTimeComponentProvider implements FormComponentProviderInterface
 {
-    public function supports(ReflectionType $type, ApieContext $context): bool
+    public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
         if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
             if (class_exists($type->getName()) || interface_exists($type->getName())) {
@@ -23,12 +26,15 @@ class DateTimeComponentProvider implements FormComponentProviderInterface
         }
         return false;
     }
-    public function createComponentFor(ReflectionType $type, ApieContext $context, array $prefix, array $filledIn): ComponentInterface
+    public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        return new Input(
-            Utils::toFormName($prefix),
-            $filledIn[end($prefix)] ?? '',
-            'datetime-local'
+        return new SingleInput(
+            $context->getFormName(),
+            $context->getFilledInValue(),
+            $context->createTranslationLabel(),
+            $type->allowsNull(),
+            $type,
+            new CmsSingleInput(['datetime'])
         );
     }
 }

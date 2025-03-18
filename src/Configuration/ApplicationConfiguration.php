@@ -7,9 +7,10 @@ use Apie\Core\Context\ApieContext;
 
 class ApplicationConfiguration
 {
-    private array $config;
-
-    public function __construct(array $config = [])
+    /**
+     * @param array<int|string, mixed> $config
+     */
+    public function __construct(private array $config = [])
     {
         $this->config = $config;
     }

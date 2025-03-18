@@ -1,7 +1,9 @@
 <?php
 namespace Apie\HtmlBuilders\Components\Layout;
 
+use Apie\Core\ContextConstants;
 use Apie\HtmlBuilders\Components\BaseComponent;
+use Apie\HtmlBuilders\Components\Dashboard\RawContents;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 
@@ -24,11 +26,19 @@ class LoginSelect extends BaseComponent
                 }
             }
         }
+        $profile = new RawContents('');
+        if ($currentConfiguration->getApieContext()->hasContext(ContextConstants::AUTHENTICATED_USER)) {
+            $profile = new ShowProfile(
+                $currentConfiguration,
+                $currentConfiguration->getApieContext()->getContext(ContextConstants::AUTHENTICATED_USER)
+            );
+        }
         parent::__construct(
             [
                 'loginOptions' => $loginOptions,
             ],
             new ComponentHashmap([
+                'profile' => $profile,
             ])
         );
     }

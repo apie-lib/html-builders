@@ -12,6 +12,9 @@ final class CurrentConfiguration
 
     private ?BoundedContextId $selected;
 
+    /**
+     * @param array<int|string, mixed> $config
+     */
     public function __construct(
         private readonly array $config,
         ApieContext $apieContext,

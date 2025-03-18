@@ -1,10 +1,10 @@
 <?php
 namespace Apie\HtmlBuilders\Factories\Concrete;
 
-use Apie\Core\Context\ApieContext;
-use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Entities\PolymorphicEntityInterface;
-use Apie\HtmlBuilders\Factories\FormComponentFactory;
+use Apie\Core\Metadata\CompositeMetadata;
+use Apie\Core\Metadata\MetadataFactory;
+use Apie\HtmlBuilders\FormBuildContext;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use ReflectionClass;
@@ -13,11 +13,14 @@ use ReflectionType;
 
 class EntityComponentProvider implements FormComponentProviderInterface
 {
-    public function supports(ReflectionType $type, ApieContext $context): bool
+    public function supports(ReflectionType $type, FormBuildContext $context): bool
     {
-        if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName()) && $context->hasContext(FormComponentFactory::class)) {
+        if ($type instanceof ReflectionNamedType && !$type->isBuiltin() && class_exists($type->getName())) {
             $refl = new ReflectionClass($type->getName());
-            return $refl->isInstantiable() && $refl->implementsInterface(EntityInterface::class) && !$refl->implementsInterface(PolymorphicEntityInterface::class);
+            return $refl->isInstantiable()
+                && !$refl->implementsInterface(PolymorphicEntityInterface::class)
+                && MetadataFactory::getCreationMetadata($type, $context->getApieContext()) instanceof CompositeMetadata
+            ;
         }
         return false;
     }
@@ -25,16 +28,13 @@ class EntityComponentProvider implements FormComponentProviderInterface
     /**
      * @param ReflectionNamedType $type
      */
-    public function createComponentFor(ReflectionType $type, ApieContext $context, array $prefix, array $filledIn): ComponentInterface
+    public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface
     {
-        /** @var FormComponentFactory $formComponentFactory */
-        $formComponentFactory = $context->getContext(FormComponentFactory::class);
+        $formComponentFactory = $context->getComponentFactory();
         return $formComponentFactory->createFromClass(
-            $context,
             new ReflectionClass($type->getName()),
-            $prefix,
-            $filledIn,
-            false
+            $context,
+            $this
         );
     }
 }

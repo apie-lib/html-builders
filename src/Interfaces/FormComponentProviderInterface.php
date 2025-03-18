@@ -1,11 +1,11 @@
 <?php
 namespace Apie\HtmlBuilders\Interfaces;
 
-use Apie\Core\Context\ApieContext;
+use Apie\HtmlBuilders\FormBuildContext;
 use ReflectionType;
 
 interface FormComponentProviderInterface
 {
-    public function supports(ReflectionType $type, ApieContext $context): bool;
-    public function createComponentFor(ReflectionType $type, ApieContext $context, array $prefix, array $filledIn): ComponentInterface;
+    public function supports(ReflectionType $type, FormBuildContext $context): bool;
+    public function createComponentFor(ReflectionType $type, FormBuildContext $context): ComponentInterface;
 }

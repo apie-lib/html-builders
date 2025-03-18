@@ -15,7 +15,7 @@ class TopBar extends BaseComponent
             [
             ],
             new ComponentHashmap([
-                'logo' => new Logo(),
+                'logo' => new Logo($currentConfiguration),
                 'middle' => $currentConfiguration->shouldDisplayBoundedContextSelect()
                     ? new BoundedContextSelect($currentConfiguration)
                     : new RawContents('&nbsp;'),

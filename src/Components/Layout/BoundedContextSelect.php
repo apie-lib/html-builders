@@ -15,6 +15,7 @@ class BoundedContextSelect extends BaseComponent
             [
                 'selectedBoundedContextId' => $contextId ? $contextId->toNative() : null,
                 'boundedContextHashmap' => $currentConfiguration->getBoundedContextHashmap(),
+                'path' => $currentConfiguration->getContextUrl('/../'),
             ],
             new ComponentHashmap([
             ])
