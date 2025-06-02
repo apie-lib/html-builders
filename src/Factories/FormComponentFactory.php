@@ -13,8 +13,10 @@ use Apie\Core\Metadata\Fields\SetterMethod;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\ValueObjects\Utils;
+use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
+use Apie\HtmlBuilders\Components\Forms\OptionalField;
 use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\Factories\Concrete\ApieSingleInputComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ArrayComponentProvider;
@@ -41,6 +43,7 @@ use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionClass;
 use ReflectionParameter;
+use ReflectionProperty;
 use ReflectionType;
 use SensitiveParameter;
 use Throwable;
@@ -175,6 +178,15 @@ final class FormComponentFactory
         return $this->createFromMetadata($metadata, $context);
     }
 
+    private function makeOptional(BaseComponent $component): BaseComponent
+    {
+        $attr = new ReflectionProperty(BaseComponent::class, 'attributes');
+        $attributes = $attr->getValue($component);
+        $attributes['optional'] = true;
+        $attr->setValue($component, $attributes);
+        return $component;
+    }
+
     public function createFromMetadata(MetadataInterface $metadata, FormBuildContext $context): ComponentInterface
     {
         if (!$metadata instanceof CompositeMetadata) {
@@ -191,7 +203,8 @@ final class FormComponentFactory
                 case SetterMethod::class:
                     foreach ($reflectionData->getMethod()->getParameters() as $parameter) {
                         if ($parameter->name === $fieldName) {
-                            $components[$fieldName] = $this->createFromParameter($parameter, $context);
+                            $component = $this->createFromParameter($parameter, $context);
+                            $components[$fieldName] = $component instanceof BaseComponent ? $this->makeOptional($component) : $component;
                             break;
                         }
                     }
