@@ -1,6 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\ValueObjects;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Exceptions\InvalidTypeException;
@@ -11,6 +12,7 @@ use Apie\HtmlBuilders\Exceptions\EmptyFormNameException;
 use ReflectionClass;
 use Stringable;
 
+#[Description('Represents a form name field, for example form[a][b]')]
 #[SchemaMethod('createSchema')]
 final class FormName implements ValueObjectInterface, Stringable
 {

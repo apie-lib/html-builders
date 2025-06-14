@@ -1,11 +1,13 @@
 <?php
 namespace Apie\HtmlBuilders\ErrorHandler;
 
+use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\Optional;
 use Apie\Core\ValueObjects\CompositeValueObject;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use JsonSerializable;
 
+#[Description('Represents a single line in an error stacktrace often used in development mode only')]
 final class WrappedErrorTrace implements ValueObjectInterface, JsonSerializable
 {
     use CompositeValueObject;
