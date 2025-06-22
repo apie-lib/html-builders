@@ -16,7 +16,6 @@ use Apie\Core\ValueObjects\Utils;
 use Apie\HtmlBuilders\Components\BaseComponent;
 use Apie\HtmlBuilders\Components\Forms\FormGroup;
 use Apie\HtmlBuilders\Components\Forms\FormPrototypeList;
-use Apie\HtmlBuilders\Components\Forms\OptionalField;
 use Apie\HtmlBuilders\Components\Forms\SingleInput;
 use Apie\HtmlBuilders\Factories\Concrete\ApieSingleInputComponentProvider;
 use Apie\HtmlBuilders\Factories\Concrete\ArrayComponentProvider;
