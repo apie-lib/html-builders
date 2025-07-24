@@ -23,7 +23,7 @@ class ColumnSelectorTest extends TestCase
     public static function classProvider(): Generator
     {
         yield 'Regular entity' => [
-            ['id', 'orderStatus', 'orderLines'],
+            ['id', 'orderStatus', 'optionalTags', 'orderLines'],
             Order::class
         ];
         yield 'Polymorphic entity base class' => [
