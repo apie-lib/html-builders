@@ -19,7 +19,9 @@ final class ColumnSelector
         $done = [];
         $columns = $this->getInternalColumns($class, $context, $done);
         if ($class->getAttributes(HideIdOnOverview::class)) {
-            $columns = array_values(array_filter($columns, function ($value) { return $value !== 'id'; }));
+            $columns = array_values(array_filter($columns, function ($value) {
+                return $value !== 'id';
+            }));
         }
         return $columns;
     }
