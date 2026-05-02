@@ -12,6 +12,7 @@ use Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory;
 use Apie\HtmlBuilders\Factories\FormComponentFactory;
 use Apie\HtmlBuilders\Factories\ResourceActionFactory;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class ComponentFactoryTest extends TestCase
 {
@@ -23,7 +24,7 @@ class ComponentFactoryTest extends TestCase
             new BoundedContextHashmap([]),
             FormComponentFactory::create(),
             FieldDisplayComponentFactory::create([]),
-            new ResourceActionFactory(new ActionDefinitionProvider)
+            new ResourceActionFactory(new ActionDefinitionProvider(new ServiceLocator([])))
         );
         $this->assertInstanceOf(
             Layout::class,
