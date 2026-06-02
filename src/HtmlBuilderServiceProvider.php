@@ -22,7 +22,8 @@ class HtmlBuilderServiceProvider extends ServiceProvider
                     $app->make(\Apie\Core\BoundedContext\BoundedContextHashmap::class),
                     $app->make(\Apie\HtmlBuilders\Factories\FormComponentFactory::class),
                     $app->make(\Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory::class),
-                    $app->make(\Apie\HtmlBuilders\Factories\ResourceActionFactory::class)
+                    $app->make(\Apie\HtmlBuilders\Factories\ResourceActionFactory::class),
+                    $app->bound(\Apie\Cms\MenuStructure\MainMenuBuilder::class) ? $app->make(\Apie\Cms\MenuStructure\MainMenuBuilder::class) : null
                 );
             }
         );

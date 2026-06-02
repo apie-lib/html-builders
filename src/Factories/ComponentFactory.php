@@ -1,6 +1,7 @@
 <?php
 namespace Apie\HtmlBuilders\Factories;
 
+use Apie\Cms\MenuStructure\MainMenuBuilder;
 use Apie\Core\Actions\ActionResponse;
 use Apie\Core\Attributes\Context;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
@@ -32,6 +33,7 @@ use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\Enums\LayoutEnum;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
+use Apie\Serializer\Serializer;
 use Psr\Http\Message\RequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -47,6 +49,7 @@ class ComponentFactory
         private readonly FormComponentFactory $formComponentFactory,
         private readonly FieldDisplayComponentFactory $fieldDisplayComponentFactory,
         private readonly ResourceActionFactory $resourceActionFactory,
+        private readonly ?MainMenuBuilder $mainMenuFactory = null,
         ?ColumnSelector $columnSelector = null
     ) {
         $this->columnSelector = $columnSelector ?? new ColumnSelector();
@@ -162,6 +165,11 @@ class ComponentFactory
             return $contents;
         }
         $configuration = $this->applicationConfiguration->createConfiguration($context, $this->boundedContextHashmap, $boundedContextId);
+        $menu = $this->mainMenuFactory?->buildMenu(
+            $context,
+            $boundedContextId
+        );
+        // var_dump(json_encode(Serializer::create()->normalize($menu, $context), JSON_PRETTY_PRINT));
         return new Layout(
             $pageTitle,
             $configuration,

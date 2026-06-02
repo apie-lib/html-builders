@@ -6,6 +6,7 @@ services:
       - '@Apie\HtmlBuilders\Factories\FormComponentFactory'
       - '@Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory'
       - '@Apie\HtmlBuilders\Factories\ResourceActionFactory'
+      - '@?Apie\Cms\MenuStructure\MainMenuBuilder'
 
   Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory:
     factory: ['Apie\HtmlBuilders\Factories\FieldDisplayComponentFactory', 'create']
