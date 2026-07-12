@@ -21,10 +21,12 @@
   },
   "extra": {
     "apie-objects": [
-      "Apie\\HtmlBuilders\\Enums\\ActionDefinitionVariant",
-      "Apie\\HtmlBuilders\\Enums\\LayoutEnum",
-      "Apie\\HtmlBuilders\\ValueObjects\\FormName"
-    ]
+    "Apie\\HtmlBuilders\\Enums\\LayoutEnum",
+    "Apie\\HtmlBuilders\\Enums\\ActionDefinitionVariant",
+    "Apie\\HtmlBuilders\\ValueObjects\\FormName",
+    "Apie\\HtmlBuilders\\ErrorHandler\\WrappedErrorTrace",
+    "Apie\\HtmlBuilders\\ErrorHandler\\WrappedErrorTraceList"
+]
   },
   "require": {
     "php": ">=8.3",
