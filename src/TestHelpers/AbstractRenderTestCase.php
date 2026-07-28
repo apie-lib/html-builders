@@ -2,6 +2,8 @@
 namespace Apie\HtmlBuilders\TestHelpers;
 
 use Apie\Common\ActionDefinitions\CreateResourceActionDefinition;
+use Apie\Common\MenuStructure\MenuBuilder;
+use Apie\Common\MenuStructure\MenuNode;
 use Apie\Core\Attributes\CmsSingleInput;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
@@ -11,6 +13,7 @@ use Apie\Core\Lists\StringSet;
 use Apie\Core\Translator\ApieTranslator;
 use Apie\Core\Translator\ApieTranslatorInterface;
 use Apie\Core\Translator\Lists\TranslationStringSet;
+use Apie\Core\Translator\ValueObjects\MenuHeader;
 use Apie\Core\Translator\ValueObjects\TranslationString;
 use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\BoundedContextFactory;
@@ -36,6 +39,7 @@ use Apie\HtmlBuilders\Components\Layout;
 use Apie\HtmlBuilders\Components\Layout\BoundedContextSelect;
 use Apie\HtmlBuilders\Components\Layout\LoginSelect;
 use Apie\HtmlBuilders\Components\Layout\Logo;
+use Apie\HtmlBuilders\Components\Layout\MenuItem;
 use Apie\HtmlBuilders\Components\Layout\ShowProfile;
 use Apie\HtmlBuilders\Components\Resource\Detail;
 use Apie\HtmlBuilders\Components\Resource\FieldDisplay\BooleanDisplay;
@@ -106,6 +110,20 @@ abstract class AbstractRenderTestCase extends TestCase
                 'Title',
                 $defaultConfiguration,
                 $rawContents
+            )
+        ];
+        $menuBuilder = new MenuBuilder();
+        $menuBuilder->addLeaf('test', new MenuNode('Test', MenuHeader::fromNative('apie.menu.test.header'), '/test'));
+        $menuBuilder->addLeaf('test2', new MenuNode('Test2', MenuHeader::fromNative('apie.menu.test2.header'), '/test2'));
+        $menuBuilder->addLeaf('test3/test4', new MenuNode('Test3', MenuHeader::fromNative('apie.menu.test3.header'), '/test3'));
+        
+        yield 'Simple layout, new menu' => [
+            'expected-with-menu.html',
+            new Layout(
+                'Title',
+                $defaultConfiguration,
+                $rawContents,
+                new MenuItem($menuBuilder->getRoot()),
             )
         ];
         yield 'Bounded context select => nothing selected' => [

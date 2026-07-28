@@ -12,7 +12,8 @@ class Layout extends BaseComponent
     public function __construct(
         string $pageTitle,
         CurrentConfiguration $currentConfiguration,
-        ComponentInterface $contents
+        ComponentInterface $contents,
+        ?ComponentInterface $menu = null,
     ) {
         parent::__construct(
             [
@@ -20,7 +21,7 @@ class Layout extends BaseComponent
             ],
             new ComponentHashmap([
                 'top' => new TopBar($currentConfiguration),
-                'menu' => new Menu($currentConfiguration),
+                'menu' => $menu ?? new Menu($currentConfiguration),
                 'content' => $contents,
             ])
         );

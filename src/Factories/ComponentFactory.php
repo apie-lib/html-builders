@@ -23,6 +23,7 @@ use Apie\HtmlBuilders\Components\Forms\Form;
 use Apie\HtmlBuilders\Components\Forms\PolymorphicForm;
 use Apie\HtmlBuilders\Components\Forms\RemoveConfirm;
 use Apie\HtmlBuilders\Components\Layout;
+use Apie\HtmlBuilders\Components\Layout\MenuItem;
 use Apie\HtmlBuilders\Components\Resource\Detail;
 use Apie\HtmlBuilders\Components\Resource\FilterColumns;
 use Apie\HtmlBuilders\Components\Resource\Overview;
@@ -165,15 +166,16 @@ class ComponentFactory
             return $contents;
         }
         $configuration = $this->applicationConfiguration->createConfiguration($context, $this->boundedContextHashmap, $boundedContextId);
-        $menu = $this->mainMenuFactory?->buildMenu(
+        /*$menu = */$this->mainMenuFactory?->buildMenu(
             $context,
-            $boundedContextId
+            $boundedContextId,
         );
         // var_dump(json_encode(Serializer::create()->normalize($menu, $context), JSON_PRETTY_PRINT));
         return new Layout(
             $pageTitle,
             $configuration,
-            $contents
+            $contents,
+            // $menu ? new MenuItem($menu) : null,
         );
     }
 
