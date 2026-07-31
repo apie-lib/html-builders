@@ -14,7 +14,6 @@ use Apie\Core\Translator\ApieTranslator;
 use Apie\Core\Translator\ApieTranslatorInterface;
 use Apie\Core\Translator\Lists\TranslationStringSet;
 use Apie\Core\Translator\ValueObjects\MenuHeader;
-use Apie\Core\Translator\ValueObjects\TranslationString;
 use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\BoundedContextFactory;
 use Apie\Fixtures\Entities\Order;
@@ -58,6 +57,7 @@ use Apie\HtmlBuilders\Lists\ActionList;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ResourceActions\CreateResourceAction;
 use Apie\HtmlBuilders\ValueObjects\FormName;
+use Apie\Core\Translator\ValueObjects\DummyTranslation;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use Generator;
 use PHPUnit\Framework\TestCase;
@@ -290,7 +290,7 @@ abstract class AbstractRenderTestCase extends TestCase
             new SingleInput(
                 new FormName('name'),
                 42,
-                new TranslationStringSet([new TranslationString('test')]),
+                new TranslationStringSet([DummyTranslation::fromNative('apie.mid-section.parent')]),
                 false,
                 ReflectionTypeFactory::createReflectionType('string'),
                 new CmsSingleInput(['datetimetz', 'text'], new CmsInputOption())

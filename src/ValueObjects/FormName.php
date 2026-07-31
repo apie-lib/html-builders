@@ -5,8 +5,8 @@ use Apie\Core\Attributes\Description;
 use Apie\Core\Attributes\SchemaMethod;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Exceptions\InvalidTypeException;
-use Apie\Core\Identifiers\SnakeCaseSlug;
-use Apie\Core\Translator\ValueObjects\TranslationString;
+use Apie\Core\Lists\StringList;
+use Apie\Core\Translator\ValueObjects\FormFieldProperty;
 use Apie\Core\ValueObjects\Interfaces\ValueObjectInterface;
 use Apie\HtmlBuilders\Exceptions\EmptyFormNameException;
 use ReflectionClass;
@@ -82,16 +82,13 @@ final class FormName implements ValueObjectInterface, Stringable
     /**
      * @param ReflectionClass<object> $class
      */
-    public function createTranslationString(ReflectionClass $class, ?BoundedContextId $boundedContextId = null): TranslationString
+    public function createTranslationString(ReflectionClass $class, ?BoundedContextId $boundedContextId = null): FormFieldProperty
     {
-        $suffix = '.'
-            . SnakeCaseSlug::fromClass($class)
-            . '.properties.'
-            . strtolower(implode('.', $this->internal));
-        if ($boundedContextId === null) {
-            return new TranslationString('apie.resource' . $suffix);
-        }
-        return new TranslationString('apie.bounded.' .  $boundedContextId . $suffix);
+        return FormFieldProperty::createForProperty(
+            new StringList($this->internal),
+            $class,
+            $boundedContextId
+        );
     }
 
     public function __toString(): string
