@@ -22,6 +22,7 @@ class Layout extends BaseComponent
             new ComponentHashmap([
                 'top' => new TopBar($currentConfiguration),
                 'menu' => $menu ?? new Menu($currentConfiguration),
+                'legacy' => new Menu($currentConfiguration),
                 'content' => $contents,
             ])
         );

@@ -13,6 +13,7 @@ use Apie\Core\Lists\StringSet;
 use Apie\Core\Translator\ApieTranslator;
 use Apie\Core\Translator\ApieTranslatorInterface;
 use Apie\Core\Translator\Lists\TranslationStringSet;
+use Apie\Core\Translator\ValueObjects\DummyTranslation;
 use Apie\Core\Translator\ValueObjects\MenuHeader;
 use Apie\Core\ValueObjects\DatabaseText;
 use Apie\Fixtures\BoundedContextFactory;
@@ -57,11 +58,15 @@ use Apie\HtmlBuilders\Lists\ActionList;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
 use Apie\HtmlBuilders\ResourceActions\CreateResourceAction;
 use Apie\HtmlBuilders\ValueObjects\FormName;
-use Apie\Core\Translator\ValueObjects\DummyTranslation;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\UX\Icons\Twig\UXIconRuntime;
+use Twig\Extension\RuntimeExtensionInterface;
+use Twig\RuntimeLoader\ContainerRuntimeLoader;
+use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 /**
  * @codeCoverageIgnore
@@ -71,6 +76,22 @@ abstract class AbstractRenderTestCase extends TestCase
     abstract public function getRenderer(): ComponentRendererInterface;
 
     abstract public function getFixturesPath(): string;
+
+    public static function createTwigRuntimeForTests(): RuntimeLoaderInterface
+    {
+        $container = new Container();
+        $container->set(UXIconRuntime::class, new class implements RuntimeExtensionInterface {
+
+            /**
+             * @param array<string, bool|string>   $attributes
+             */
+            public function renderIcon(string $name, array $attributes = []): string
+            {
+                return '<svg>' . $name . '&nbsp' . json_encode($attributes) . '</svg>';
+            }
+        });
+        return new ContainerRuntimeLoader($container);
+    }
 
     /**
      * Overwriting this method to return true means the fixtures will be overwritten to ease big refactorings.
@@ -113,9 +134,9 @@ abstract class AbstractRenderTestCase extends TestCase
             )
         ];
         $menuBuilder = new MenuBuilder();
-        $menuBuilder->addLeaf('test', new MenuNode('Test', MenuHeader::fromNative('apie.menu.test.header'), '/test'));
-        $menuBuilder->addLeaf('test2', new MenuNode('Test2', MenuHeader::fromNative('apie.menu.test2.header'), '/test2'));
-        $menuBuilder->addLeaf('test3/test4', new MenuNode('Test3', MenuHeader::fromNative('apie.menu.test3.header'), '/test3'));
+        $menuBuilder->addLeaf('test', new MenuNode(MenuHeader::fromNative('apie.menu.test.header'), '/test'));
+        $menuBuilder->addLeaf('test2', new MenuNode(MenuHeader::fromNative('apie.menu.test2.header'), '/test2'));
+        $menuBuilder->addLeaf('test3/test4', new MenuNode(MenuHeader::fromNative('apie.menu.test3.header'), '/test3'));
         
         yield 'Simple layout, new menu' => [
             'expected-with-menu.html',

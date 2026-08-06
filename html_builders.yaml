@@ -52,5 +52,6 @@ services:
       - 'Apie\Common\Wrappers\CmsRendererFactory'
       - createRenderer
     arguments:
+      - '@?twig.runtime_loader'
       - '@Apie\HtmlBuilders\Assets\AssetManager'
 

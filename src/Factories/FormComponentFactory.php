@@ -10,6 +10,7 @@ use Apie\Core\Exceptions\InvalidTypeException;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\DiscriminatorColumn;
 use Apie\Core\Metadata\Fields\SetterMethod;
+use Apie\Core\Metadata\Fields\StaticDiscriminatorColumn;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\ValueObjects\Utils;
@@ -208,6 +209,7 @@ final class FormComponentFactory
                         }
                     }
                     break;
+                case StaticDiscriminatorColumn::class:
                 case DiscriminatorColumn::class:
                     $components[$fieldName] = new SingleInput(
                         $childContext->getFormName(),

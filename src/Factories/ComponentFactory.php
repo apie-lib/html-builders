@@ -34,7 +34,6 @@ use Apie\HtmlBuilders\Configuration\ApplicationConfiguration;
 use Apie\HtmlBuilders\Enums\LayoutEnum;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Lists\ComponentHashmap;
-use Apie\Serializer\Serializer;
 use Psr\Http\Message\RequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -166,16 +165,16 @@ class ComponentFactory
             return $contents;
         }
         $configuration = $this->applicationConfiguration->createConfiguration($context, $this->boundedContextHashmap, $boundedContextId);
-        /*$menu = */$this->mainMenuFactory?->buildMenu(
+        $menu = $this->mainMenuFactory?->buildMenu(
             $context,
             $boundedContextId,
         );
-        // var_dump(json_encode(Serializer::create()->normalize($menu, $context), JSON_PRETTY_PRINT));
+
         return new Layout(
             $pageTitle,
             $configuration,
             $contents,
-            // $menu ? new MenuItem($menu) : null,
+            $menu ? new MenuItem($menu) : null,
         );
     }
 

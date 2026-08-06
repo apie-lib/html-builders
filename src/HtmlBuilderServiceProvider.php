@@ -113,6 +113,7 @@ class HtmlBuilderServiceProvider extends ServiceProvider
             \Apie\HtmlBuilders\Interfaces\ComponentRendererInterface::class,
             function ($app) {
                 return \Apie\Common\Wrappers\CmsRendererFactory::createRenderer(
+                    $app->bound('twig.runtime_loader') ? $app->make('twig.runtime_loader') : null,
                     $app->make(\Apie\HtmlBuilders\Assets\AssetManager::class)
                 );
                 

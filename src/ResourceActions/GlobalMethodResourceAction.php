@@ -26,11 +26,11 @@ class GlobalMethodResourceAction implements ResourceActionInterface
         if ($actionDefinition instanceof RunGlobalMethodDefinition) {
             $method = $actionDefinition->getMethod();
             try {
-                $class = ConverterUtils::toReflectionClass($method);
+                $class = ConverterUtils::toReflectionClass($method, context: $method);
                 if ($class?->name === $entityClass->name) {
                     return new self($actionDefinition);
                 }
-                $class = ConverterUtils::toReflectionClass($method->getReturnType());
+                $class = ConverterUtils::toReflectionClass($method->getReturnType(), context: $method);
                 if ($class?->name === $entityClass->name) {
                     return new self($actionDefinition);
                 }
