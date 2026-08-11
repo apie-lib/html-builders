@@ -62,11 +62,9 @@ use Apie\TypeConverter\ReflectionTypeFactory;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\UX\Icons\IconRenderer;
+use Symfony\UX\Icons\Registry\ChainIconRegistry;
 use Symfony\UX\Icons\Twig\UXIconRuntime;
-use Twig\Extension\RuntimeExtensionInterface;
-use Twig\RuntimeLoader\ContainerRuntimeLoader;
-use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 /**
  * @codeCoverageIgnore
@@ -77,20 +75,15 @@ abstract class AbstractRenderTestCase extends TestCase
 
     abstract public function getFixturesPath(): string;
 
-    public static function createTwigRuntimeForTests(): RuntimeLoaderInterface
+    public static function createTwigRuntimeForTests(): UXIconRuntime
     {
-        $container = new Container();
-        $container->set(UXIconRuntime::class, new class implements RuntimeExtensionInterface {
-
-            /**
-             * @param array<string, bool|string>   $attributes
-             */
-            public function renderIcon(string $name, array $attributes = []): string
-            {
-                return '<svg>' . $name . '&nbsp' . json_encode($attributes) . '</svg>';
-            }
-        });
-        return new ContainerRuntimeLoader($container);
+        return new UXIconRuntime(
+            new IconRenderer(
+                new ChainIconRegistry([]),
+            ),
+            true,
+            new \Psr\Log\NullLogger()
+        );
     }
 
     /**
