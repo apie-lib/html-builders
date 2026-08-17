@@ -61,7 +61,7 @@ class ComponentFactory
     }
 
     /**
-     * @param ReflectionClass<EntityInterface> $className
+     * @param ReflectionClass<covariant EntityInterface> $className
      */
     public function createResource(
         ActionResponse $actionResponse,
@@ -98,7 +98,7 @@ class ComponentFactory
     }
 
     /**
-     * @param ReflectionClass<EntityInterface> $className
+     * @param ReflectionClass<covariant EntityInterface> $className
      */
     public function createResourceOverview(
         ActionResponse $actionResponse,
@@ -133,7 +133,7 @@ class ComponentFactory
     }
 
     /**
-     * @param ReflectionClass<EntityInterface> $className
+     * @param ReflectionClass<covariant EntityInterface> $className
      */
     public function createFilterColumns(ReflectionClass $className, ApieContext $apieContext): ComponentInterface
     {
@@ -216,7 +216,7 @@ class ComponentFactory
     }
 
     /**
-     * @param ReflectionClass<EntityInterface> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public function createFormForResourceRemoval(
         string $pageTitle,
@@ -251,7 +251,7 @@ class ComponentFactory
     }
 
     /**
-     * @param ReflectionClass<EntityInterface> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public function createFormForResourceCreation(
         string $pageTitle,
@@ -312,7 +312,7 @@ class ComponentFactory
     }
 
     /**
-     * @param ReflectionClass<EntityInterface> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public function createFormForResourceModification(
         string $pageTitle,

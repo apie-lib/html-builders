@@ -80,7 +80,7 @@ final class FormName implements ValueObjectInterface, Stringable
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public function createTranslationString(ReflectionClass $class, ?BoundedContextId $boundedContextId = null): FormFieldProperty
     {

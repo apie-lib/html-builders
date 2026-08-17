@@ -9,7 +9,7 @@ use ReflectionClass;
 class PolymorphicForm extends BaseComponent
 {
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @param array<string, string> $formValidationErrors
      */
     public function __construct(

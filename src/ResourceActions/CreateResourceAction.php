@@ -15,7 +15,7 @@ use ReflectionClass;
 class CreateResourceAction implements ResourceActionInterface
 {
     /**
-     * @param ReflectionClass<EntityInterface> $entityClass
+     * @param ReflectionClass<covariant EntityInterface> $entityClass
      */
     public function __construct(
         private readonly ReflectionClass $entityClass,

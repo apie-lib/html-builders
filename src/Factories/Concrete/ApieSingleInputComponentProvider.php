@@ -19,7 +19,7 @@ class ApieSingleInputComponentProvider implements FormComponentProviderInterface
     private static array $alreadyCheckedValidation = [];
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     private function getSingleInputAttribute(ReflectionClass $class): ?CmsSingleInput
     {
@@ -43,8 +43,8 @@ class ApieSingleInputComponentProvider implements FormComponentProviderInterface
     }
 
     /**
-     * @param ReflectionClass<object> $class
-     * @param ReflectionClass<object> $mainClass
+     * @param ReflectionClass<covariant object> $class
+     * @param ReflectionClass<covariant object> $mainClass
      * @return (CmsValidationCheck|array<string, mixed>)[]
      */
     private function getMultipleInputAttributes(ReflectionClass $class, ReflectionClass $mainClass): array

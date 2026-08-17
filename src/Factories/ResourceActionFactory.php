@@ -32,7 +32,7 @@ final class ResourceActionFactory
     }
 
     /**
-     * @param ReflectionClass<EntityInterface> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public function createResourceActionForOverview(ReflectionClass $class, ApieContext $context): ActionList
     {
@@ -53,7 +53,7 @@ final class ResourceActionFactory
      * @template T of EntityInterface
      *
      * @param T $entity
-     * @param ReflectionClass<T> $class
+     * @param ReflectionClass<covariant T> $class
      */
     public function createResourceActionForDetail(EntityInterface $entity, ReflectionClass $class, ApieContext $context): ActionList
     {

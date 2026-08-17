@@ -11,7 +11,7 @@ use ReflectionClass;
 final class ColumnSelector
 {
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @return array<int, string>
      */
     public function getColumns(ReflectionClass $class, ApieContext $context): array
@@ -27,7 +27,7 @@ final class ColumnSelector
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @param array<string, bool> $internalDone
      * @return array<int, string>
      */
@@ -54,7 +54,7 @@ final class ColumnSelector
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @return Generator<int, DiscriminatorMapping>
      */
     private function iterateOverDiscriminatorMappings(ReflectionClass $class): Generator
@@ -69,10 +69,10 @@ final class ColumnSelector
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @param array<int|string, string> $done
      * @param-out array<int|string, string> $done
-     * @return Generator<int, ReflectionClass<PolymorphicEntityInterface>>
+     * @return Generator<int, ReflectionClass<covariant PolymorphicEntityInterface>>
      */
     private function iterateOverChildClasses(ReflectionClass $class, array& $done): Generator
     {
@@ -91,7 +91,7 @@ final class ColumnSelector
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @param array<string, bool> $done
      * @return array<int, string>
      */
@@ -113,7 +113,7 @@ final class ColumnSelector
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      * @return array<int, string>
      */
     private function getFromSingleClass(ReflectionClass $class, ApieContext $context): array

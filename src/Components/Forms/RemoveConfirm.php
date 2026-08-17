@@ -8,7 +8,7 @@ use ReflectionClass;
 class RemoveConfirm extends BaseComponent
 {
     /**
-     * @param ReflectionClass<EntityInterface> $class
+     * @param ReflectionClass<covariant EntityInterface> $class
      */
     public function __construct(ReflectionClass $class)
     {

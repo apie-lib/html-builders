@@ -24,7 +24,7 @@ class MultiSelectComponentProvider implements FormComponentProviderInterface
             if (empty($options)) {
                 return false;
             }
-            $scalar = $metadata->getArrayItemType()?->toScalarType();
+            $scalar = $metadata->getArrayItemType()->toScalarType();
             if (!in_array($scalar, ScalarType::PRIMITIVES, true)) {
                 return false;
             }

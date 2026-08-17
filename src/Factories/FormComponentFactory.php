@@ -42,11 +42,13 @@ use Apie\HtmlBuilders\Interfaces\ComponentInterface;
 use Apie\HtmlBuilders\Interfaces\FormComponentProviderInterface;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use ReflectionClass;
+use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionType;
 use SensitiveParameter;
 use Throwable;
+use Time\Duration;
 
 final class FormComponentFactory
 {
@@ -129,13 +131,20 @@ final class FormComponentFactory
             $value = Utils::toString($context->getFilledInValue($allowsNull ? null : '', true));
         } catch (Throwable) {
         }
+        $input = new CmsSingleInput($context->isSensitive() ? ['password'] : ['text']);
+        if ($typehint instanceof ReflectionNamedType && $typehint->getName() === Duration::class) {
+            $input = new CmsSingleInput(
+                ['integer', 'number', 'text']
+            );
+        }
+
         return new SingleInput(
             $context->getFormName(),
             $context->getFilledInValue(),
             $context->createTranslationLabel(),
             $allowsNull,
             $typehint,
-            new CmsSingleInput($context->isSensitive() ? ['password'] : ['text']),
+            $input,
         );
     }
 
@@ -163,7 +172,7 @@ final class FormComponentFactory
     }
 
     /**
-     * @param ReflectionClass<object> $class
+     * @param ReflectionClass<covariant object> $class
      */
     public function createFromClass(ReflectionClass $class, FormBuildContext $context, ?FormComponentProviderInterface $skipProvider = null): ComponentInterface
     {
