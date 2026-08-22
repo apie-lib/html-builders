@@ -174,7 +174,7 @@ class ComponentFactory
             $pageTitle,
             $configuration,
             $contents,
-            $menu ? new MenuItem($menu) : null,
+            $menu ? new MenuItem($menu) : new RawContents('No menu?'),
         );
     }
 

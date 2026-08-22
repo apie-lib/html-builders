@@ -114,23 +114,28 @@ abstract class AbstractRenderTestCase extends TestCase
     {
         $rawContents = new RawContents('<marquee>Hello world</marquee>');
         $defaultConfiguration = new CurrentConfiguration([], new ApieContext(), BoundedContextFactory::createHashmap(), new BoundedContextId('default'));
+        $menuBuilder = new MenuBuilder();
+        $menuBuilder->addLeaf('test', new MenuNode(MenuHeader::fromNative('apie.menu.test.header'), '/test'));
+        $menuBuilder->addLeaf('test2', new MenuNode(MenuHeader::fromNative('apie.menu.test2.header'), '/test2'));
+        $menuBuilder->addLeaf('test3/test4', new MenuNode(MenuHeader::fromNative('apie.menu.test3.header'), '/test3'));
+       
+        
         yield 'Raw HTML concents' => [
             'expected-raw-contents.html',
             $rawContents,
         ];
+
+        
         yield 'Simple layout' => [
             'expected-simple-layout.html',
             new Layout(
                 'Title',
                 $defaultConfiguration,
-                $rawContents
+                $rawContents,
+                new MenuItem($menuBuilder->getRoot())
             )
         ];
-        $menuBuilder = new MenuBuilder();
-        $menuBuilder->addLeaf('test', new MenuNode(MenuHeader::fromNative('apie.menu.test.header'), '/test'));
-        $menuBuilder->addLeaf('test2', new MenuNode(MenuHeader::fromNative('apie.menu.test2.header'), '/test2'));
-        $menuBuilder->addLeaf('test3/test4', new MenuNode(MenuHeader::fromNative('apie.menu.test3.header'), '/test3'));
-        
+         
         yield 'Simple layout, new menu' => [
             'expected-with-menu.html',
             new Layout(
@@ -193,7 +198,7 @@ abstract class AbstractRenderTestCase extends TestCase
 
         yield 'Simple Menu' => [
             'expected-menu.html',
-            new Layout\Menu($defaultConfiguration),
+            new Layout\MenuItem($menuBuilder->getRoot()),
         ];
 
         yield 'Resource overview filters' => [

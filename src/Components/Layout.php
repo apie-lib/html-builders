@@ -1,7 +1,6 @@
 <?php
 namespace Apie\HtmlBuilders\Components;
 
-use Apie\HtmlBuilders\Components\Layout\Menu;
 use Apie\HtmlBuilders\Components\Layout\TopBar;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Interfaces\ComponentInterface;
@@ -13,7 +12,7 @@ class Layout extends BaseComponent
         string $pageTitle,
         CurrentConfiguration $currentConfiguration,
         ComponentInterface $contents,
-        ?ComponentInterface $menu = null,
+        ComponentInterface $menu,
     ) {
         parent::__construct(
             [
@@ -21,8 +20,7 @@ class Layout extends BaseComponent
             ],
             new ComponentHashmap([
                 'top' => new TopBar($currentConfiguration),
-                'menu' => $menu ?? new Menu($currentConfiguration),
-                'legacy' => new Menu($currentConfiguration),
+                'menu' => $menu,
                 'content' => $contents,
             ])
         );
