@@ -27,18 +27,31 @@ class LoginSelect extends BaseComponent
             }
         }
         $profile = new RawContents('');
+        $profileDetails =  new RawContents('');
+        $authenticated = false;
         if ($currentConfiguration->getApieContext()->hasContext(ContextConstants::AUTHENTICATED_USER)) {
             $profile = new ShowProfile(
                 $currentConfiguration,
-                $currentConfiguration->getApieContext()->getContext(ContextConstants::AUTHENTICATED_USER)
+                $currentConfiguration->getApieContext()->getContext(ContextConstants::AUTHENTICATED_USER),
+                true
             );
+            $profileDetails = new ShowProfile(
+                $currentConfiguration,
+                $currentConfiguration->getApieContext()->getContext(ContextConstants::AUTHENTICATED_USER),
+                false
+            );
+            $authenticated = true;
         }
         parent::__construct(
             [
-                'loginOptions' => $loginOptions,
+                'loginOptions'  => $loginOptions,
+                'profileUrl'    => $profile->getAttribute('profileUrl'),
+                'logoutUrl'     => $authenticated ? $currentConfiguration->getLogoutUrl() : null,
+                'authenticated' => $authenticated,
             ],
             new ComponentHashmap([
                 'profile' => $profile,
+                'profileDetails' => $profileDetails,
             ])
         );
     }

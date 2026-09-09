@@ -72,7 +72,8 @@ class ShowProfile extends BaseComponent
 
     public function __construct(
         CurrentConfiguration $currentConfiguration,
-        EntityInterface $user
+        EntityInterface $user,
+        bool $simple = true,
     ) {
         $fields = $this->buildFields($user, $currentConfiguration->getApieContext());
         $baseClass = $user->getId()::getReferenceFor();
@@ -93,6 +94,7 @@ class ShowProfile extends BaseComponent
                 'gravatarUrl' => 'https://gravatar.com/avatar/' . md5(strtolower($fields['email'] ?? '')),
                 'fieldNames' => array_keys($fields),
                 'fields' => $fields,
+                'simple' => $simple,
             ]
         );
     }

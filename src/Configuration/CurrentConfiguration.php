@@ -5,6 +5,7 @@ use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\BoundedContext\BoundedContextHashmap;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 
 final class CurrentConfiguration
 {
@@ -28,6 +29,11 @@ final class CurrentConfiguration
     public function getApieContext(): ApieContext
     {
         return $this->apieContext;
+    }
+
+    public function getLogoutUrl(): ?string
+    {
+        return $this->apieContext->getContext(ContextConstants::LOGOUT_URL, false);
     }
 
     public function getBoundedContextHashmap(): BoundedContextHashmap
