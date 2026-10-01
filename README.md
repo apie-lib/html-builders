@@ -14,4 +14,18 @@ This package is part of the [Apie](https://github.com/apie-lib) library.
 The code is maintained in a monorepo, so PR's need to be sent to the [monorepo](https://github.com/apie-lib/apie-lib-monorepo/pulls)
 
 ## Documentation
-This package is used internally in Apie or no documentation is available right now
+Reusable HTML components and builder contexts used by the Apie CMS and exporters: forms, resource listings/dashboards, field display providers, and error rendering.
+
+### Standalone usage
+Install it with:
+```bash
+composer require apie/html-builders
+```
+
+Build a component tree with the classes in `Apie\HtmlBuilders\Components` (e.g. `Layout`, and the `Forms`/`Resource`/`Dashboard` components), configured through `Apie\HtmlBuilders\Factories\ComponentFactory` and rendered via `Apie\HtmlBuilders\Interfaces\ComponentRendererInterface`. `Apie\HtmlBuilders\Columns\ColumnSelector` is also reused by `apie/export`. The component classes themselves are framework-free; only the renderer wiring needs a container.
+
+### Symfony integration
+Via `apie/apie-bundle`, `html_builders.yaml` is loaded automatically and registers the component/field-display factories, `ApplicationConfiguration`, `AssetManager`, and `CmsErrorRenderer`. Configuration keys such as `apie.cms.base_url`, `apie.cms.asset_folders` and `apie.cms.error_template` (under `config/packages/apie.yaml`) feed these services.
+
+### Laravel integration
+Via `apie/laravel-apie`, the generated `Apie\HtmlBuilders\HtmlBuilderServiceProvider` is auto-registered and wires the same component factories and configuration into the Laravel container.
