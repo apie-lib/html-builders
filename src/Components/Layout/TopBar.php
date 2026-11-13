@@ -13,6 +13,7 @@ class TopBar extends BaseComponent
     ) {
         parent::__construct(
             [
+                'dashboardUrl' => $currentConfiguration->getContextUrl('/'),
             ],
             new ComponentHashmap([
                 'logo' => new Logo($currentConfiguration),

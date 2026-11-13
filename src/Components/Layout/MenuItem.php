@@ -15,6 +15,7 @@ class MenuItem extends BaseComponent
         array $currentPath = [],
         int $index = 0,
         int $counterInMenu = 0,
+        ?string $dashboardUrl = null,
     ) {
         $components = [];
         $submenuCounter = 0;
@@ -25,6 +26,7 @@ class MenuItem extends BaseComponent
         parent::__construct(
             [
                 'index' => $index,
+                'dashboardUrl' => $dashboardUrl,
                 'id' => $menuItem->id,
                 'name' => $menuItem->name,
                 'route' => $menuItem->route,
