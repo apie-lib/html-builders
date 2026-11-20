@@ -5,6 +5,7 @@ use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
 use Apie\Common\ActionDefinitions\RunResourceMethodDefinition;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
+use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Enums\ActionDefinitionVariant;
 use ReflectionClass;
@@ -19,7 +20,8 @@ class RunResourceMethodResourceAction implements ResourceActionInterface, Single
 
     public function getName(): string
     {
-        return $this->actionDefinition->getMethod()->name;
+        $method = $this->actionDefinition->getMethod();
+        return ucfirst(SnakeCaseSlug::fromClass($method)->humanize());
     }
 
     public static function createForEntity(EntityInterface $entity, ReflectionClass $entityClass, ActionDefinitionInterface $actionDefinition): ?self

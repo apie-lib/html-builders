@@ -4,6 +4,7 @@ namespace Apie\HtmlBuilders\ResourceActions;
 use Apie\Common\ActionDefinitions\ActionDefinitionInterface;
 use Apie\Common\ActionDefinitions\RunGlobalMethodDefinition;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Identifiers\SnakeCaseSlug;
 use Apie\Core\Utils\ConverterUtils;
 use Apie\HtmlBuilders\Configuration\CurrentConfiguration;
 use Apie\HtmlBuilders\Enums\ActionDefinitionVariant;
@@ -18,7 +19,8 @@ class GlobalMethodResourceAction implements ResourceActionInterface
 
     public function getName(): string
     {
-        return $this->actionDefinition->getMethod()->name;
+        $method = $this->actionDefinition->getMethod();
+        return ucfirst(SnakeCaseSlug::fromClass($method)->humanize());
     }
 
     public static function createFor(ReflectionClass $entityClass, ActionDefinitionInterface $actionDefinition): ?self
@@ -44,9 +46,11 @@ class GlobalMethodResourceAction implements ResourceActionInterface
     public function getUrl(CurrentConfiguration $currentConfiguration): string
     {
         $method = $this->actionDefinition->getMethod();
-        return $currentConfiguration->getContextUrl(
-            'action/' . $method->getDeclaringClass()->getShortName() . '/' . $method->getName()
-        );
+        $url = 'action/' . $method->getDeclaringClass()->getShortName();
+        if ($method->getName() !== '__invoke') {
+            $url .= '/' . $method->getName();
+        }
+        return $currentConfiguration->getContextUrl($url);
     }
 
     /**
